@@ -14,10 +14,12 @@ internal class NetworkedComponentRegistry(IEnumerable<INetworkedComponentRegistr
     protected readonly Dictionary<string, (NetworkedComponentId Id, DeliveryMethod DeliveryMethod)> ComponentIds = new();
     protected readonly Dictionary<NetworkedComponentId, Type> NetComponentTypes = new();
 
-    public INetworkedComponentRegistry RegisterComponent(Type componentType, DeliveryMethod deliveryMethod = DeliveryMethod.Unreliable)
+    public INetworkedComponentRegistry RegisterComponent(Type componentType, DeliveryMethod deliveryMethod = DeliveryMethod.ReliableOrdered)
     {
         if (!typeof(INetworkedComponent).IsAssignableFrom(componentType))
             throw new ArgumentException($"Type {componentType.FullName} does not implement INetworkedComponent", nameof(componentType));
+
+        RequireDeltaSafe(deliveryMethod, componentType.FullName!);
 
         var id = new NetworkedComponentId(GetNextComponentId());
         ComponentIds.Add(componentType.FullName!, (id, deliveryMethod));
@@ -27,9 +29,11 @@ internal class NetworkedComponentRegistry(IEnumerable<INetworkedComponentRegistr
         return base.RegisterComponentImpl(componentType);
     }
 
-    public INetworkedComponentRegistry RegisterComponent<T>(DeliveryMethod deliveryMethod = DeliveryMethod.Unreliable)
+    public INetworkedComponentRegistry RegisterComponent<T>(DeliveryMethod deliveryMethod = DeliveryMethod.ReliableOrdered)
         where T : struct, INetworkedComponent
     {
+        RequireDeltaSafe(deliveryMethod, typeof(T).FullName!);
+
         var id = new NetworkedComponentId(GetNextComponentId());
         ComponentIds.Add(typeof(T).FullName!, (id, deliveryMethod));
         NetComponentTypes.Add(id, typeof(T));
@@ -52,4 +56,18 @@ internal class NetworkedComponentRegistry(IEnumerable<INetworkedComponentRegistr
 
     public DeliveryMethod GetNetworkedComponentDeliveryMethod<T>()
         => ComponentIds[typeof(T).FullName!].DeliveryMethod;
+
+    // A delta carries only the entities and fields that changed since the previous one, all of it on one channel,
+    // and nothing sends it again. Sequenced drops every message but the newest and unordered can apply an older
+    // value over a newer one, either of which leaves the state wrong until that field changes again
+    protected static void RequireDeltaSafe(DeliveryMethod deliveryMethod, string component)
+    {
+        if (deliveryMethod is DeliveryMethod.Unreliable or DeliveryMethod.ReliableOrdered)
+            return;
+
+        throw new ArgumentException(
+            $"{component} is registered with {deliveryMethod}. A networked component takes Unreliable, for a value that is " +
+            "sent again whenever it changes, or ReliableOrdered for anything else.",
+            nameof(deliveryMethod));
+    }
 }

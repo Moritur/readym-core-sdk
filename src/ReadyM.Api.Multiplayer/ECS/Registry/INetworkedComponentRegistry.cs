@@ -7,8 +7,8 @@ namespace ReadyM.Api.Multiplayer.ECS.Registry;
 
 internal interface INetworkedComponentRegistry : IComponentRegistryBase<INetworkedComponentRegistry, INetworkedComponent>
 {
-    INetworkedComponentRegistry RegisterComponent(Type componentTyp, DeliveryMethod deliveryMethod = DeliveryMethod.ReliableUnordered);
-    INetworkedComponentRegistry RegisterComponent<T>(DeliveryMethod deliveryMethod = DeliveryMethod.ReliableUnordered)
+    INetworkedComponentRegistry RegisterComponent(Type componentTyp, DeliveryMethod deliveryMethod = DeliveryMethod.ReliableOrdered);
+    INetworkedComponentRegistry RegisterComponent<T>(DeliveryMethod deliveryMethod = DeliveryMethod.ReliableOrdered)
         where T : struct, INetworkedComponent;
 
     NetworkedComponentId GetNetworkedComponentId(Type type);
