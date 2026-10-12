@@ -5,6 +5,8 @@ using System.Runtime.InteropServices;
 using Friflo.Engine.ECS;
 using LiteNetLib.Utils;
 using ReadyM.Api.Interop;
+using ReadyM.Api.Multiplayer;
+using ReadyM.Api.Multiplayer.ConflictResolution;
 using ReadyM.Api.Multiplayer.ECS.Components;
 using ReadyM.Api.Multiplayer.Interop;
 
@@ -31,6 +33,8 @@ internal sealed class ModComponentManager : IDisposable
     // a concern, add a per-heap dispose delegate (see note at bottom of file).
     private readonly List<IDisposable> _allHeaps = [];
     private readonly Lock _heapsLock = new();
+    
+    internal IChangeTrackingStore? ChangeTracking { get; set; }
 
     // -------------------------------------------------------------------------
     // Registration
@@ -158,7 +162,7 @@ internal sealed class ModComponentManager : IDisposable
         });
         var writeDeltaDelegatePtr = _delegateStore.PinDelegate(writeDeltaDelegate);
 
-        var readDeltaDelegate = new ReadDeltaDelegate((heapSelf, index, buffer, bufferSize, clearDirty) =>
+        var readDeltaDelegate = new ReadDeltaDelegate((heapSelf, index, buffer, bufferSize, clearDirty, entityId, currentTime, lastObservedTime, resolveConflicts) =>
         {
             // TODO: Replace with a span
             if (bufferSize > readBuffer.Length)
@@ -167,7 +171,16 @@ internal sealed class ModComponentManager : IDisposable
             Marshal.Copy((IntPtr)buffer, readBuffer, 0, bufferSize);
             reader.SetPosition(0);
             ref var data = ref Slot(heapSelf, index);
-            data.ReadDelta(reader);
+
+            if (resolveConflicts != 0 && heapSelf != IntPtr.Zero && ChangeTracking is { } changes)
+            {
+                using (ComponentWriteContext.EnterServerApplyDelta(currentTime, lastObservedTime, changes))
+                    data.ReadDeltaTracking(reader, entityId);
+            }
+            else
+            {
+                data.ReadDelta(reader);
+            }
 
             if (clearDirty == 1)
             {

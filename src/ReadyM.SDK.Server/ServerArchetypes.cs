@@ -42,7 +42,7 @@ public static class ServerArchetypes
     }
 
     /// Every component a mod adds to the game's archetype for a shape.
-    private static List<Type> Contributed(Type shape)
+    internal static List<Type> Contributed(Type shape)
     {
         var contributed = new List<Type>(ArchetypeContributions.OwnGenerated(shape));
         
