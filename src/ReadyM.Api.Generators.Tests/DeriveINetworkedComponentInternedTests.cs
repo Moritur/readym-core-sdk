@@ -177,10 +177,10 @@ public partial struct InternedComponent(AllocatorKind kind) : INetworkedComponen
     }
 
     [Fact]
-    public void An_id_saves_the_string_its_length_and_its_wide_flag()
+    public void An_id_saves_the_string_and_its_two_byte_header()
     {
-        // Inline: a 0 varint, an int length, a bool and the bytes. As id 0: one byte
-        Assert.Equal(sizeof(int) + sizeof(bool) + Walk.Length, SerializedSizeWithNoIndex() - SerializedSize(0));
+        // Inline: a 0 varint, a length byte, a form byte and Walk's ASCII, one byte a character. As id 0: one byte
+        Assert.Equal(2 + Walk.Length / 2, SerializedSizeWithNoIndex() - SerializedSize(0));
     }
 
     // A component whose only string is Walk, written with this many strings interned before it
