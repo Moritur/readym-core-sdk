@@ -37,6 +37,15 @@ internal sealed class ModComponentManager : IDisposable
     
     internal IChangeTrackingStore? ChangeTracking { get; set; }
 
+    internal IInternedStringIndex? InternedStringIndex { get; set; }
+
+    // The SDK's wire value for Delivery.Reliable; 1 is unreliable
+    private const byte ReliableDelivery = 0;
+
+    // Null when no index was handed over: a default scope would clear whichever index the thread already has
+    private InternedStrings.Scope? EnterInternedStrings()
+        => InternedStringIndex is { } index ? InternedStrings.Enter(index) : null;
+
     // -------------------------------------------------------------------------
     // Registration
     // -------------------------------------------------------------------------
@@ -86,8 +95,9 @@ internal sealed class ModComponentManager : IDisposable
         where T : struct, INetworkedComponent
     {
         // A mod component is read here, where no index is entered, so its ids would all read as empty
-        if (default(T) is IInternedComponent)
-            throw new NotSupportedException($"{typeof(T).FullName} has a field marked [Interned], which mod components do not support yet");
+        // An id is only readable after the reliable message carrying its string, and an unreliable delta can overtake it
+        if (default(T) is IInternedComponent && delivery != ReliableDelivery)
+            throw new ArgumentException($"{typeof(T).FullName} has a field marked [Interned], which needs reliable delivery", nameof(delivery));
 
         // Bind the factory to this T at registration time. Capturing via method group
         // means each call to RegisterComponent<T> creates an independent delegate instance
@@ -120,6 +130,8 @@ internal sealed class ModComponentManager : IDisposable
 
         var writeSnapshotDelegate = new WriteSnapshotDelegate((heapSelf, index, buffer, bufferSize) =>
         {
+            using var interned = EnterInternedStrings();
+
             writer.Reset();
             var data = Slot(heapSelf, index);
             writer.Put(data);
@@ -135,6 +147,8 @@ internal sealed class ModComponentManager : IDisposable
 
         var readSnapshotDelegate = new ReadSnapshotDelegate((heapSelf, index, buffer, bufferSize) =>
         {
+            using var interned = EnterInternedStrings();
+
             // TODO: Replace with a span
             if (bufferSize > readBuffer.Length)
                 throw new InvalidOperationException($"Buffer too small for snapshot of {typeof(T).Name}: need {bufferSize} bytes, have {readBuffer.Length} bytes");
@@ -148,6 +162,8 @@ internal sealed class ModComponentManager : IDisposable
 
         var writeDeltaDelegate = new WriteDeltaDelegate((heapSelf, index, buffer, bufferSize) =>
         {
+            using var interned = EnterInternedStrings();
+
             ref var data = ref Slot(heapSelf, index);
 
             if (!data.IsDirty)
@@ -169,6 +185,8 @@ internal sealed class ModComponentManager : IDisposable
 
         var readDeltaDelegate = new ReadDeltaDelegate((heapSelf, index, buffer, bufferSize, clearDirty, entityId, currentTime, lastObservedTime, resolveConflicts) =>
         {
+            using var interned = EnterInternedStrings();
+
             // TODO: Replace with a span
             if (bufferSize > readBuffer.Length)
                 throw new InvalidOperationException($"Buffer too small for snapshot of {typeof(T).Name}: need {bufferSize} bytes, have {readBuffer.Length} bytes");
