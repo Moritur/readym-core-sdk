@@ -142,6 +142,10 @@ internal class ClientNetworkedStateSynchronizer : IHostedService
         // When an ECS change scope message is received, the client moves an entity it already has into another scope. No response is sent to the server.
         RelayClient.AddBuiltInMessageHandler(RelayMessageCode.EcsChangeScope, OnEcsChangeScopeMessageHandler);
 
+        // When interned strings are received, the client adds them to its copy of the server's index, in order with
+        // the messages around them. No response is sent to the server.
+        RelayClient.AddBuiltInMessageHandler(RelayMessageCode.EcsInternedStrings, OnEcsInternedStringsMessageHandler);
+
         // When an entity is deleted, we check if the event originated locally on the client. If yes, then a message is
         // sent to the server.
         NetEntity.OnEntityDelete += OnEntityDeleteHandler;
@@ -177,6 +181,7 @@ internal class ClientNetworkedStateSynchronizer : IHostedService
         RelayClient.RemoveBuiltInMessageHandler(RelayMessageCode.EcsSnapshot, OnEcsSnapshotMessageHandler);
         RelayClient.RemoveBuiltInMessageHandler(RelayMessageCode.EcsChangeOwnership, OnEcsChangeOwnershipMessageHandler);
         RelayClient.RemoveBuiltInMessageHandler(RelayMessageCode.EcsChangeScope, OnEcsChangeScopeMessageHandler);
+        RelayClient.RemoveBuiltInMessageHandler(RelayMessageCode.EcsInternedStrings, OnEcsInternedStringsMessageHandler);
 
         NetEntity.OnEntityDelete -= OnEntityDeleteHandler;
         State.OnLeftArea -= OnLeftAreaHandler;
@@ -299,6 +304,14 @@ internal class ClientNetworkedStateSynchronizer : IHostedService
                 _skipEcsEventMessages--;
             }
         }, this, netId, scopeNetId);
+    }
+
+    protected void OnEcsInternedStringsMessageHandler(ServerEventHeader header, NetDataReader reader)
+    {
+        _receiveSystem.Scheduler.Schedule(static (_, self, readerCopy) =>
+        {
+            self._ecsLoop.InternedStringIndex.ApplyAppend(readerCopy);
+        }, this, _receiveSystem.Scheduler.MakeSafe(reader));
     }
 
     protected void OnEcsDeltaMessageHandler(ServerEventHeader header, NetDataReader reader)

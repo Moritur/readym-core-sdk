@@ -29,14 +29,18 @@ public sealed class ClientInternedStringIndex : IInternedStringIndex
         return false;
     }
 
-    /// Adds the strings from an append or a whole index.
+    /// Adds the strings from an append, or replaces the copy with a whole index, which is the only append starting at 0.
     public void ApplyAppend(NetDataReader reader)
     {
         var firstId = reader.GetUInt();
         var count = reader.GetInt();
 
-        // Appends arrive in order and a whole index only follows Clear, so a gap or an overlap means the copies diverged
-        if (firstId != (uint)_names.Count)
+        if (firstId == 0)
+            Clear();
+
+        // Appends arrive in order, so a gap means the copies diverged. An overlap is a reconnect into a live session
+        // repeating what the whole index just gave, and has to match it.
+        if (firstId > (uint)_names.Count)
             throw new InvalidDataException($"An interned string append starts at id {firstId}, but this index has {_names.Count}");
         if (count < 0)
             throw new InvalidDataException($"An interned string append has a negative count {count}");
@@ -45,6 +49,15 @@ public sealed class ClientInternedStringIndex : IInternedStringIndex
         {
             var name = default(NativeString256);
             name.Deserialize(reader);
+
+            var id = firstId + (uint)i;
+            if (id < (uint)_names.Count)
+            {
+                if (_names[(int)id] != name)
+                    throw new InvalidDataException($"Interned string {id} is \"{_names[(int)id]}\" here, but an append says \"{name}\"");
+
+                continue;
+            }
 
             if (_ids.ContainsKey(name))
                 throw new InvalidDataException($"An interned string append repeats \"{name}\"");
