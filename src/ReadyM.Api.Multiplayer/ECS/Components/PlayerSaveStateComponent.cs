@@ -19,5 +19,9 @@ public partial struct PlayerSaveStateComponent : IServerAuthoritative
 
     private PlayerStateOrigin _origin;
 
+    /// <summary>The networked components the slot restored into this entity, synced at the first bind after connect.</summary>
     private NetworkedComponentMask _restored;
+
+    /// <summary>Every savable networked component the entity has, synced at the first bind after a game reload.</summary>
+    private NetworkedComponentMask _persisted;
 }
