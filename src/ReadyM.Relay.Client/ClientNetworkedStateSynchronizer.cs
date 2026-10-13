@@ -424,9 +424,13 @@ internal class ClientNetworkedStateSynchronizer : IHostedService
                 if (self.NetEntity.TryGetEntityByNetworkId(netId0, out var entity))
                 {
                     self.Logger.LogDebug("Deleting remote entity: {Id}", netId0);
-                    // The command buffer runs the delete after the skip counter is back to zero
                     self._deletesFromServer.Add(netId0);
-                    cb.DeleteEntity(entity.Value.Id);
+
+                    // Now, not through the command buffer: a move out of a scope keeps the NetworkId, so a create of it
+                    // later in the same batch must find it gone. A playback could also come after a skip-sync delete
+                    // of the entity (leaving a scope), which raises no event, leaving the NetworkId in
+                    // _deletesFromServer, and it deletes by entity id, which may have been reused by then.
+                    entity.Value.DeleteEntity();
                 }
                 else
                 {
