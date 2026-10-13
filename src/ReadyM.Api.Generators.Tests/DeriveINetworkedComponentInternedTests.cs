@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using ReadyM.Api.Multiplayer;
 using ReadyM.Api.Multiplayer.ConflictResolution;
 using ReadyM.Api.Multiplayer.Interning;
+using ReadyM.Api.Serialization;
 using Xunit;
 using Yooni.Native.Container;
 using Yooni.Native.LowLevel;
@@ -163,6 +164,38 @@ public partial struct InternedComponent(AllocatorKind kind) : INetworkedComponen
         // One Error per id the client copy lacked, and nothing from the read with no index to report through
         Assert.Equal(["Interned string 0", "Interned string 1"], _log.Errors.Select(e => e[..17]));
     }
+
+    // One varint for the id plus one: 1 byte up to id 126, 2 up to 16,382, 3 after
+    [Theory]
+    [InlineData(126, 0)]
+    [InlineData(127, 1)]
+    [InlineData(16_382, 1)]
+    [InlineData(16_383, 2)]
+    public void An_id_costs_one_byte_until_127_strings_and_two_until_16383(int stringsBefore, int extraBytes)
+    {
+        Assert.Equal(SerializedSize(0) + extraBytes, SerializedSize(stringsBefore));
+    }
+
+    [Fact]
+    public void An_id_saves_the_string_its_length_and_its_wide_flag()
+    {
+        // Inline: a 0 varint, an int length, a bool and the bytes. As id 0: one byte
+        Assert.Equal(sizeof(int) + sizeof(bool) + Walk.Length, SerializedSizeWithNoIndex() - SerializedSize(0));
+    }
+
+    // A component whose only string is Walk, written with this many strings interned before it
+    private int SerializedSize(int stringsBefore)
+    {
+        var server = new ServerInternedStringIndex(100_000, _log);
+        for (var i = 0; i < stringsBefore; i++)
+            server.TryGetIdForWrite(new NativeString256($"Filler.{i}", false), out _);
+
+        using (InternedStrings.Enter(server))
+            return InvokeSerialize(Create(7, Walk, [], default)).Length;
+    }
+
+    private int SerializedSizeWithNoIndex()
+        => InvokeSerialize(Create(7, Walk, [], default)).Length;
 
     [Fact]
     public void A_component_with_a_marked_string_is_an_IInternedComponent()
@@ -346,14 +379,13 @@ public partial struct TaggedComponent : IComponent
 
     private static void PutInline(NetDataWriter writer, NativeString256 value)
     {
-        writer.Put((byte)InternedStringTag.Inline);
+        writer.PutVarUInt(0);
         value.Serialize(writer);
     }
 
     private static void PutId(NetDataWriter writer, uint id)
     {
-        writer.Put((byte)InternedStringTag.Id);
-        writer.Put(id);
+        writer.PutVarUInt(id + 1);
     }
 
     private ClientInternedStringIndex ClientCopyOf(ServerInternedStringIndex server)

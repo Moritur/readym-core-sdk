@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using LiteNetLib.Utils;
 using Microsoft.Extensions.Logging;
+using ReadyM.Api.Serialization;
 using Yooni.Native.Container;
 using Yooni.Native.Serialization;
 
@@ -42,8 +43,8 @@ public sealed class ClientInternedStringIndex(ILogger logger) : IInternedStringI
     /// Adds the strings from an append, or replaces the copy with a whole index, which is the only append starting at 0.
     public void ApplyAppend(NetDataReader reader)
     {
-        var firstId = reader.GetUInt();
-        var count = reader.GetInt();
+        var firstId = reader.GetVarUInt();
+        var count = reader.GetVarUInt();
 
         if (firstId == 0)
             Clear();
@@ -52,15 +53,13 @@ public sealed class ClientInternedStringIndex(ILogger logger) : IInternedStringI
         // repeating what the whole index just gave, and has to match it.
         if (firstId > (uint)_names.Count)
             throw new InvalidDataException($"An interned string append starts at id {firstId}, but this index has {_names.Count}");
-        if (count < 0)
-            throw new InvalidDataException($"An interned string append has a negative count {count}");
 
-        for (var i = 0; i < count; i++)
+        for (var i = 0u; i < count; i++)
         {
             var name = default(NativeString256);
             name.Deserialize(reader);
 
-            var id = firstId + (uint)i;
+            var id = firstId + i;
             if (id < (uint)_names.Count)
             {
                 if (_names[(int)id] != name)

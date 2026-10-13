@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using LiteNetLib.Utils;
 using Microsoft.Extensions.Logging;
+using ReadyM.Api.Serialization;
 using Yooni.Native.Container;
 using Yooni.Native.Serialization;
 
@@ -87,11 +88,11 @@ public sealed class ServerInternedStringIndex : IInternedStringIndex
     public void WriteAll(NetDataWriter writer)
         => Write(writer, 0);
 
-    // [uint first id][int count][strings], read by ClientInternedStringIndex.ApplyAppend
+    // [varuint first id][varuint count][strings], read by ClientInternedStringIndex.ApplyAppend
     private void Write(NetDataWriter writer, int first)
     {
-        writer.Put((uint)first);
-        writer.Put(_names.Count - first);
+        writer.PutVarUInt((uint)first);
+        writer.PutVarUInt((uint)(_names.Count - first));
 
         for (var i = first; i < _names.Count; i++)
             _names[i].Serialize(writer);
