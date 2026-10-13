@@ -65,11 +65,12 @@ internal static class ReplicatedComponentEmitter
         AddDefaultUsings(moduleState);
 
         var hasDispose = HasDispose(sb, model, classState);
+        var interned = members.Any(m => m.Interned && IsInternable(m.Source.Type));
 
         sb.Append($$"""
 namespace {{info.Namespace}};
 
-{{access}} partial struct {{info.Name}} : INetworkedComponent{{(policy is null ? string.Empty : ", " + policy)}}{{(hasDispose ? ", IDisposable" : string.Empty)}}
+{{access}} partial struct {{info.Name}} : INetworkedComponent{{(policy is null ? string.Empty : ", " + policy)}}{{(hasDispose ? ", IDisposable" : string.Empty)}}{{(interned ? ", global::ReadyM.Api.Multiplayer.Interning.IInternedComponent" : string.Empty)}}
 {
 
 """);

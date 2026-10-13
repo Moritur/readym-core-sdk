@@ -23,7 +23,7 @@ internal class ClientEcsUpdateLoop(Store world, ILogger logger)
     public bool IsRunning { get; private set; }
     private float _applicationTime;
 
-    public ClientInternedStringIndex InternedStringIndex { get; } = new();
+    public ClientInternedStringIndex InternedStringIndex { get; } = new(logger);
 
     public void Start()
     {

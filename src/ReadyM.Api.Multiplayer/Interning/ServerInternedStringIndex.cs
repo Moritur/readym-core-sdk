@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using LiteNetLib.Utils;
+using Microsoft.Extensions.Logging;
 using Yooni.Native.Container;
 using Yooni.Native.Serialization;
 
@@ -16,12 +17,24 @@ public sealed class ServerInternedStringIndex : IInternedStringIndex
     private readonly List<NativeString256> _names = new();
     private int _firstPending;
 
-    public ServerInternedStringIndex(int capacity)
+    public ServerInternedStringIndex(int capacity, ILogger logger)
     {
         if (capacity < 0)
             throw new ArgumentOutOfRangeException(nameof(capacity), capacity, "Capacity cannot be negative");
 
         _capacity = capacity;
+        _logger = logger;
+    }
+
+    private readonly ILogger _logger;
+    private readonly HashSet<uint> _reported = new();
+    private bool _capacityReported;
+
+    public void ReportUnresolved(uint id)
+    {
+        // The server never gave this id out, so it came from a client
+        if (_reported.Add(id))
+            _logger.LogWarning("Interned string {Id} came from a client but was never given out; read as empty ({Count} known)", id, Count);
     }
 
     public int Count => _names.Count;
@@ -35,7 +48,15 @@ public sealed class ServerInternedStringIndex : IInternedStringIndex
 
         // Past the cap new strings stay inline, so a field marked by mistake cannot grow the index for ever
         if (_names.Count >= _capacity)
+        {
+            if (!_capacityReported)
+            {
+                _capacityReported = true;
+                _logger.LogError("The interned string index is full at {Capacity}; \"{Value}\" and every later new string stay inline. A field marked [Interned] does not hold a closed set", _capacity, value.ToString());
+            }
+
             return false;
+        }
 
         id = (uint)_names.Count;
         _names.Add(value);

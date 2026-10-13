@@ -1,14 +1,24 @@
 using System.Collections.Generic;
 using System.IO;
 using LiteNetLib.Utils;
+using Microsoft.Extensions.Logging;
 using Yooni.Native.Container;
 using Yooni.Native.Serialization;
 
 namespace ReadyM.Api.Multiplayer.Interning;
 
 /// A client's copy of the server's index, filled only from what the server sends.
-public sealed class ClientInternedStringIndex : IInternedStringIndex
+public sealed class ClientInternedStringIndex(ILogger logger) : IInternedStringIndex
 {
+    private readonly HashSet<uint> _reported = new();
+
+    public void ReportUnresolved(uint id)
+    {
+        // The server sends a string before any message using its id, so this is the server's ordering broken
+        if (_reported.Add(id))
+            logger.LogError("Interned string {Id} arrived before its string; read as empty ({Count} known)", id, Count);
+    }
+
     private readonly Dictionary<NativeString256, uint> _ids = new();
     private readonly List<NativeString256> _names = new();
 
@@ -71,5 +81,6 @@ public sealed class ClientInternedStringIndex : IInternedStringIndex
     {
         _ids.Clear();
         _names.Clear();
+        _reported.Clear();
     }
 }

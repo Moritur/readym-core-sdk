@@ -8,6 +8,7 @@ using ReadyM.Api.Interop;
 using ReadyM.Api.Multiplayer;
 using ReadyM.Api.Multiplayer.ConflictResolution;
 using ReadyM.Api.Multiplayer.ECS.Components;
+using ReadyM.Api.Multiplayer.Interning;
 using ReadyM.Api.Multiplayer.Interop;
 
 namespace ReadyM.Relay.Server.Sdk.Ecs;
@@ -84,6 +85,10 @@ internal sealed class ModComponentManager : IDisposable
     public unsafe ModComponentInfo RegisterComponent<T>(byte delivery = 0)
         where T : struct, INetworkedComponent
     {
+        // A mod component is read here, where no index is entered, so its ids would all read as empty
+        if (default(T) is IInternedComponent)
+            throw new NotSupportedException($"{typeof(T).FullName} has a field marked [Interned], which mod components do not support yet");
+
         // Bind the factory to this T at registration time. Capturing via method group
         // means each call to RegisterComponent<T> creates an independent delegate instance
         // correctly specialized for that T.

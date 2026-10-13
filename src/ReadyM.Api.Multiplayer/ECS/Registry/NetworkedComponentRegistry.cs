@@ -4,6 +4,7 @@ using LiteNetLib;
 using Microsoft.Extensions.Logging;
 using ReadyM.Api.ECS.Registry;
 using ReadyM.Api.Multiplayer.ECS.Components;
+using ReadyM.Api.Multiplayer.Interning;
 
 namespace ReadyM.Api.Multiplayer.ECS.Registry;
 
@@ -20,6 +21,7 @@ internal class NetworkedComponentRegistry(IEnumerable<INetworkedComponentRegistr
             throw new ArgumentException($"Type {componentType.FullName} does not implement INetworkedComponent", nameof(componentType));
 
         RequireDeltaSafe(deliveryMethod, componentType.FullName!);
+        RequireInternedSafe(componentType, deliveryMethod);
 
         var id = new NetworkedComponentId(GetNextComponentId());
         ComponentIds.Add(componentType.FullName!, (id, deliveryMethod));
@@ -33,6 +35,7 @@ internal class NetworkedComponentRegistry(IEnumerable<INetworkedComponentRegistr
         where T : struct, INetworkedComponent
     {
         RequireDeltaSafe(deliveryMethod, typeof(T).FullName!);
+        RequireInternedSafe(typeof(T), deliveryMethod);
 
         var id = new NetworkedComponentId(GetNextComponentId());
         ComponentIds.Add(typeof(T).FullName!, (id, deliveryMethod));
@@ -68,6 +71,19 @@ internal class NetworkedComponentRegistry(IEnumerable<INetworkedComponentRegistr
         throw new ArgumentException(
             $"{component} is registered with {deliveryMethod}. A networked component takes Unreliable, for a value that is " +
             "sent again whenever it changes, or ReliableOrdered for anything else.",
+            nameof(deliveryMethod));
+    }
+
+    // An id is only readable after the reliable-ordered message carrying its string, and an unreliable delta can
+    // overtake that message
+    protected static void RequireInternedSafe(Type componentType, DeliveryMethod deliveryMethod)
+    {
+        if (deliveryMethod == DeliveryMethod.ReliableOrdered || !typeof(IInternedComponent).IsAssignableFrom(componentType))
+            return;
+
+        throw new ArgumentException(
+            $"{componentType.FullName} is registered with {deliveryMethod}, but has a field marked [Interned], which " +
+            "needs ReliableOrdered.",
             nameof(deliveryMethod));
     }
 }

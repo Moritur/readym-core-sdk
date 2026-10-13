@@ -2,6 +2,7 @@ using System.Reflection;
 using Friflo.Engine.ECS;
 using LiteNetLib.Utils;
 using Microsoft.CodeAnalysis;
+using Microsoft.Extensions.Logging;
 using ReadyM.Api.Multiplayer;
 using ReadyM.Api.Multiplayer.ConflictResolution;
 using ReadyM.Api.Multiplayer.Interning;
@@ -59,7 +60,7 @@ public partial struct InternedComponent(AllocatorKind kind) : INetworkedComponen
     public void The_server_index_writes_ids_and_queues_each_new_string_once()
     {
         var component = Create(7, Walk, [Moving, Walk], Plain);
-        var server = new ServerInternedStringIndex(100);
+        var server = new ServerInternedStringIndex(100, _log);
 
         byte[] bytes;
         using (InternedStrings.Enter(server))
@@ -83,7 +84,7 @@ public partial struct InternedComponent(AllocatorKind kind) : INetworkedComponen
     [Fact]
     public void A_client_writes_ids_only_for_strings_the_server_sent_it_and_adds_nothing()
     {
-        var server = new ServerInternedStringIndex(100);
+        var server = new ServerInternedStringIndex(100, _log);
         server.TryGetIdForWrite(Walk, out _);
         var client = ClientCopyOf(server);
 
@@ -108,8 +109,8 @@ public partial struct InternedComponent(AllocatorKind kind) : INetworkedComponen
     [Fact]
     public void Snapshots_and_deltas_written_with_ids_read_back_through_a_client_copy()
     {
-        var server = new ServerInternedStringIndex(100);
-        var client = new ClientInternedStringIndex();
+        var server = new ServerInternedStringIndex(100, _log);
+        var client = new ClientInternedStringIndex(_log);
         var sent = Create(7, Walk, [Moving, Walk], Plain);
 
         byte[] snapshot;
@@ -142,7 +143,7 @@ public partial struct InternedComponent(AllocatorKind kind) : INetworkedComponen
     [Fact]
     public void An_id_the_reader_cannot_resolve_reads_as_empty_and_the_fields_after_it_still_read()
     {
-        var server = new ServerInternedStringIndex(100);
+        var server = new ServerInternedStringIndex(100, _log);
         var sent = Create(7, Walk, [Moving], Plain);
 
         byte[] snapshot;
@@ -150,7 +151,7 @@ public partial struct InternedComponent(AllocatorKind kind) : INetworkedComponen
             snapshot = InvokeSerialize(sent);
 
         var withEmptyCopy = CreateEmpty(sent.GetType());
-        using (InternedStrings.Enter(new ClientInternedStringIndex()))
+        using (InternedStrings.Enter(new ClientInternedStringIndex(_log)))
             InvokeDeserialize(withEmptyCopy, snapshot);
 
         var withNoIndex = CreateEmpty(sent.GetType());
@@ -158,6 +159,41 @@ public partial struct InternedComponent(AllocatorKind kind) : INetworkedComponen
 
         AssertValues(withEmptyCopy, 7, default, [default], Plain);
         AssertValues(withNoIndex, 7, default, [default], Plain);
+
+        // One Error per id the client copy lacked, and nothing from the read with no index to report through
+        Assert.Equal(["Interned string 0", "Interned string 1"], _log.Errors.Select(e => e[..17]));
+    }
+
+    [Fact]
+    public void A_component_with_a_marked_string_is_an_IInternedComponent()
+    {
+        Assert.True(typeof(IInternedComponent).IsAssignableFrom(CompileComponentType()));
+    }
+
+    [Theory]
+    [InlineData("private NativeString256 _value;")]
+    [InlineData("[Interned] private int _value;")]
+    public void A_component_with_no_valid_mark_is_not_an_IInternedComponent(string field)
+    {
+        var source = $$"""
+using ReadyM.Api.Multiplayer.Generators;
+using ReadyM.Api.Multiplayer.ECS.Components;
+using Yooni.Native.Container;
+
+namespace ReadyM.Api.Generators.Tests.TestTypes;
+
+[DeriveINetworkedComponent]
+public partial struct UninternedComponent : INetworkedComponent
+{
+    {{field}}
+}
+""";
+
+        var result = SourceGeneratorTestHelper.RunGenerator<DeriveINetworkedComponentGenerator>(source, output);
+        var generated = string.Join(Environment.NewLine, result.GeneratedSyntaxTrees.Select(t => t.GetText().ToString()));
+
+        Assert.Contains("partial struct UninternedComponent", generated);
+        Assert.DoesNotContain("IInternedComponent", generated);
     }
 
     [Fact]
@@ -166,7 +202,7 @@ public partial struct InternedComponent(AllocatorKind kind) : INetworkedComponen
         var sent = Create(7, Walk, [Moving, Walk], Plain);
 
         byte[] delta;
-        using (InternedStrings.Enter(new ServerInternedStringIndex(100)))
+        using (InternedStrings.Enter(new ServerInternedStringIndex(100, _log)))
             delta = InvokeWriteDelta(sent);
 
         SkipDeltaOfType(sent.GetType(), delta);
@@ -177,8 +213,8 @@ public partial struct InternedComponent(AllocatorKind kind) : INetworkedComponen
     [InlineData("ReadDeltaTracking", true)]
     public void A_marked_field_that_loses_a_conflict_is_still_read_past(string method, bool delta)
     {
-        var server = new ServerInternedStringIndex(100);
-        var client = new ClientInternedStringIndex();
+        var server = new ServerInternedStringIndex(100, _log);
+        var client = new ClientInternedStringIndex(_log);
         var sent = Create(7, Walk, [Moving], Plain);
 
         byte[] bytes;
@@ -270,6 +306,8 @@ public partial struct TaggedComponent : IComponent
         return component;
     }
 
+    private readonly RecordingLogger _log = new();
+
     private Type? _componentType;
 
     private Type CompileComponentType()
@@ -318,9 +356,9 @@ public partial struct TaggedComponent : IComponent
         writer.Put(id);
     }
 
-    private static ClientInternedStringIndex ClientCopyOf(ServerInternedStringIndex server)
+    private ClientInternedStringIndex ClientCopyOf(ServerInternedStringIndex server)
     {
-        var client = new ClientInternedStringIndex();
+        var client = new ClientInternedStringIndex(_log);
         var writer = new NetDataWriter();
         server.WriteAll(writer);
         client.ApplyAppend(new NetDataReader(writer.CopyData()));
@@ -348,6 +386,21 @@ public partial struct TaggedComponent : IComponent
     }
 
     // One change component per type, standing in for the entity's
+    // Keeps what an index logs, so a test can assert the Errors it expects and nothing else
+    private sealed class RecordingLogger : ILogger
+    {
+        private readonly List<(LogLevel Level, string Message)> _entries = new();
+
+        public IEnumerable<string> Errors => _entries.Where(e => e.Level == LogLevel.Error).Select(e => e.Message);
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+            => _entries.Add((logLevel, formatter(state, exception)));
+    }
+
     private sealed class ChangeStore : IChangeTrackingStore
     {
         private readonly Dictionary<Type, Array> _changes = new();

@@ -33,7 +33,21 @@ public static class InternedStringCodec
             case InternedStringTag.Id:
                 var id = reader.GetUInt();
                 // An id the reader cannot resolve is still fixed width, so the rest of the message reads correctly
-                value = InternedStrings.Current is { } index && index.TryResolve(id, out var name) ? name : default;
+                if (InternedStrings.Current is not { } index)
+                {
+                    // Nothing to report through; registration keeps marked fields out of the plugin host, the one reader without an index
+                    value = default;
+                }
+                else if (index.TryResolve(id, out var name))
+                {
+                    value = name;
+                }
+                else
+                {
+                    value = default;
+                    index.ReportUnresolved(id);
+                }
+
                 return;
 
             default:

@@ -9,4 +9,7 @@ public interface IInternedStringIndex
     bool TryGetIdForWrite(in NativeString256 value, out uint id);
 
     bool TryResolve(uint id, out NativeString256 value);
+
+    /// Called by the reader for an id it could not resolve.
+    void ReportUnresolved(uint id);
 }
