@@ -30,4 +30,8 @@ internal sealed class SavedArchetypeFilter : IArchetypeBuilderCallback
         if (typeof(T) == typeof(SaveLayerComponent) && !builder.Contains<PersistentIdComponent>())
             builder.Add<PersistentIdComponent>();
     }
+
+    public void AcceptTags(ArchetypeBuilder builder, in Tags tags)
+    {
+    }
 }

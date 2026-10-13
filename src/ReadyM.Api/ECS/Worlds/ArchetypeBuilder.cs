@@ -177,6 +177,10 @@ public class ArchetypeBuilder
         public void AcceptTag<T>(ArchetypeBuilder builder) where T : struct, ITag
         {
         }
+
+        public void AcceptTags(ArchetypeBuilder builder, in Tags tags)
+        {
+        }
     }
 
     internal void ForceComponentAOT<T>()
