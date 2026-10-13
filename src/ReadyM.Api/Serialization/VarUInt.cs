@@ -1,3 +1,5 @@
+using System;
+using System.Runtime.InteropServices;
 using LiteNetLib.Utils;
 
 namespace ReadyM.Api.Serialization;
@@ -5,7 +7,9 @@ namespace ReadyM.Api.Serialization;
 /// Variable-length unsigned integer.
 /// Most significant bit of each byte is used as a continuation flag.
 /// The remaining 7 bits are used to store the value.
-public struct VarUInt(uint value) : INetSerializable
+[DeriveJsonSerializable]
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public partial struct VarUInt(uint value) : INetSerializable, IEquatable<VarUInt>
 {
     public const int MaxSize = 5;
 
@@ -33,4 +37,29 @@ public struct VarUInt(uint value) : INetSerializable
 
     public static implicit operator VarUInt(uint value)
         => new(value);
+
+    public bool Equals(VarUInt other)
+    {
+        return Value == other.Value;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is VarUInt other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return Value.GetHashCode();
+    }
+
+    public static bool operator ==(VarUInt left, VarUInt right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(VarUInt left, VarUInt right)
+    {
+        return !left.Equals(right);
+    }
 }
