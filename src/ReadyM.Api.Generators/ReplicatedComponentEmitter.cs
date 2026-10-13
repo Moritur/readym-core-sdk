@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -9,6 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ReadyM.Api.Generators.Derive.CSharp;
 using ReadyM.Api.Generators.Derive.CSharp.ConflictResolution;
 using ReadyM.Api.Generators.Derive.CSharp.FieldSupport;
+using ReadyM.Api.Generators.Derive.CSharp.Serialization;
 using static ReadyM.Api.Generators.DeriveCSharpUtils;
 
 namespace ReadyM.Api.Generators;
@@ -101,6 +103,11 @@ namespace {{info.Namespace}};
             if (member.Interned && !IsInternable(member.Source.Type))
                 sb.AppendLine($"""
     #error Field {member.Source.Name}: [Interned] only applies to NativeString256 and NativeList<NativeString256>
+""");
+
+            foreach (var problem in QuantizationProblems(member))
+                sb.AppendLine($"""
+    #error Field {member.Source.Name}: {problem}
 """);
 
             if (member.Source.Type.ContainingNamespace is { } ns)
@@ -594,10 +601,27 @@ using {ns};
         => SerializationHelper.GetDeserializationMethod(type.SpecialType);
 
     private static bool HasGetEmitFieldSupportImpl(DeriveMemberModel member, bool fallback)
-        => CSharpFieldSupportRegistry.FieldTypeSupportVisitor.TryGetImpl(member.Source.Type, fallback, out _);
+        => IsQuantized(member) || CSharpFieldSupportRegistry.FieldTypeSupportVisitor.TryGetImpl(member.Source.Type, fallback, out _);
 
     private static ICSharpFieldTypeSupportImpl GetEmitFieldSupportImpl(DeriveMemberModel member, bool fallback)
-        => CSharpFieldSupportRegistry.FieldTypeSupportVisitor.GetImpl(member.Source.Type, fallback);
+        => IsQuantized(member)
+            ? QuantizedFieldTypeSupportImpl.Instance
+            : CSharpFieldSupportRegistry.FieldTypeSupportVisitor.GetImpl(member.Source.Type, fallback);
+
+    // A misused quantization attribute is reported as an error and the field falls back to its plain encoding
+    private static bool IsQuantized(DeriveMemberModel member)
+        => member.Quantization is not null && !QuantizationProblems(member).Any();
+
+    private static IEnumerable<string> QuantizationProblems(DeriveMemberModel member)
+    {
+        if (member.Quantization is null)
+            return [];
+
+        if (member.QuantizationAttributeCount > 1)
+            return ["use only one of [Quantize], [QuantizeAngle] and [HalfPrecision]"];
+
+        return member.Quantization.Problems(member.Source.Type);
+    }
 
     private static CSharpEmitFieldSupportContext CreateEmitContext(
         StringBuilder sb,
@@ -622,9 +646,7 @@ using {ns};
             model,
             CSharpFieldSupportRegistry.EmitSerializeVisitor,
             CSharpFieldSupportRegistry.EmitDeserializeVisitor,
-            member.Interned && IsInternable(member.Source.Type)
-                ? CSharpFieldSupportRegistry.InternedNetDataCodec
-                : CSharpFieldSupportRegistry.NetDataCodec);
+            CodecOf(member));
         var fieldName = member.Source.Name;
         var fieldType = member.Source.Type;
         context.State.ResetCurrent(fieldName, fieldType);
@@ -637,6 +659,16 @@ using {ns};
         context.SetEmitConflictResolver(new DefaultEmitConflictSupportImpl(), changeContext);
 
         return context;
+    }
+
+    private static ICSharpSerializationCodec CodecOf(DeriveMemberModel member)
+    {
+        if (IsQuantized(member))
+            return new QuantizedNetDataSerializationCodec(CSharpFieldSupportRegistry.NetDataCodec, member.Quantization!);
+
+        return member.Interned && IsInternable(member.Source.Type)
+            ? CSharpFieldSupportRegistry.InternedNetDataCodec
+            : CSharpFieldSupportRegistry.NetDataCodec;
     }
 
     private const string NativeString256Name = "Yooni.Native.Container.NativeString256";

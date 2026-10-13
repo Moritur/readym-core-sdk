@@ -253,6 +253,7 @@ internal static class DeriveComponentUtils
             boolAccessors: boolAccessors);
 
         var cppSettings = GetCppSettings(memberInfo, fieldAttributes);
+        var quantization = DeriveQuantization.Read(memberInfo.Symbol, out var quantizationAttributeCount);
         
         return new DeriveMemberModel(
             source: memberInfo, 
@@ -260,7 +261,9 @@ internal static class DeriveComponentUtils
             maskIndex: index,
             accessorSettings: settings,
             cppSettings: cppSettings,
-            interned: AttributeUtils.HasAttribute(memberInfo.Symbol, "InternedAttribute"));
+            interned: AttributeUtils.HasAttribute(memberInfo.Symbol, "InternedAttribute"),
+            quantization: quantization,
+            quantizationAttributeCount: quantizationAttributeCount);
     }
     
     private static DeriveMemberCppSettings GetCppSettings(
