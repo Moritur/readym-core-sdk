@@ -12,10 +12,6 @@ internal interface INetworkedEntityManager
 {
     event Action<NetworkId, Entity>? OnEntityDelete;
 
-    /// <summary>
-    /// Raised when a live entity's <see cref="NetworkId"/> stops being valid.
-    /// </summary>
-    event Action<NetworkId, Entity>? OnNetworkEntityRetired;
     void SetNextNetworkedId(uint nextId);
     bool IsNetworkEntityDeleted(NetworkId netId);
     (Entity Entity, NetworkId NetId) CreateNetworkedEntity(

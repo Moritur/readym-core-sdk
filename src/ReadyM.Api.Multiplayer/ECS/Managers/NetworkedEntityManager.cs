@@ -25,9 +25,6 @@ internal sealed class NetworkedEntityManager : INetworkedEntityManager, IDisposa
     // NOTE: This event will be fired on the ECS thread.
     public event Action<NetworkId, Entity>? OnEntityDelete;
 
-    // NOTE: This event will be fired on the ECS thread.
-    public event Action<NetworkId, Entity>? OnNetworkEntityRetired;
-
     public NetworkedEntityManager(
         Store world,
         IPlayerIdProvider playerIdProvider,
@@ -138,12 +135,8 @@ internal sealed class NetworkedEntityManager : INetworkedEntityManager, IDisposa
         // Clients know the entity only once it was sent: one still tagged as locally created never reached them.
         if (IsReplicated(current) && !entity.Tags.Has<LocallyCreatedEntityTag>())
         {
-            // Still in the old scope here, so the delete is routed to that scope's viewers.
-            OnNetworkEntityRetired?.Invoke(meta.NetId, entity);
-            _netIdTombstones.Add(meta.NetId);
-
-            meta = new MetadataComponent(NextNetworkId(), meta.Archetype, meta.Owner);
-            entity.AddComponent(meta); // indexed: replace, not mutate
+            // Delete entity from the scope. Still in the old scope here, so the delete is routed to that scope's viewers.
+            OnEntityDelete?.Invoke(meta.NetId, entity);
         }
 
         // Indexed link: replace, not mutate.
