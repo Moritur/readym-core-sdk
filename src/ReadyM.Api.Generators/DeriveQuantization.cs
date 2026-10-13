@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.CodeAnalysis;
 
@@ -84,13 +84,14 @@ internal sealed class DeriveQuantization(DeriveQuantizationKind kind, float min,
         }
     }
 
-    /// A C# expression that is true when <paramref name="a"/> and <paramref name="b"/> encode the same.
-    public string SameExpression(string a, string b)
+    /// A C# expression that is true when writing <paramref name="b"/> over <paramref name="a"/> is no change: it stays
+    /// within the plain fields' cutoff or encodes the same.
+    public string UnchangedExpression(string a, string b)
         => Kind switch
         {
-            DeriveQuantizationKind.Range => $"{Runtime}.SameStep({a}, {b}, {Float(Min)}, {Float(Max)}, {Bits})",
-            DeriveQuantizationKind.Angle => $"{Runtime}.SameAngleStep({a}, {b}, {Bits})",
-            _ => $"{Runtime}.SameHalf({a}, {b})",
+            DeriveQuantizationKind.Range => $"{Runtime}.Unchanged({a}, {b}, {Float(Min)}, {Float(Max)}, {Bits})",
+            DeriveQuantizationKind.Angle => $"{Runtime}.UnchangedAngle({a}, {b}, {Bits})",
+            _ => $"{Runtime}.UnchangedHalf({a}, {b})",
         };
 
     /// A C# statement writing <paramref name="value"/> to <c>writer</c>.
@@ -115,13 +116,13 @@ internal sealed class DeriveQuantization(DeriveQuantizationKind kind, float min,
         };
     }
 
-    /// A C++ expression that is true when <paramref name="a"/> and <paramref name="b"/> encode the same.
-    public string CppSameExpression(string a, string b)
+    /// The C++ counterpart of <see cref="UnchangedExpression"/>.
+    public string CppUnchangedExpression(string a, string b)
         => Kind switch
         {
-            DeriveQuantizationKind.Range => $"Interop::Quantization::SameStep({a}, {b}, {Float(Min)}, {Float(Max)}, {Bits})",
-            DeriveQuantizationKind.Angle => $"Interop::Quantization::SameAngleStep({a}, {b}, {Bits})",
-            _ => $"Interop::Quantization::SameHalf({a}, {b})",
+            DeriveQuantizationKind.Range => $"Interop::Quantization::Unchanged({a}, {b}, {Float(Min)}, {Float(Max)}, {Bits})",
+            DeriveQuantizationKind.Angle => $"Interop::Quantization::UnchangedAngle({a}, {b}, {Bits})",
+            _ => $"Interop::Quantization::UnchangedHalf({a}, {b})",
         };
 
     // A literal both C# and C++ accept: C++ needs a decimal point or an exponent before the f suffix

@@ -1,12 +1,12 @@
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.CodeAnalysis;
 using static ReadyM.Api.Generators.DeriveCppUtils;
 
 namespace ReadyM.Api.Generators.Derive.Cpp.FieldSupport;
 
 /// A float or vector field marked [Quantize], [QuantizeAngle] or [HalfPrecision]. The native setter marks it dirty
-/// only when its encoding changes, matching the managed side, so the game does not resend values the wire cannot tell
-/// apart.
+/// only when it moves past the plain fields' cutoff and its encoding changes too, matching the managed side, so the
+/// game does not resend values the wire cannot tell apart.
 internal sealed class QuantizedFieldTypeSupportImpl : CppNonOverrideFieldTypeSupportImplBase
 {
     private const string Include = "Interop/Quantization.h";
@@ -43,8 +43,8 @@ internal sealed class QuantizedFieldTypeSupportImpl : CppNonOverrideFieldTypeSup
     }
 
     protected override void EmitEqualCheck(ITypeSymbol symbol, CppEmitFieldSupportContext context)
-        => context.Append(context.Member.Quantization!.CppSameExpression(context.State.CurrentVar, "value"));
+        => context.Append(context.Member.Quantization!.CppUnchangedExpression(context.State.CurrentVar, "value"));
 
     protected override void EmitNotEqualCheck(ITypeSymbol symbol, CppEmitFieldSupportContext context)
-        => context.Append("!" + context.Member.Quantization!.CppSameExpression(context.State.CurrentVar, "value"));
+        => context.Append("!" + context.Member.Quantization!.CppUnchangedExpression(context.State.CurrentVar, "value"));
 }

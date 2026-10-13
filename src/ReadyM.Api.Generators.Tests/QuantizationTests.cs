@@ -10,7 +10,7 @@ public sealed class QuantizationTests
 {
     private const float WorldMin = -1048576f;
     private const float WorldMax = 1048576f;
-    private const float WorldStep = (WorldMax - WorldMin) / 0xFFFFFF;
+    private const float WorldStep = (WorldMax - WorldMin) / 0xFFFFFE;
 
     [Theory]
     [InlineData(8)]
@@ -81,6 +81,73 @@ public sealed class QuantizationTests
         Assert.True(Quantization.SameStep(center, center - WorldStep / 4, WorldMin, WorldMax, 24));
         Assert.False(Quantization.SameStep(100f, 100f + WorldStep * 2, WorldMin, WorldMax, 24));
         Assert.False(Quantization.SameStep(new Vector3(1, 2, 3), new Vector3(1, 2, 3 + WorldStep * 2), WorldMin, WorldMax, 24));
+    }
+
+    // An even step count puts the middle of a range on a step, not between two, so a value resting at zero and
+    // jittering a little does not flip between steps
+    [Theory]
+    [InlineData(8)]
+    [InlineData(16)]
+    [InlineData(24)]
+    public void Zero_in_a_symmetric_range_is_exact_and_jitter_around_it_stays_in_its_step(int bits)
+    {
+        var step = 2f / ((1 << bits) - 2);
+
+        Assert.Equal(0f, RoundTrip(0f, -1f, 1f, bits));
+        Assert.True(Quantization.SameStep(0f, step / 4, -1f, 1f, bits));
+        Assert.True(Quantization.SameStep(0f, -step / 4, -1f, 1f, bits));
+        Assert.True(Quantization.SameStep(step / 4, -step / 4, -1f, 1f, bits));
+    }
+
+    [Fact]
+    public void A_change_within_the_cutoff_is_no_change_even_across_a_step()
+    {
+        // Two values either side of a step boundary, 0.02 apart
+        var boundary = Quantization.Dequantize(Quantization.Quantize(100f, WorldMin, WorldMax, 24), WorldMin, WorldMax, 24) + WorldStep / 2;
+        Assert.False(Quantization.SameStep(boundary - 0.01f, boundary + 0.01f, WorldMin, WorldMax, 24));
+        Assert.True(Quantization.Unchanged(boundary - 0.01f, boundary + 0.01f, WorldMin, WorldMax, 24));
+
+        Assert.False(Quantization.SameHalf(1f, 1.05f));
+        Assert.True(Quantization.UnchangedHalf(1f, 1.05f));
+        Assert.True(Quantization.UnchangedHalf(new Vector3(1f, 2f, 3f), new Vector3(1.05f, 2.05f, 3f)));
+
+        Assert.False(Quantization.SameAngleStep(45f, 45.05f, 16));
+        Assert.True(Quantization.UnchangedAngle(45f, 45.05f, 16));
+    }
+
+    [Fact]
+    public void A_change_past_the_cutoff_that_moves_the_encoding_is_a_change()
+    {
+        Assert.False(Quantization.Unchanged(100f, 100.5f, WorldMin, WorldMax, 24));
+        Assert.False(Quantization.Unchanged(new Vector3(1f, 2f, 3f), new Vector3(1f, 2f, 3.2f), WorldMin, WorldMax, 24));
+        Assert.False(Quantization.UnchangedHalf(1f, 1.2f));
+        Assert.False(Quantization.UnchangedHalf(new Vector2(1f, 2f), new Vector2(1.2f, 2f)));
+        Assert.False(Quantization.UnchangedAngle(45f, 45.2f, 16));
+    }
+
+    [Fact]
+    public void A_change_past_the_cutoff_inside_one_step_is_no_change()
+    {
+        // An 8-bit step over -100..100 is about 0.79, so 0.3 from the middle of a step stays in it
+        var center = Quantization.Dequantize(Quantization.Quantize(10f, -100f, 100f, 8), -100f, 100f, 8);
+        Assert.True(Quantization.Unchanged(center, center + 0.3f, -100f, 100f, 8));
+    }
+
+    [Theory]
+    [InlineData(10f, 350f, 20f)]
+    [InlineData(179.95f, -179.98f, 0.07f)]
+    [InlineData(-90f, 90f, 180f)]
+    [InlineData(720f, 0f, 0f)]
+    public void Angles_are_compared_around_the_circle(float a, float b, float distance)
+    {
+        Assert.Equal(distance, Quantization.AngleDistance(a, b), 3);
+    }
+
+    [Fact]
+    public void A_turn_across_the_wrap_within_the_cutoff_is_no_change()
+    {
+        Assert.False(Quantization.SameAngleStep(179.95f, -179.98f, 16));
+        Assert.True(Quantization.UnchangedAngle(179.95f, -179.98f, 16));
     }
 
     [Theory]

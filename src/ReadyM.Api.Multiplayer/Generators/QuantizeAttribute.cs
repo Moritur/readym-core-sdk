@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace ReadyM.Api.Multiplayer.Generators;
 
@@ -8,7 +8,8 @@ namespace ReadyM.Api.Multiplayer.Generators;
 /// </summary>
 /// <remarks>
 /// Values outside the range are clamped, so pick a range the value can never leave. The step between two values the
-/// network can tell apart is <c>(max - min) / (2^bits - 1)</c>; a change smaller than that is not sent.
+/// network can tell apart is <c>(max - min) / (2^bits - 2)</c>, which keeps both ends and the middle of the range exact.
+/// A change is sent only when it crosses into another step and is over 0.1, the cutoff plain fields use.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 public sealed class QuantizeAttribute(float min, float max, int bits) : Attribute

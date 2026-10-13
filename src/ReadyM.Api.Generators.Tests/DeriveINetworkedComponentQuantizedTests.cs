@@ -28,7 +28,7 @@ public partial struct QuantizedComponent : INetworkedComponent
 }
 """;
 
-    private const float PositionStep = 2097152f / 0xFFFFFF;
+    private const float PositionStep = 2097152f / 0xFFFFFE;
 
     [Fact]
     public void A_snapshot_takes_the_encoded_sizes()

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using LiteNetLib.Utils;
@@ -7,10 +7,18 @@ namespace ReadyM.Api.Multiplayer.Serialization;
 
 /// <exclude />
 /// Wire encodings behind [Quantize], [QuantizeAngle] and [HalfPrecision], called from generated component code.
-/// A field changes, and is sent, only when its encoded value changes, so the Same* checks compare encodings.
+/// A field changes, and is sent, only when it moves past the plain fields' cutoff and its encoding changes too; the
+/// Unchanged* checks decide that, the Same* checks compare encodings alone.
 public static class Quantization
 {
-    // --- fixed-point range: 2^bits - 1 steps between min and max, both ends exact
+    /// The cutoff plain float fields use: a scalar change up to this is not a change.
+    public const float ScalarDeadZone = 0.1f;
+
+    /// The cutoff plain vector fields use, as a squared distance: a move up to 0.1 is not a change.
+    public const float VectorDeadZoneSquared = 0.01f;
+
+    // --- fixed-point range: 2^bits - 2 steps between min and max. An even count keeps both ends and the midpoint
+    // exact, so in a symmetric range a value resting at zero does not sit on a rounding boundary and flicker
 
     public static uint Quantize(float value, float min, float max, int bits)
     {
@@ -271,14 +279,50 @@ public static class Quantization
         return new FloatBits { Bits = bits }.Float;
     }
 
+    // --- whether a write counts as a change
+
+    public static bool Unchanged(float a, float b, float min, float max, int bits)
+        => Math.Abs(a - b) <= ScalarDeadZone || SameStep(a, b, min, max, bits);
+
+    public static bool Unchanged(Vector2 a, Vector2 b, float min, float max, int bits)
+        => Vector2.DistanceSquared(a, b) <= VectorDeadZoneSquared || SameStep(a, b, min, max, bits);
+
+    public static bool Unchanged(Vector3 a, Vector3 b, float min, float max, int bits)
+        => Vector3.DistanceSquared(a, b) <= VectorDeadZoneSquared || SameStep(a, b, min, max, bits);
+
+    public static bool Unchanged(Vector4 a, Vector4 b, float min, float max, int bits)
+        => Vector4.DistanceSquared(a, b) <= VectorDeadZoneSquared || SameStep(a, b, min, max, bits);
+
+    public static bool UnchangedAngle(float a, float b, int bits)
+        => AngleDistance(a, b) <= ScalarDeadZone || SameAngleStep(a, b, bits);
+
+    public static bool UnchangedHalf(float a, float b)
+        => Math.Abs(a - b) <= ScalarDeadZone || SameHalf(a, b);
+
+    public static bool UnchangedHalf(Vector2 a, Vector2 b)
+        => Vector2.DistanceSquared(a, b) <= VectorDeadZoneSquared || SameHalf(a, b);
+
+    public static bool UnchangedHalf(Vector3 a, Vector3 b)
+        => Vector3.DistanceSquared(a, b) <= VectorDeadZoneSquared || SameHalf(a, b);
+
+    public static bool UnchangedHalf(Vector4 a, Vector4 b)
+        => Vector4.DistanceSquared(a, b) <= VectorDeadZoneSquared || SameHalf(a, b);
+
+    /// How far apart two angles in degrees are around the circle, from 0 to 180.
+    public static float AngleDistance(float a, float b)
+    {
+        var difference = Math.Abs(((double)a - b) % 360.0);
+        return (float)(difference > 180.0 ? 360.0 - difference : difference);
+    }
+
     // ---
 
     private static uint StepsOf(int bits)
         => bits switch
         {
-            8 => 0xFFu,
-            16 => 0xFFFFu,
-            24 => 0xFFFFFFu,
+            8 => 0xFEu,
+            16 => 0xFFFEu,
+            24 => 0xFFFFFEu,
             _ => throw new ArgumentOutOfRangeException(nameof(bits), bits, "Quantized fields use 8, 16 or 24 bits."),
         };
 
