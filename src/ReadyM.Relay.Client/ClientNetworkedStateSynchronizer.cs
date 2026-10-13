@@ -416,7 +416,7 @@ internal class ClientNetworkedStateSynchronizer : IHostedService
     protected void OnEcsDeleteEntityMessageHandler(ServerEventHeader header, NetDataReader reader)
     {
         var netId = reader.Get<NetworkId>();
-        _receiveSystem.Scheduler.Schedule(static (cb, self, netId0) =>
+        _receiveSystem.Scheduler.Schedule(static (_, self, netId0) =>
         {
             try
             {
