@@ -97,6 +97,11 @@ namespace {{info.Namespace}};
     #error Field {member.Source.Name} cannot be read-only
 """);
 
+            if (member.Interned && !IsInternable(member.Source.Type))
+                sb.AppendLine($"""
+    #error Field {member.Source.Name}: [Interned] only applies to NativeString256 and NativeList<NativeString256>
+""");
+
             if (member.Source.Type.ContainingNamespace is { } ns)
             {
                 moduleState.AddUsing(ns.ToDisplayString());
@@ -616,7 +621,9 @@ using {ns};
             model,
             CSharpFieldSupportRegistry.EmitSerializeVisitor,
             CSharpFieldSupportRegistry.EmitDeserializeVisitor,
-            CSharpFieldSupportRegistry.NetDataCodec);
+            member.Interned && IsInternable(member.Source.Type)
+                ? CSharpFieldSupportRegistry.InternedNetDataCodec
+                : CSharpFieldSupportRegistry.NetDataCodec);
         var fieldName = member.Source.Name;
         var fieldType = member.Source.Type;
         context.State.ResetCurrent(fieldName, fieldType);
@@ -630,4 +637,12 @@ using {ns};
 
         return context;
     }
+
+    private const string NativeString256Name = "Yooni.Native.Container.NativeString256";
+
+    private static bool IsInternable(ITypeSymbol type)
+        => type.ToDisplayString() == NativeString256Name
+           || type is INamedTypeSymbol { IsGenericType: true } list
+           && list.OriginalDefinition.ToDisplayString() == "Yooni.Native.Container.NativeList<T>"
+           && list.TypeArguments[0].ToDisplayString() == NativeString256Name;
 }

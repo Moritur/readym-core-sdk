@@ -7,11 +7,13 @@ internal sealed class DeriveMemberModel(
     string generatedPropertyName,
     int maskIndex,
     DeriveAccessorMemberSettings accessorSettings,
-    DeriveMemberCppSettings cppSettings)
+    DeriveMemberCppSettings cppSettings,
+    bool interned)
 {
     public DeriveMemberInfo Source { get; } = source ?? throw new ArgumentNullException(nameof(source));
     public string GeneratedPropertyName { get; } = generatedPropertyName ?? throw new ArgumentNullException(nameof(generatedPropertyName));
     public int MaskIndex { get; } = maskIndex;
     public DeriveAccessorMemberSettings AccessorSettings { get; } = accessorSettings;
     public DeriveMemberCppSettings CppSettings { get; } = cppSettings;
+    public bool Interned { get; } = interned;
 }

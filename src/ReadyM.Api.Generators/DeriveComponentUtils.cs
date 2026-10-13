@@ -259,7 +259,8 @@ internal static class DeriveComponentUtils
             generatedPropertyName: generatedPropertyName,
             maskIndex: index,
             accessorSettings: settings,
-            cppSettings: cppSettings);
+            cppSettings: cppSettings,
+            interned: AttributeUtils.HasAttribute(memberInfo.Symbol, "InternedAttribute"));
     }
     
     private static DeriveMemberCppSettings GetCppSettings(
