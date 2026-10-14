@@ -1,6 +1,6 @@
 using BenchmarkDotNet.Running;
 
-namespace ReadyM.SDK.Benchmarks;
+namespace ReadyM.SDK.Tests.Benchmarks;
 
 public static class Program
 {

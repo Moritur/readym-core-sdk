@@ -1,10 +1,10 @@
-# ReadyM.SDK.Benchmarks
+# ReadyM.SDK.Tests.Benchmarks
 
 Five comparisons, three arms each: what the same work costs through raw ECS access, through the v0
 shape, and through v1.
 
 ```bash
-dotnet run -c Release --project ReadyM.SDK.Benchmarks -- --filter '*'
+dotnet run -c Release --project ReadyM.SDK.Tests.Benchmarks -- --filter '*'
 ```
 
 `--filter` takes a glob, so `--filter '*Mixins*'` runs one set.

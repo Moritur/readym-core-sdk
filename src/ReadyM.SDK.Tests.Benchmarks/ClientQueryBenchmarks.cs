@@ -3,7 +3,7 @@ using Friflo.Engine.ECS;
 using Microsoft.Extensions.Logging.Abstractions;
 using ReadyM.SDK.Client.Entities;
 
-namespace ReadyM.SDK.Benchmarks;
+namespace ReadyM.SDK.Tests.Benchmarks;
 
 /// <summary>
 /// A query over one archetype on the client, reading five fields from the five mixins it includes.

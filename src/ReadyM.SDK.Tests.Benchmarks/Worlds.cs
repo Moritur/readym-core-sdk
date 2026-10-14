@@ -4,7 +4,7 @@ using ReadyM.Api.Multiplayer.Interop;
 using ReadyM.SDK.Server.Entities;
 using ReadyM.SDK.TestHarness;
 
-namespace ReadyM.SDK.Benchmarks;
+namespace ReadyM.SDK.Tests.Benchmarks;
 
 /// <summary>
 /// A world behind the interop boundary, reached through real function pointers.
