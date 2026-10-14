@@ -6,4 +6,4 @@ namespace ReadyM.Api.Generators;
 /// Excludes a member from the save format.
 /// </summary>
 [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
-public sealed class SaveIgnoreAttribute : Attribute;
+internal sealed class SaveIgnoreAttribute : Attribute;

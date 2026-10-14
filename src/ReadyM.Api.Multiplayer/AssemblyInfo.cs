@@ -8,6 +8,8 @@
 [assembly: InternalsVisibleTo("ReadyM.SDK.Server")]
 [assembly: InternalsVisibleTo("ReadyM.SDK.Tests")]
 [assembly: InternalsVisibleTo("ReadyM.SDK.TestHarness")]
+[assembly: InternalsVisibleTo("ReadyM.SDK.Benchmarks")]
+[assembly: InternalsVisibleTo("ReadyM.Api.Generators.Tests")]
 [assembly: InternalsVisibleTo("ReadyM.SDK.Tests.Benchmarks")]
 [assembly: InternalsVisibleTo("ReadyM.Relay.Server.PluginHost")]
 [assembly: InternalsVisibleTo("ReadyM.Relay.Server.Wukong")]

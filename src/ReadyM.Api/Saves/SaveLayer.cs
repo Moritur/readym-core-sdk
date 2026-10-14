@@ -3,7 +3,7 @@
 /// <summary>
 /// Indicates the layer of a save: which kind of partition an entity is saved into.
 /// </summary>
-public enum SaveLayer
+internal enum SaveLayer
 {
     /// <summary>
     /// The global world state: the World entity and everything not tied to an area, a cell or a player.

@@ -9,7 +9,7 @@ using Yooni.Native.Serialization;
 namespace ReadyM.Api.Multiplayer.Interning;
 
 /// A client's copy of the server's index, filled only from what the server sends.
-public sealed class ClientInternedStringIndex(ILogger logger) : IInternedStringIndex
+internal sealed class ClientInternedStringIndex(ILogger logger) : IInternedStringIndex
 {
     private readonly HashSet<uint> _reported = new();
 

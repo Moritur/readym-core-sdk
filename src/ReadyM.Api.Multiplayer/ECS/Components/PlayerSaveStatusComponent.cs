@@ -8,7 +8,7 @@ namespace ReadyM.Api.Multiplayer.ECS.Components;
 /// game). The server saves a player-save entity only once this is set.
 /// </summary>
 [DeriveINetworkedComponent(emitDirtyMask: false)]
-public partial struct PlayerSaveStatusComponent : IOwnershipBased
+internal partial struct PlayerSaveStatusComponent : IOwnershipBased
 {
     private byte _dirtyMask;
     private byte _apiMask;

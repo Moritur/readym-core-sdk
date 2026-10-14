@@ -14,10 +14,10 @@ public static class ReplicationRegistry
         where TComponent : struct, Friflo.Engine.ECS.IComponent
         => Deliveries[typeof(TComponent)] = delivery;
 
-    public static IReadOnlyList<ReplicatedComponent> Snapshot()
+    internal static IReadOnlyList<ReplicatedComponent> Snapshot()
         => [.. Deliveries.Select(entry => new ReplicatedComponent(entry.Key, entry.Value))];
 
-    public static IReadOnlyList<ReplicatedComponent> InWireOrder()
+    internal static IReadOnlyList<ReplicatedComponent> InWireOrder()
         => [.. Snapshot().OrderBy(replicated => replicated.Component.FullName, StringComparer.Ordinal)];
 
     /// Only for tests, which need each case to start from nothing.

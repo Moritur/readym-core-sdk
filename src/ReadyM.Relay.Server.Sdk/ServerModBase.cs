@@ -6,6 +6,7 @@ using ReadyM.Relay.Server.Sdk.Ecs.Components;
 
 namespace ReadyM.Relay.Server.Sdk;
 
+[Obsolete("Use the [ModEntry] attribute instead.")]
 public abstract class ServerModBase
 {
     protected IServerDependencyContainer Services { get; private set; } = null!;

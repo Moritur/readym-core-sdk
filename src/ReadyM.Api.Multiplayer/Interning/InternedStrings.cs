@@ -3,7 +3,7 @@ using System;
 namespace ReadyM.Api.Multiplayer.Interning;
 
 /// The index generated code writes and reads interned strings through on this thread.
-public static class InternedStrings
+internal static class InternedStrings
 {
     [field: ThreadStatic]
     public static IInternedStringIndex? Current { get; private set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using ReadyM.Api.Idents;
 
 namespace ReadyM.Api.ECS.Worlds;
@@ -6,6 +7,8 @@ namespace ReadyM.Api.ECS.Worlds;
 /// <summary>
 /// Allows registering and modifying entity archetypes in the ECS.
 /// </summary>
+/// <exclude />
+[EditorBrowsable(EditorBrowsableState.Never)]
 public interface IArchetypeRegistry
 {
     /// <summary>

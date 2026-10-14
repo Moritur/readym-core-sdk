@@ -10,7 +10,7 @@ using ReadyM.SDK.Services;
 namespace ReadyM.SDK.Server;
 
 /// What the SDK needs in place before any server-side mod runs.
-public static class ServerSdk
+internal static class ServerSdk
 {
     private static readonly ConditionalWeakTable<IDependencyContainer, object> Bootstrapped = new();
 

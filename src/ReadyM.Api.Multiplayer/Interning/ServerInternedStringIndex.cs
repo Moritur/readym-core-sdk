@@ -9,7 +9,7 @@ using Yooni.Native.Serialization;
 namespace ReadyM.Api.Multiplayer.Interning;
 
 /// Gives every new string the next id and queues it for the clients.
-public sealed class ServerInternedStringIndex : IInternedStringIndex
+internal sealed class ServerInternedStringIndex : IInternedStringIndex
 {
     public const int DefaultCapacity = 65536;
 

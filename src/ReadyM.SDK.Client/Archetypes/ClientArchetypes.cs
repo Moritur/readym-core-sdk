@@ -4,7 +4,7 @@ using ReadyM.SDK.Archetypes;
 
 namespace ReadyM.SDK.Client.Archetypes;
 
-public static class ClientArchetypes
+internal static class ClientArchetypes
 {
     /// Returns how many components were added, which a game can log to see its shapes arrived.
     /// <param name="idOf">

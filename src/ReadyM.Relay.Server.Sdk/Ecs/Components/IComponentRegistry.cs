@@ -1,8 +1,11 @@
+using System.ComponentModel;
 using ReadyM.Api.Multiplayer.ECS.Components;
 
 namespace ReadyM.Relay.Server.Sdk.Ecs.Components;
 
 /// Allows registering components with the ECS system, both local and networked.
+/// <exclude />
+[EditorBrowsable(EditorBrowsableState.Never)]
 public interface IComponentRegistry
 {
     /// Registers a local (not replicated over the network) component type with the ECS system.

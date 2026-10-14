@@ -5,7 +5,7 @@ using HostComponents = ReadyM.Relay.Server.Sdk.Ecs.Components.ModComponentRegist
 namespace ReadyM.SDK.Server;
 
 /// Tells the server what a mod's shapes add to the archetypes the game registers.
-public static class ServerArchetypes
+internal static class ServerArchetypes
 {
     /// <summary>Whether the replication pass owns this component rather than this one.</summary>
     private static bool Replicates(Type component)

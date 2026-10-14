@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ReadyM.Api.DI;
 
-public abstract class DependencyContainerBase : IDependencyContainer, IDisposable
+internal abstract class DependencyContainerBase : IDependencyContainer, IDisposable
 {
     protected internal IContainer Container { get; private set; } = new Container(rules =>
         rules.With(FactoryMethod.ConstructorWithResolvableArguments)
