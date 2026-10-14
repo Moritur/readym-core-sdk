@@ -172,6 +172,32 @@ public class ReplicationTests(ITestOutputHelper output)
                 }
                 """));
 
+    // -- what the generated component compiles to ------------------------------------------------
+
+    /// The values and the masks sit in two declarations of one struct. Left at the default layout, the
+    /// compiler warns that their order is undefined (CS0282), and every mod with a replicated shape saw it.
+    [Theory]
+    [InlineData(ReplicatedShape)]
+    [InlineData("""
+        [Archetype(replicated: true)]
+        public readonly partial struct Crate
+        {
+            public partial int Size { get; set; }
+        }
+        """)]
+    public void A_replicated_component_compiles_without_a_layout_warning(string shape)
+    {
+        var result = SourceGeneratorTestHelper.RunGenerators(
+            [("Core.cs", Core), ("Shape.cs", Source(shape))],
+            [new ArchetypeGenerator(), new ArchetypeMixinGenerator()],
+            output,
+            Sdk,
+            SourceGeneratorTestHelper.SdkInternalsAssembly);
+
+        Assert.DoesNotContain(result.OutputDiagnostics, d => d.Id == "CS0282");
+        Assert.DoesNotContain(result.OutputDiagnostics, d => d.Severity == DiagnosticSeverity.Error);
+    }
+
     // -- what a client build leaves out ---------------------------------------------------------
 
     private string GeneratedFor(string shape, string side)

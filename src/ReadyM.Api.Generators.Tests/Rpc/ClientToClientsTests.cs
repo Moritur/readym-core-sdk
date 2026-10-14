@@ -130,9 +130,26 @@ public class ClientToClientsTests(ITestOutputHelper output)
     {
         var generated = ClientCode();
 
-        Assert.Contains("protected void OnClientEvent(CustomRelayEventHeader header, NetDataReader reader)", generated);
+        Assert.Contains("private void OnClientEvent(CustomRelayEventHeader header, NetDataReader reader)", generated);
         Assert.Contains("RelayClient.AddClientRpcMessageHandler(", generated);
         Assert.Contains("RelayClient.RemoveClientRpcMessageHandler(", generated);
+    }
+
+    /// Handler classes are usually sealed, and a protected member of a sealed class is a warning (CS0628)
+    /// in every mod that has one. Only the class itself hands its dispatchers to the relay.
+    [Fact]
+    public void A_sealed_handler_class_gets_no_warning_about_its_dispatchers()
+    {
+        var result = SourceGeneratorTestHelper.RunGenerators(
+            [("Client.cs", Client.Replace("public partial class ModRpc", "public sealed partial class ModRpc"))],
+            [new ServerRpcEventGenerator()],
+            output,
+            Sdk,
+            alsoReferenceMetadata: [ContractsRun().OutputCompilation.ToMetadataReference()],
+            withoutReferences: AsAClientMod);
+
+        Assert.DoesNotContain(result.OutputDiagnostics, d => d.Id == "CS0628");
+        Assert.DoesNotContain(result.OutputDiagnostics, d => d.Severity == DiagnosticSeverity.Error);
     }
 
     /// The other two directions are untouched by it, and still go through the server's own offset.

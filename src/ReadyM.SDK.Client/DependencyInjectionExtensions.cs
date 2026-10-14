@@ -16,7 +16,7 @@ using ReadyM.SDK.Client.Chunks;
 
 namespace ReadyM.SDK.Client;
 
-public static class DependencyInjectionExtensions
+internal static class DependencyInjectionExtensions
 {
     /// Register data mappings declared in all loaded mods.
     /// A game calls this once its mods are loaded and before anything reaches a sync point.

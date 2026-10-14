@@ -201,7 +201,7 @@ internal class ServerRpcEventGenerator : IIncrementalGenerator
         }
 
         sb.AppendLine($$"""
-                            protected void OnServerEvent(ServerEventHeader header, NetDataReader reader)
+                            private void OnServerEvent(ServerEventHeader header, NetDataReader reader)
                             {
                                 switch ((RelayMessageCode)(header.EventCode - {{serverOffset}}))
                                 {
@@ -216,7 +216,7 @@ internal class ServerRpcEventGenerator : IIncrementalGenerator
         {
             sb.AppendLine($$"""
 
-                                protected void OnClientEvent(CustomRelayEventHeader header, NetDataReader reader)
+                                private void OnClientEvent(CustomRelayEventHeader header, NetDataReader reader)
                                 {
                                     switch ((RelayMessageCode)(header.EventCode - {{clientOffset}}))
                                     {

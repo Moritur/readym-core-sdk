@@ -3,7 +3,7 @@ using ReadyM.SDK.Archetypes.Core;
 
 namespace ReadyM.SDK.Client.Systems;
 
-public static class ModSystems
+internal static class ModSystems
 {
     /// Whether mod systems are allowed to run this frame.
     /// False when disconnected or the world entity is not present.

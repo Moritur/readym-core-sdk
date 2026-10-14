@@ -302,7 +302,7 @@ internal class ClientRpcEventGenerator : IIncrementalGenerator
 
             // Emit OnCustomEvent override
             sb.AppendLine($$"""
-                                protected void OnCustomRpcMessageHandler(CustomRelayEventHeader header, NetDataReader reader)
+                                private void OnCustomRpcMessageHandler(CustomRelayEventHeader header, NetDataReader reader)
                                 {
                                     switch ((byte)header.EventCode - Offset)
                                     {

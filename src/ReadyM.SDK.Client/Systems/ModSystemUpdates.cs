@@ -5,7 +5,7 @@ using ReadyM.SDK.Services;
 namespace ReadyM.SDK.Client.Systems;
 
 /// Wraps the [Service]s that declared an update into a Friflo system.
-public sealed class ModSystemUpdates : BaseSystem
+internal sealed class ModSystemUpdates : BaseSystem
 {
     private readonly IDependencyContainer _services;
 

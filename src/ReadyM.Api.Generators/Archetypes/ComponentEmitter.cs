@@ -36,6 +36,11 @@ internal static class ComponentEmitter
         // allocation follow the fields, so they belong on the half that declares them.
         var contracts = Contracts(accessors, index is null ? null : $"{ArchetypeNames.IndexedComponent}<{index.Type}>");
 
+        // The other half declares the masks, so the struct has fields in two declarations. Under the
+        // default sequential layout that leaves their order undefined, which the compiler warns about in
+        // every mod (CS0282). Nothing reads this component by memory layout: it crosses the wire through
+        // its generated serialization, field by field. A hand-written networked component says the same.
+        writer.Line("[global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]");
         using (writer.Braces($"internal partial struct {name}{contracts}"))
         {
             foreach (var accessor in accessors)

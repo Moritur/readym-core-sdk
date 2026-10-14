@@ -13,7 +13,7 @@ namespace ReadyM.Relay.Client.Utilities;
 ///
 /// Not thread-safe by design (we use a single network thread).
 /// </summary>
-public sealed class NetworkSessionStats
+internal sealed class NetworkSessionStats
 {
     private const int DefaultMaxValidPingMs = 1000;
 
