@@ -87,7 +87,7 @@ internal class ChunkCombinationGenerator : IIncrementalGenerator
 
         // The global namespace, because the shapes may be declared anywhere and this has to be in
         // scope wherever the query is written.
-        using (writer.Braces($"public static class {combination.ClassName}"))
+        using (writer.Braces($"internal static class {combination.ClassName}"))
         {
             foreach (var query in combination.Queries)
             {

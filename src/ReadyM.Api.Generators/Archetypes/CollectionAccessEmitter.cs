@@ -64,6 +64,10 @@ internal static class CollectionAccessEmitter
         var handle = ArchetypeNames.EntityHandle;
 
         writer.Line();
+
+        if (model.IsHidden)
+            writer.Line(ArchetypeNames.Hidden);
+
         writer.Line("#if NET");
         writer.Line($"public readonly ref struct {name}");
         writer.Line("#else");

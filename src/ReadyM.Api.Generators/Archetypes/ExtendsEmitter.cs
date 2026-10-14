@@ -16,7 +16,7 @@ internal static class ExtendsEmitter
         writer.Line();
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {name}"))
+        using (writer.Braces($"internal static class {name}"))
         {
             if (HasModuleInitializer(compilation))
                 writer.Line("[global::System.Runtime.CompilerServices.ModuleInitializer]");

@@ -82,7 +82,7 @@ internal class ModEntryGenerator : IIncrementalGenerator
             writer.Line();
             writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-            using (writer.Braces("public static class Registration"))
+            using (writer.Braces("internal static class Registration"))
             {
                 // A module initializer runs this where the target has one, and the mod loader runs
                 // it for every assembly it loads.

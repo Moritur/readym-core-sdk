@@ -60,7 +60,7 @@ internal class ModConfigGenerator : IIncrementalGenerator
         {
             writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-            using (writer.Braces("public static class Registration"))
+            using (writer.Braces("internal static class Registration"))
             {
                 writer.Line("private static bool _registered;");
                 writer.Line();

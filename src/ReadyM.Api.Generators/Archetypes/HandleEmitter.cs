@@ -25,6 +25,8 @@ internal static class HandleEmitter
     {
         writer.Line($"private readonly {ArchetypeNames.EntityHandle} _handle;");
         writer.Line();
+        writer.Line("/// <exclude />");
+        writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
         writer.Line($"public {model.Name}({ArchetypeNames.EntityHandle} handle) => _handle = handle;");
         writer.Line();
 
@@ -94,12 +96,16 @@ internal static class HandleEmitter
         bool partial,
         bool replicated = false,
         bool client = false,
-        string? name = null)
+        string? name = null,
+        bool hidden = false)
     {
         if (!partial && !accessor.IsExposed)
             return;
 
         var called = name ?? accessor.Name;
+
+        if (hidden)
+            writer.Line(ArchetypeNames.Hidden);
 
         var declaration = partial
             ? $"{Keyword(accessor)} partial {accessor.Type} {called}"

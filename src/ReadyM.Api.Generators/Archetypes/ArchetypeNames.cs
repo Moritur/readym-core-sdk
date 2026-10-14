@@ -30,6 +30,10 @@ internal static class ArchetypeNames
 
     public const string EntityHandle = "global::ReadyM.SDK.Entities.EntityHandle";
     public const string ComponentSet = "global::ReadyM.SDK.Archetypes.ComponentSet";
+
+    /// Keeps a generated type or member out of IntelliSense and the docs.
+    public const string Hidden = "[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]";
+
     public const string Queryable = "global::ReadyM.SDK.Archetypes.IArchetypeQueryable";
     public const string Shape = "global::ReadyM.SDK.Archetypes.IEntityShape";
     public const string Archetype = "global::ReadyM.SDK.Archetypes.IArchetype";

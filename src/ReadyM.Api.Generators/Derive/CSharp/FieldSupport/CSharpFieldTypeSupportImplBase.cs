@@ -159,6 +159,8 @@ internal abstract class CSharpFieldTypeSupportImplBase : ICSharpFieldTypeSupport
 
     public void EmitNotifyChangesMethods(ITypeSymbol sourceType, CSharpEmitFieldSupportContext context)
     {
+        context.AppendLine("/// <exclude />");
+        context.AppendLine("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
         context.AppendLine($"public void {context.Member.GeneratedPropertyName}NotifyChanged(int id)");
         using (context.WithCodeBlock())
         {

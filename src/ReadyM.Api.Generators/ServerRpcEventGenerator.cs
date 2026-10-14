@@ -135,7 +135,6 @@ internal class ServerRpcEventGenerator : IIncrementalGenerator
         var ns = classSymbol.ContainingNamespace.ToDisplayString();
         var className = classSymbol.Name;
         var fullClassName = classSymbol.ToDisplayString();
-        var access = classSymbol.DeclaredAccessibility.ToString().ToLower();
         var baseList = HasOwnBase(classSymbol) ? string.Empty : $" : {RpcBaseFqn}";
 
         var sb = new StringBuilder($$"""
@@ -151,7 +150,7 @@ internal class ServerRpcEventGenerator : IIncrementalGenerator
 
                                      namespace {{ns}};
 
-                                     {{access}} partial class {{className}}{{baseList}}
+                                     partial class {{className}}{{baseList}}
                                      {
 
                                      """);

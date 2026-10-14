@@ -22,6 +22,7 @@ internal static class AccessorEmitter
         ChunkNames? chunks = null,
         bool chunkWrites = true)
     {
+        writer.Line("/// <exclude />");
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
         using (writer.Braces($"public static class {ClassNameOf(model.Name)}"))
@@ -230,11 +231,14 @@ internal static class AccessorEmitter
     /// What the member is called here, which an include puts its prefix in front of. The accessor
     /// class it is reached through keeps the name the declaring shape gave it.
     /// </param>
-    public static void Forwarded(SourceWriter writer, ForwardModel forward, string accessors, string? name = null)
+    public static void Forwarded(SourceWriter writer, ForwardModel forward, string accessors, string? name = null, bool hidden = false)
     {
         var called = name ?? forward.Name;
 
         writer.Line();
+
+        if (hidden)
+            writer.Line(ArchetypeNames.Hidden);
 
         if (forward.IsProperty)
         {
@@ -261,11 +265,15 @@ internal static class AccessorEmitter
         ForwardModel forward,
         string accessors,
         string field,
-        string? name = null)
+        string? name = null,
+        bool hidden = false)
     {
         var called = name ?? forward.Name;
 
         writer.Line();
+
+        if (hidden)
+            writer.Line(ArchetypeNames.Hidden);
 
         if (forward.IsProperty)
         {

@@ -65,7 +65,7 @@ internal static class CreateHandlerEmitter
         writer.Line();
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {handler.Name}Registration"))
+        using (writer.Braces($"internal static class {handler.Name}Registration"))
         {
             if (ExtendsEmitter.HasModuleInitializer(compilation))
                 writer.Line("[global::System.Runtime.CompilerServices.ModuleInitializer]");
@@ -83,6 +83,7 @@ internal static class CreateHandlerEmitter
     private static void EmitWatchPoint(SourceWriter writer, DeclarationModel model)
     {
         writer.Line();
+        writer.Line("/// <exclude />");
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
         writer.Line($"public static void ObserveCreated({ArchetypeNames.EntityHandler} handler)");
         writer.Line($"    => {ArchetypeNames.CreateHandlers}.Observe({model.QualifiedAccessors}.Components, handler);");

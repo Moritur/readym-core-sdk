@@ -17,7 +17,7 @@ internal static class NativeInitEmitter
         writer.Line();
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {model.Name}NativeInit"))
+        using (writer.Braces($"internal static class {model.Name}NativeInit"))
         {
             if (ExtendsEmitter.HasModuleInitializer(compilation))
                 writer.Line("[global::System.Runtime.CompilerServices.ModuleInitializer]");

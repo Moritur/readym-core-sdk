@@ -196,7 +196,7 @@ internal class RegistrationAggregatorGenerator : IIncrementalGenerator
         writer.Line();
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {ClassName}"))
+        using (writer.Braces($"internal static class {ClassName}"))
         using (writer.Braces("public static void RegisterAll()"))
             foreach (var name in names)
                 writer.Line($"{name}.Register();");

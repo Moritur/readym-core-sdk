@@ -65,7 +65,7 @@ internal static class DeleteHandlerEmitter
         writer.Line();
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {handler.Name}DeleteRegistration"))
+        using (writer.Braces($"internal static class {handler.Name}DeleteRegistration"))
         {
             if (ExtendsEmitter.HasModuleInitializer(compilation))
                 writer.Line("[global::System.Runtime.CompilerServices.ModuleInitializer]");
@@ -83,6 +83,7 @@ internal static class DeleteHandlerEmitter
     private static void EmitWatchPoint(SourceWriter writer, DeclarationModel model)
     {
         writer.Line();
+        writer.Line("/// <exclude />");
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
         writer.Line($"public static void ObserveDeleted({ArchetypeNames.EntityHandler} handler)");
         writer.Line($"    => {ArchetypeNames.DeleteHandlers}.Observe({model.QualifiedAccessors}.Components, handler);");

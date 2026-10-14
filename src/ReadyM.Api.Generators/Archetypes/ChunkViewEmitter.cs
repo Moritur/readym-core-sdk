@@ -57,6 +57,7 @@ internal static class ChunkViewEmitter
     {
         var qualified = ArchetypeNames.QualifiedViewOf(model.Symbol);
 
+        writer.Line("/// <exclude />");
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
         using (writer.Braces($"public static class {ArchetypeNames.ChunkQueryOf(model.Symbol)}"))
@@ -142,7 +143,7 @@ internal static class ChunkViewEmitter
 
             if (slot is not null)
                 Property(writer, accessor, include.Accessors, slot.Field,
-                    DeclarationModel.For(include.Type).IndexedBy is not null, writes, include.Named(accessor.Name));
+                    DeclarationModel.For(include.Type).IndexedBy is not null, writes, include.Named(accessor.Name), include.IsHidden);
         }
 
         if (own is not null)
@@ -156,7 +157,7 @@ internal static class ChunkViewEmitter
 
             if (slot is not null)
                 AccessorEmitter.ForwardedFromChunk(
-                    writer, forward, include.Accessors, slot.Field, include.Named(forward));
+                    writer, forward, include.Accessors, slot.Field, include.Named(forward), include.IsHidden);
         }
     }
 
@@ -167,7 +168,8 @@ internal static class ChunkViewEmitter
         string field,
         bool indexed,
         bool writes,
-        string? name = null)
+        string? name = null,
+        bool hidden = false)
     {
         // A value the shape keeps to itself is not put on its chunk view either.
         if (!accessor.IsExposed)
@@ -176,6 +178,9 @@ internal static class ChunkViewEmitter
         var called = name ?? accessor.Name;
 
         writer.Line();
+
+        if (hidden)
+            writer.Line(ArchetypeNames.Hidden);
 
         if (!accessor.HasSetter || indexed || !writes)
         {

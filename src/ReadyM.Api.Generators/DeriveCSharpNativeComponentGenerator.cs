@@ -179,7 +179,7 @@ namespace {info.Namespace};
         else
         {
             sb.Append($"""
-{access} partial struct {info.Name}{typeParameterList}
+partial struct {info.Name}{typeParameterList}
 """);
         }
         

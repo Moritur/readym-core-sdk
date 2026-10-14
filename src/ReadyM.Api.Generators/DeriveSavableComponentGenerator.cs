@@ -88,7 +88,6 @@ internal sealed class DeriveSavableComponentGenerator : IIncrementalGenerator
     private string GenerateSavableComponent(DeriveTargetModel model, bool isComponent)
     {
         var info = model.Source;
-        var access = info.Symbol.DeclaredAccessibility.ToString().ToLower();
         var contract = isComponent ? "ISavableComponent" : "ISaveSerializable";
 
         var sb = new StringBuilder();
@@ -100,7 +99,7 @@ internal sealed class DeriveSavableComponentGenerator : IIncrementalGenerator
         sb.Append($$"""
 namespace {{info.Namespace}};
 
-{{access}} partial struct {{info.Name}} : {{contract}}
+partial struct {{info.Name}} : {{contract}}
 {
 
 """);
@@ -108,7 +107,11 @@ namespace {{info.Namespace}};
         if (isComponent)
         {
             sb.AppendLine($$"""
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public readonly string SaveName => "{{ResolveSaveName(info.Symbol)}}";
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public readonly ushort SaveVersion => {{ResolveSaveVersion(info.Symbol)}};
 
 """);
@@ -146,6 +149,8 @@ namespace {{info.Namespace}};
     private void EmitWriteSave(StringBuilder sb, DeriveTargetModel model, CSharpClassState classState)
     {
         sb.AppendLine("""
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public void WriteSave(ISaveWriter writer, ISaveWriteContext context)
     {
         writer.BeginObject();
@@ -176,6 +181,8 @@ namespace {{info.Namespace}};
     private void EmitReadSave(StringBuilder sb, DeriveTargetModel model, CSharpClassState classState)
     {
         sb.AppendLine("""
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public void ReadSave(ISaveReader reader, ISaveLoadContext context)
     {
         reader.BeginObject();

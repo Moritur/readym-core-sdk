@@ -17,7 +17,7 @@ internal static class RpcRegistrationEmitter
 
         sb.AppendLine();
         sb.AppendLine("    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
-        sb.AppendLine("    public static class Registration");
+        sb.AppendLine("    internal static class Registration");
         sb.AppendLine("    {");
 
         // A module initializer runs this where the target has one, and the mod loader runs it for

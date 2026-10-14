@@ -301,6 +301,9 @@ internal sealed class IncludeModel(
 
     /// Whether what it brings goes over the wire, which decides what a write through it means.
     public bool IsReplicated { get; } = DeclarationModel.For(type).IsReplicated;
+
+    /// Whether the included shape is hidden, which hides what it brings onto the shape that takes it.
+    public bool IsHidden { get; } = DeclarationModel.IsHiddenType(type);
 }
 
 /// <summary>One entry in a shape's component set: a declaration's component, or its marker.</summary>
@@ -371,6 +374,16 @@ internal sealed class DeclarationModel
     }
 
     public INamedTypeSymbol Symbol { get; }
+
+    /// Whether the shape is [EditorBrowsable(Never)], so what is generated for it is hidden as well.
+    public bool IsHidden => IsHiddenType(Symbol);
+
+    internal static bool IsHiddenType(INamedTypeSymbol symbol)
+        => symbol.GetAttributes().Any(attribute =>
+            attribute.AttributeClass?.ToDisplayString() == "System.ComponentModel.EditorBrowsableAttribute"
+            && attribute.ConstructorArguments.Length == 1
+            && attribute.ConstructorArguments[0].Value is int state
+            && state == (int)System.ComponentModel.EditorBrowsableState.Never);
 
     public IReadOnlyList<AccessorModel> Accessors { get; }
 

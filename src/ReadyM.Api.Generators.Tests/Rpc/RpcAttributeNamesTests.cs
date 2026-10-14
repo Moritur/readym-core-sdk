@@ -54,7 +54,7 @@ public class RpcAttributeNamesTests(ITestOutputHelper output)
     {
         var generated = Client(contracts, handlersFor);
 
-        Assert.Contains("public partial class Rpc : global::ReadyM.Api.Multiplayer.RPC.RpcBase", generated);
+        Assert.Contains("\npartial class Rpc : global::ReadyM.Api.Multiplayer.RPC.RpcBase", generated);
         Assert.Contains("public void SendPing(int value)", generated);
         Assert.Contains("partial void OnPong(int value);", generated);
     }
@@ -67,7 +67,7 @@ public class RpcAttributeNamesTests(ITestOutputHelper output)
         var generated = Server(contracts, handlersFor);
 
         Assert.Contains(
-            "public partial class Rpc : global::ReadyM.Relay.Server.Sdk.Rpc.ServerRpcHandlersBase",
+            "\npartial class Rpc : global::ReadyM.Relay.Server.Sdk.Rpc.ServerRpcHandlersBase",
             generated);
         Assert.Contains("partial void OnPing(global::ReadyM.Relay.Server.Sdk.Rpc.RpcContext context, int value);", generated);
         Assert.Contains("public void SendPong(global::ReadyM.Api.Idents.PlayerId recipient, int value)", generated);

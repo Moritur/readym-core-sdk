@@ -13,7 +13,7 @@ internal static class ReplicationEmitter
         writer.Line();
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {model.Name}Replication"))
+        using (writer.Braces($"internal static class {model.Name}Replication"))
         {
             if (ExtendsEmitter.HasModuleInitializer(compilation))
                 writer.Line("[global::System.Runtime.CompilerServices.ModuleInitializer]");

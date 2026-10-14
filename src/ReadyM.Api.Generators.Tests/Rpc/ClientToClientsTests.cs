@@ -141,7 +141,7 @@ public class ClientToClientsTests(ITestOutputHelper output)
     public void A_sealed_handler_class_gets_no_warning_about_its_dispatchers()
     {
         var result = SourceGeneratorTestHelper.RunGenerators(
-            [("Client.cs", Client.Replace("public partial class ModRpc", "public sealed partial class ModRpc"))],
+            [("Client.cs", Client.Replace("\npartial class ModRpc", "public sealed partial class ModRpc"))],
             [new ServerRpcEventGenerator()],
             output,
             Sdk,
@@ -167,7 +167,7 @@ public class ClientToClientsTests(ITestOutputHelper output)
     [Fact]
     public void A_class_without_a_base_of_its_own_is_given_one()
         => Assert.Contains(
-            "public partial class ModRpc : global::ReadyM.Api.Multiplayer.RPC.RpcBase",
+            "\npartial class ModRpc : global::ReadyM.Api.Multiplayer.RPC.RpcBase",
             ClientCode());
 
     /// And one that still writes the 0.x base keeps it, or the two halves would disagree.
@@ -187,7 +187,7 @@ public class ClientToClientsTests(ITestOutputHelper output)
             }
             """);
 
-        Assert.Contains("public partial class ModRpc", generated);
+        Assert.Contains("\npartial class ModRpc", generated);
         Assert.DoesNotContain("ModRpc :", generated);
     }
 
