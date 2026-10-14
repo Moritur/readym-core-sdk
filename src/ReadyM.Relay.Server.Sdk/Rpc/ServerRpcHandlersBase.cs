@@ -3,7 +3,6 @@ using ReadyM.Api.Multiplayer.Serialization;
 
 namespace ReadyM.Relay.Server.Sdk.Rpc;
 
-[Obsolete("Use [RpcHandlersFor] without explicit base class.")]
 public abstract class ServerRpcHandlersBase : IHostedService
 {
     public RpcApi Rpc { protected get; set; }

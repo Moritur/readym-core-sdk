@@ -52,6 +52,7 @@ internal class ArchetypeMixinGenerator : IIncrementalGenerator
         var problems = ExplicitComponentRules.Check(model, compilation)
             .AddRange(ReplicationRules.Check(model))
             .AddRange(InternedShapeRules.Check(model))
+            .AddRange(IncludeRules.Check(model))
             .AddRange(QuantizedShapeRules.Check(model))
             .AddRange(CreateHandlerEmitter.Check(model))
             .AddRange(DeleteHandlerEmitter.Check(model))

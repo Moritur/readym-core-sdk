@@ -264,9 +264,20 @@ internal sealed class ForwardModel
 }
 
 /// <summary>One entry of an <c>[Include]</c> or <c>[IncludeArchetype]</c> on an archetype.</summary>
-internal sealed class IncludeModel(INamedTypeSymbol type, IncludeKind kind, string prefix = "")
+internal sealed class IncludeModel(
+    INamedTypeSymbol type,
+    IncludeKind kind,
+    string prefix = "",
+    Location? location = null,
+    bool byIncludeArchetype = false)
 {
     public INamedTypeSymbol Type { get; } = type;
+
+    /// Whether [IncludeArchetype] named it rather than [Include], which a rule holds against what it actually is.
+    public bool ByIncludeArchetype { get; } = byIncludeArchetype;
+
+    /// <summary>Where the attribute naming it is written, for a diagnostic about what it brings.</summary>
+    public Location Location { get; } = location ?? Location.None;
 
     public IncludeKind Kind { get; } = kind;
 
@@ -721,6 +732,83 @@ internal sealed class DeclarationModel
     }
 
     /// <summary>
+    /// Every name this shape would expose twice, from two different places: its own members and
+    /// everything its includes bring, under the names the flattening above gives them.
+    /// </summary>
+    /// <remarks>
+    /// The flattening keeps the first of two members of one name and drops the rest, so a clash would
+    /// otherwise send every call to whichever include happened to be listed first. The same member
+    /// reached twice is no clash: a shape re-including a mixin the archetype it builds on already has
+    /// gets that mixin's members twice, and they are one member.
+    /// </remarks>
+    public IReadOnlyList<NameClash> NameClashes()
+    {
+        var first = new Dictionary<string, (string Origin, string From)>();
+        var clashes = new List<NameClash>();
+
+        void Add(string key, string shown, string origin, string from, Location at)
+        {
+            if (!first.TryGetValue(key, out var earlier))
+                first[key] = (origin, from);
+            else if (earlier.Origin != origin)
+                clashes.Add(new NameClash(shown, earlier.From, from, at));
+        }
+
+        var own = Symbol.Locations.FirstOrDefault() ?? Location.None;
+
+        foreach (var accessor in Accessors)
+        {
+            var at = Symbol.GetMembers(accessor.Name).FirstOrDefault()?.Locations.FirstOrDefault() ?? own;
+            Add(PropertyKey(accessor.Name), accessor.Name, $"{QualifiedName}|{accessor.Name}", $"'{Name}' itself", at);
+        }
+
+        foreach (var forward in Forwards)
+            Add(ForwardKey(forward, forward.Name), forward.Name, $"{QualifiedName}|{ForwardKey(forward, forward.Name)}",
+                $"'{Name}' itself", own);
+
+        Walk(this, null);
+        return clashes;
+
+        void Walk(DeclarationModel model, IncludeModel? through)
+        {
+            foreach (var include in model.Includes)
+            {
+                // A member arriving through an included archetype is reported where that archetype is included
+                var at = (through ?? include).Location;
+                var included = For(include.Type);
+                var from = $"'{include.Type.Name}'";
+                var accessors = include.Kind == IncludeKind.Archetype ? included.Accessors : ReadAccessors(include.Type);
+
+                foreach (var accessor in accessors)
+                {
+                    var name = include.Named(accessor.Name);
+                    Add(PropertyKey(name), name, $"{included.QualifiedName}|{include.Prefix}|{accessor.Name}", from, at);
+                }
+
+                foreach (var forward in included.Forwards)
+                {
+                    var name = include.Named(forward);
+                    Add(ForwardKey(forward, name), name, $"{included.QualifiedName}|{include.Prefix}|{ForwardKey(forward, forward.Name)}",
+                        from, at);
+                }
+
+                if (include.Kind == IncludeKind.Archetype)
+                    Walk(included, through ?? include);
+            }
+        }
+    }
+
+    // A property and a property-like forward share one name space; a method is told apart by what it takes,
+    // so overloads are not clashes
+    private static string PropertyKey(string name) => "P:" + name;
+
+    private static string ForwardKey(ForwardModel forward, string name)
+        => forward.IsProperty
+            ? PropertyKey(name)
+            : $"M:{name}({string.Join(",", forward.Parameters.Select(p => p.Modifier + p.Type))})";
+
+
+    /// <summary>
     /// The accessors declared directly on a type, never the ones it inherited by including something.
     /// </summary>
     /// <remarks>
@@ -960,9 +1048,11 @@ internal sealed class DeclarationModel
                 attribute.ConstructorArguments[0].Value is not INamedTypeSymbol included)
                 continue;
 
+            var location = attribute.ApplicationSyntaxReference?.GetSyntax().GetLocation();
+
             if (name == ArchetypeNames.IncludeArchetypeAttribute)
             {
-                includes.Add(new IncludeModel(included, IncludeKind.Archetype));
+                includes.Add(new IncludeModel(included, IncludeKind.Archetype, location: location, byIncludeArchetype: true));
                 continue;
             }
 
@@ -973,13 +1063,13 @@ internal sealed class DeclarationModel
                 ? attribute.ConstructorArguments[1].Value as string
                 : null;
 
-            includes.Add(new IncludeModel(included, KindOf(included), prefix ?? string.Empty));
+            includes.Add(new IncludeModel(included, KindOf(included), prefix ?? string.Empty, location));
         }
 
         return includes;
     }
 
-    private static IncludeKind KindOf(INamedTypeSymbol symbol)
+    internal static IncludeKind KindOf(INamedTypeSymbol symbol)
     {
         foreach (var attribute in symbol.GetAttributes())
         {
