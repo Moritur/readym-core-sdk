@@ -13,9 +13,9 @@ using ReadyM.Api.Multiplayer.Serialization;
 
 namespace ReadyM.Api.Multiplayer.ECS.Jobs;
 
-internal sealed class SerializationJobRegistry
+internal sealed class NetworkedComponentJobRegistry
 {
-    private class RegisterJobsCallback(SerializationJobRegistry owner) : INetworkedComponentRegistryCallback
+    private class RegisterJobsCallback(NetworkedComponentJobRegistry owner) : INetworkedComponentRegistryCallback
     {
         public void AcceptModComponent(INetworkedComponentRegistry registry, ModComponentInfo info, string typeFullName)
             => throw new NotSupportedException(
@@ -48,7 +48,7 @@ internal sealed class SerializationJobRegistry
     private readonly Dictionary<NetworkedComponentId, Action?> _onApplySnapshotByComponentId = [];
     private readonly Dictionary<NetworkedComponentId, Action?> _onApplyDeltaByComponentId = [];
 
-    public SerializationJobRegistry(
+    public NetworkedComponentJobRegistry(
         INetworkedComponentRegistry registry,
         INetworkedEntityManager netEntity,
         IPlayerIdProvider playerIdProvider,
