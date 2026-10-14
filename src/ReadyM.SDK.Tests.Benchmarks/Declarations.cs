@@ -1,7 +1,7 @@
 using ReadyM.SDK.Attributes;
 using FrifloEntity = Friflo.Engine.ECS.Entity;
 
-namespace ReadyM.SDK.Benchmarks;
+namespace ReadyM.SDK.Tests.Benchmarks;
 
 [ArchetypeMixin]
 public readonly partial struct Vitality

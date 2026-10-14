@@ -3,7 +3,7 @@
 [assembly: InternalsVisibleTo("ReadyM.SDK.Client")]
 [assembly: InternalsVisibleTo("ReadyM.SDK.Server")]
 [assembly: InternalsVisibleTo("ReadyM.SDK.Tests")]
-[assembly: InternalsVisibleTo("ReadyM.SDK.Benchmarks")]
+[assembly: InternalsVisibleTo("ReadyM.SDK.Tests.Benchmarks")]
 [assembly: InternalsVisibleTo("WukongMp.Sdk")]
 [assembly: InternalsVisibleTo("WukongMp.Sdk.Common")]
 [assembly: InternalsVisibleTo("OblivionMp.Sdk")]

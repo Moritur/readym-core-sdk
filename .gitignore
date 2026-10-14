@@ -22,4 +22,4 @@ src/ReadyM.Relay.Server.Oblivion/wwwroot
 .commit/
 src/.claude
 src/BenchmarkDotNet.Artifacts
-src/ReadyM.SDK.Benchmarks/BenchmarkDotNet.Artifacts
+src/ReadyM.SDK.Tests.Benchmarks/BenchmarkDotNet.Artifacts

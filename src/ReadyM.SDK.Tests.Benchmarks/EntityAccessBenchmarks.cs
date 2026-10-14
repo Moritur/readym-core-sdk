@@ -5,7 +5,7 @@ using ReadyM.SDK.Client.Entities;
 using ReadyM.SDK.Entities;
 using FrifloEntity = Friflo.Engine.ECS.Entity;
 
-namespace ReadyM.SDK.Benchmarks;
+namespace ReadyM.SDK.Tests.Benchmarks;
 
 /// <summary>
 /// Reading one component off one entity you already hold, repeatedly.

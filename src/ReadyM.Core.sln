@@ -45,7 +45,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadyM.SDK.Client", "ReadyM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadyM.SDK.Server", "ReadyM.SDK.Server\ReadyM.SDK.Server.csproj", "{F8769C60-3589-4241-9DEA-0DB47BB595E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadyM.SDK.Benchmarks", "ReadyM.SDK.Benchmarks\ReadyM.SDK.Benchmarks.csproj", "{C28BF0E6-5634-49F4-A2DF-4815AFE29144}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadyM.SDK.Tests.Benchmarks", "ReadyM.SDK.Tests.Benchmarks\ReadyM.SDK.Tests.Benchmarks.csproj", "{C28BF0E6-5634-49F4-A2DF-4815AFE29144}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadyM.SDK.Tests", "ReadyM.SDK.Tests\ReadyM.SDK.Tests.csproj", "{2BFB1380-B547-48CC-9FDA-37A54B4C7A5B}"
 EndProject

@@ -2,7 +2,7 @@ using BenchmarkDotNet.Attributes;
 using ReadyM.Api.Multiplayer.Interop;
 using ReadyM.SDK.TestHarness;
 
-namespace ReadyM.SDK.Benchmarks;
+namespace ReadyM.SDK.Tests.Benchmarks;
 
 /// <summary>
 /// A query over one archetype, reading five fields from the five mixins it includes.
