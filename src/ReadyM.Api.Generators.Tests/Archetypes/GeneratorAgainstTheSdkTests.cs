@@ -148,6 +148,24 @@ public class GeneratorAgainstTheSdkTests(ITestOutputHelper output)
     }
 
     /// <summary>
+    /// A mod's shared project, as the Common package compiles it: the chunk types without either half's query
+    /// type. It cannot query, so there is no fast path to report as off.
+    /// </summary>
+    [Fact]
+    public void A_shared_project_does_not_report_the_fast_path_as_disabled()
+    {
+        var reported = SourceGeneratorTestHelper.RunGenerators(
+            [("Declarations.cs", Declarations)],
+            [new ArchetypeGenerator(), new ArchetypeMixinGenerator(), new ChunkCombinationGenerator()],
+            output,
+            [typeof(SDK.Attributes.ArchetypeAttribute).Assembly, typeof(SDK.Chunks.ChunkSlot).Assembly],
+            withoutReferences: ["ReadyM.SDK.Client", "ReadyM.SDK.Server"])
+            .DriverRunResult.Diagnostics;
+
+        Assert.DoesNotContain(reported, diagnostic => diagnostic.Id == "READYM001");
+    }
+
+    /// <summary>
     /// A loop written the way a mod writes one, compiled. It binds a generated GetEnumerator, so it
     /// fails if the binding was not emitted for the half the query came from.
     /// </summary>

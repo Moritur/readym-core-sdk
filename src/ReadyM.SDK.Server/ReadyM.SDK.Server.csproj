@@ -6,6 +6,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!-- Never packed itself. Named apart from the ReadyM.SDK.Server package that ships this assembly, whose
+             project references this one: NuGet restore refuses two projects of the same name. -->
+        <PackageId>ReadyM.SDK.Server.Assembly</PackageId>
     </PropertyGroup>
 
     <ItemGroup>

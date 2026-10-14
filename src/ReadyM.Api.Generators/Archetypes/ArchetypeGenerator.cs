@@ -30,7 +30,7 @@ internal class ArchetypeGenerator : IIncrementalGenerator
         // Saying so beats turning the fast path off and letting a profiler find it months later.
         context.RegisterSourceOutput(context.CompilationProvider, static (spc, compilation) =>
         {
-            if (ChunkNames.ChunkAssemblyReferenced(compilation) && ChunkNames.Resolve(compilation) is null)
+            if (ChunkNames.FastPathMissing(compilation))
                 spc.ReportDiagnostic(Diagnostic.Create(ChunkTypesMissing, Location.None));
         });
 
