@@ -375,6 +375,20 @@ internal sealed class DeclarationModel
 
     public INamedTypeSymbol Symbol { get; }
 
+    /// The access of the types generated beside the shape: public only when the shape and every type around it are,
+    /// so a shape a mod keeps to itself does not have its plumbing exposed, or fail to compile for exposing it.
+    public string Access
+    {
+        get
+        {
+            for (var type = Symbol; type is not null; type = type.ContainingType)
+                if (type.DeclaredAccessibility != Accessibility.Public)
+                    return "internal";
+
+            return "public";
+        }
+    }
+
     /// Whether the shape is [EditorBrowsable(Never)], so what is generated for it is hidden as well.
     public bool IsHidden => IsHiddenType(Symbol);
 

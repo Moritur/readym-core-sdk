@@ -29,7 +29,7 @@ internal static class ChunkViewEmitter
 
         writer.Line("/// Walks this shape by chunk. Valid only inside the loop that produced it.");
 
-        using (writer.Braces($"public readonly ref struct {view} : {chunks.ChunkView}<{qualified}>"))
+        using (writer.Braces($"{model.Access} readonly ref struct {view} : {chunks.ChunkView}<{qualified}>"))
         {
             foreach (var field in fields)
                 writer.Line($"private readonly {chunks.ComponentChunk} {field};");
@@ -60,7 +60,7 @@ internal static class ChunkViewEmitter
         writer.Line("/// <exclude />");
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {ArchetypeNames.ChunkQueryOf(model.Symbol)}"))
+        using (writer.Braces($"{model.Access} static class {ArchetypeNames.ChunkQueryOf(model.Symbol)}"))
         {
             // One per half in scope. A mod sees one; a project testing both sees two, and the
             // parameter types differ so they never collide.

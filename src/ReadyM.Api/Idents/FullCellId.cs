@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using LiteNetLib.Utils;
 using ReadyM.Api.Serialization;
 
@@ -29,12 +30,16 @@ public partial struct FullCellId : INetSerializable, IEquatable<FullCellId>
         _cellId = cellId;
     }
 
+    /// <exclude />
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void Serialize(NetDataWriter writer)
     {
         _areaId.Serialize(writer);
         _cellId.Serialize(writer);
     }
 
+    /// <exclude />
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void Deserialize(NetDataReader reader)
     {
         _areaId.Deserialize(reader);

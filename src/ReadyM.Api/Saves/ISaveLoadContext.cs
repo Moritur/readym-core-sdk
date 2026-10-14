@@ -1,7 +1,10 @@
+using System.ComponentModel;
 using Friflo.Engine.ECS;
 
 namespace ReadyM.Api.Saves;
 
+/// <exclude />
+[EditorBrowsable(EditorBrowsableState.Never)]
 public interface ISaveLoadContext
 {
     /// <summary>The schema version stamped on the component currently being read.</summary>

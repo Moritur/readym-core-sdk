@@ -25,7 +25,7 @@ internal static class AccessorEmitter
         writer.Line("/// <exclude />");
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {ClassNameOf(model.Name)}"))
+        using (writer.Braces($"{model.Access} static class {ClassNameOf(model.Name)}"))
         {
             writer.Line($"public static {ArchetypeNames.ComponentSet} Components {{ get; }} = {componentSet};");
 

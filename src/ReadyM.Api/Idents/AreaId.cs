@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using LiteNetLib.Utils;
 using ReadyM.Api.Serialization;
 using Yooni.Native.Container;
@@ -39,11 +40,15 @@ public partial struct AreaId : INetSerializable, IEquatable<AreaId>
     public string ToManaged()
         => _id.ToManaged();
 
+    /// <exclude />
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void Serialize(NetDataWriter writer)
     {
         _id.Serialize(writer);
     }
 
+    /// <exclude />
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void Deserialize(NetDataReader reader)
     {
         _id.Deserialize(reader);

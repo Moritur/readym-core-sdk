@@ -1,4 +1,5 @@
-﻿using LiteNetLib.Utils;
+﻿using System.ComponentModel;
+using LiteNetLib.Utils;
 using ReadyM.Api.Serialization;
 using System;
 using Yooni.Native.Container;
@@ -33,8 +34,12 @@ public partial struct CellId : INetSerializable, IEquatable<CellId>
 
     internal string RawValue => _id.ToString();
 
+    /// <exclude />
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void Serialize(NetDataWriter writer) => _id.Serialize(writer);
 
+    /// <exclude />
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void Deserialize(NetDataReader reader) => _id.Deserialize(reader);
 
     public bool Equals(CellId other) => _id == other._id;

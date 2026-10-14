@@ -18,7 +18,7 @@ internal static class ExtendedMemberEmitter
             writer.Line();
             writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-            using (writer.Braces($"public static class {model.Name}On{archetype.Name}"))
+            using (writer.Braces($"{model.Access} static class {model.Name}On{archetype.Name}"))
             {
                 Shape(writer, model, target, prefix, client);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using LiteNetLib.Utils;
 using ReadyM.Api.Serialization;
@@ -34,11 +35,15 @@ public partial struct PlayerId : INetSerializable, IEquatable<PlayerId>
     /// </summary>
     public static PlayerId Invalid => default;
     
+    /// <exclude />
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void Serialize(NetDataWriter writer)
     {
         writer.Put(_id);
     }
 
+    /// <exclude />
+    [EditorBrowsable(EditorBrowsableState.Never)]
     public void Deserialize(NetDataReader reader)
     {
         _id = reader.Get<VarUShort>();

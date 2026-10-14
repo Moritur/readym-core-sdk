@@ -69,9 +69,9 @@ internal static class CollectionAccessEmitter
             writer.Line(ArchetypeNames.Hidden);
 
         writer.Line("#if NET");
-        writer.Line($"public readonly ref struct {name}");
+        writer.Line($"{model.Access} readonly ref struct {name}");
         writer.Line("#else");
-        writer.Line($"public readonly struct {name}");
+        writer.Line($"{model.Access} readonly struct {name}");
         writer.Line("#endif");
 
         using (writer.Braces(string.Empty))
