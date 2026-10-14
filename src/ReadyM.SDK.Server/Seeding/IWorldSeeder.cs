@@ -8,7 +8,8 @@ namespace ReadyM.SDK.Server.Seeding;
 /// </summary>
 /// <remarks>
 /// Game thread, inside the World's creation, before its created event. Entities without a scope belong to the World,
-/// so create them with <c>IEntities.Create&lt;T&gt;()</c>. A mod has at most one world seeder.
+/// so create them with <c>IEntities.Create&lt;T&gt;()</c>. A mod has at most one world seeder. It runs as the
+/// server starts, before any player has connected.
 /// </remarks>
 public interface IWorldSeeder
 {
