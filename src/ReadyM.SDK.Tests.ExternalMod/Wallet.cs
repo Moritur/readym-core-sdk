@@ -2,7 +2,7 @@ using ReadyM.SDK.Attributes;
 
 namespace ReadyM.SDK.Tests.ExternalMod;
 
-/// A mixin another assembly includes, so its component is never nameable from there.
+/// <summary>A mixin another assembly includes, so its component is never nameable from there.</summary>
 [ArchetypeMixin]
 public readonly partial struct Wallet
 {

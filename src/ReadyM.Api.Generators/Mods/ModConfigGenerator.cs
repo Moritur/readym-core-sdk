@@ -6,8 +6,10 @@ using ReadyM.Api.Generators.Archetypes;
 
 namespace ReadyM.Api.Generators.Mods;
 
+/// <summary>
 /// Completes a <c>[ModConfig]</c> class: the registration that tells the SDK which file to fill it
 /// from, so it is read out of the mod's own folder before anything asks for it.
+/// </summary>
 [Generator]
 internal class ModConfigGenerator : IIncrementalGenerator
 {
@@ -60,7 +62,7 @@ internal class ModConfigGenerator : IIncrementalGenerator
         {
             writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-            using (writer.Braces("public static class Registration"))
+            using (writer.Braces("internal static class Registration"))
             {
                 writer.Line("private static bool _registered;");
                 writer.Line();

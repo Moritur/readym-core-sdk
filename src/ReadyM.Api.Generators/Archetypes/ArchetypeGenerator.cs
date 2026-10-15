@@ -30,7 +30,7 @@ internal class ArchetypeGenerator : IIncrementalGenerator
         // Saying so beats turning the fast path off and letting a profiler find it months later.
         context.RegisterSourceOutput(context.CompilationProvider, static (spc, compilation) =>
         {
-            if (ChunkNames.ChunkAssemblyReferenced(compilation) && ChunkNames.Resolve(compilation) is null)
+            if (ChunkNames.FastPathMissing(compilation))
                 spc.ReportDiagnostic(Diagnostic.Create(ChunkTypesMissing, Location.None));
         });
 
@@ -70,6 +70,7 @@ internal class ArchetypeGenerator : IIncrementalGenerator
         var problems = ExplicitComponentRules.Check(model, compilation)
             .AddRange(ReplicationRules.Check(model))
             .AddRange(InternedShapeRules.Check(model))
+            .AddRange(IncludeRules.Check(model))
             .AddRange(QuantizedShapeRules.Check(model))
             .AddRange(CreateHandlerEmitter.Check(model))
             .AddRange(DeleteHandlerEmitter.Check(model))
@@ -178,7 +179,7 @@ internal class ArchetypeGenerator : IIncrementalGenerator
             AccessorEmitter.Forwarded(writer, forward, model.QualifiedAccessors);
 
         foreach (var (include, forward) in model.FlattenedForwards())
-            AccessorEmitter.Forwarded(writer, forward, include.Accessors, include.Named(forward));
+            AccessorEmitter.Forwarded(writer, forward, include.Accessors, include.Named(forward), include.IsHidden);
     }
 
     /// <summary>Accessors of everything included, flattened onto the archetype.</summary>
@@ -189,7 +190,7 @@ internal class ArchetypeGenerator : IIncrementalGenerator
             writer.Line();
             HandleEmitter.Accessor(
                 writer, accessor, include.Accessors, partial: false, include.IsReplicated, client,
-                include.Named(accessor.Name));
+                include.Named(accessor.Name), include.IsHidden, ArchetypeNames.DocSource(include.Type, accessor.Name));
         }
     }
 

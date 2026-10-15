@@ -5,8 +5,10 @@ using Microsoft.CodeAnalysis;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
+/// <summary>
 /// [Quantize], [QuantizeAngle] and [HalfPrecision] on a shape's property only mean something when the shape's own
 /// component is replicated.
+/// </summary>
 internal static class QuantizedShapeRules
 {
     private static readonly string[] Attributes = ["QuantizeAttribute", "QuantizeAngleAttribute", "HalfPrecisionAttribute"];

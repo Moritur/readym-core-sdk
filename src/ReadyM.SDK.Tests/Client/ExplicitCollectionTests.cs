@@ -5,7 +5,7 @@ using FrifloEntity = Friflo.Engine.ECS.Entity;
 
 namespace ReadyM.SDK.Tests.Client;
 
-/// Collections of an explicit component, reached through the methods the component already offers.
+/// <summary>Collections of an explicit component, reached through the methods the component already offers.</summary>
 public class ExplicitCollectionTests : ClientSdkTest
 {
     private FrifloEntity Raw<T>(T shape) where T : struct, IArchetypeQueryable
@@ -72,7 +72,7 @@ public class ExplicitCollectionTests : ClientSdkTest
             Assert.True(sequences.ContainsStarted(7));
     }
 
-    /// Replication plumbing belongs to the component, so a shape must not gain it.
+    /// <summary>Replication plumbing belongs to the component, so a shape must not gain it.</summary>
     [Theory]
     [InlineData("Started_SetFromApi")]
     [InlineData("StartedNotifyChanged")]

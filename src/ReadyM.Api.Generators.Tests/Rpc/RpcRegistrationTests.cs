@@ -14,7 +14,7 @@ public class RpcRegistrationTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk = [typeof(ReadyM.SDK.Attributes.RpcContractsAttribute).Assembly];
 
-    /// A client mod cannot reach the server SDK, which is how a baseless class is placed.
+    /// <summary>A client mod cannot reach the server SDK, which is how a baseless class is placed.</summary>
     private static readonly string[] AsAClientMod =
     [
         typeof(ReadyM.Relay.Server.Sdk.Rpc.ServerRpcHandlersBase).Assembly.GetName().Name!,
@@ -46,8 +46,10 @@ public class RpcRegistrationTests(ITestOutputHelper output)
         }
         """;
 
+    /// <summary>
     /// The side is the generator's, not the host's: one process may run both, and a client class in
     /// a server container would be started with no relay client to register its handlers with.
+    /// </summary>
     [Fact]
     public void A_client_class_declares_itself_for_the_client()
         => Assert.Contains(
@@ -58,8 +60,10 @@ public class RpcRegistrationTests(ITestOutputHelper output)
         => Assert.Contains(
             Declaration("Server"), Run(new ServerRpcHandlerGenerator(), Handlers, []));
 
+    /// <summary>
     /// Saying it twice registers nothing twice: a module initializer runs it where the target has
     /// one, and the mod loader runs it for every assembly it loads.
+    /// </summary>
     [Fact]
     public void Declaring_it_is_safe_to_say_twice()
     {
@@ -69,16 +73,20 @@ public class RpcRegistrationTests(ITestOutputHelper output)
         Assert.Contains("if (_registered)", generated);
     }
 
+    /// <summary>
     /// Without this the registration only fires once something in the assembly is touched, and a
     /// netstandard2.0 mod has no module initializers at all, so nothing would ever run it.
+    /// </summary>
     [Fact]
     public void The_aggregator_names_it()
         => Assert.Contains(
             "global::Mod.Rpc.Registration.Register();",
             Run(new RegistrationAggregatorGenerator(), Handlers, AsAClientMod));
 
+    /// <summary>
     /// The 0.x spelling of the attribute is collected too, or a mod that has not moved over would
     /// quietly stop registering its RPC classes.
+    /// </summary>
     [Fact]
     public void The_aggregator_names_one_that_still_uses_the_old_attribute()
         => Assert.Contains(
@@ -95,7 +103,7 @@ public class RpcRegistrationTests(ITestOutputHelper output)
                 }
                 """, AsAClientMod));
 
-    /// Nothing is written for a class no generator completes, so naming it would not compile.
+    /// <summary>Nothing is written for a class no generator completes, so naming it would not compile.</summary>
     [Fact]
     public void The_aggregator_leaves_out_a_class_that_is_not_partial()
         => Assert.DoesNotContain(

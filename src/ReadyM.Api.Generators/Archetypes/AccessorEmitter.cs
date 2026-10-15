@@ -22,9 +22,10 @@ internal static class AccessorEmitter
         ChunkNames? chunks = null,
         bool chunkWrites = true)
     {
+        writer.Line("/// <exclude />");
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {ClassNameOf(model.Name)}"))
+        using (writer.Braces($"{model.Access} static class {ClassNameOf(model.Name)}"))
         {
             writer.Line($"public static {ArchetypeNames.ComponentSet} Components {{ get; }} = {componentSet};");
 
@@ -218,7 +219,7 @@ internal static class AccessorEmitter
         }
     }
 
-    /// Calls that a consumer in any assembly can make.
+    /// <summary>Calls that a consumer in any assembly can make.</summary>
     public static string Get(IncludeModel include, AccessorModel accessor)
         => $"{include.Accessors}.Get{accessor.Name}(_handle)";
 
@@ -230,11 +231,14 @@ internal static class AccessorEmitter
     /// What the member is called here, which an include puts its prefix in front of. The accessor
     /// class it is reached through keeps the name the declaring shape gave it.
     /// </param>
-    public static void Forwarded(SourceWriter writer, ForwardModel forward, string accessors, string? name = null)
+    public static void Forwarded(SourceWriter writer, ForwardModel forward, string accessors, string? name = null, bool hidden = false)
     {
         var called = name ?? forward.Name;
 
         writer.Line();
+
+        if (hidden)
+            writer.Line(ArchetypeNames.Hidden);
 
         if (forward.IsProperty)
         {
@@ -247,8 +251,10 @@ internal static class AccessorEmitter
         writer.Line($"    => {accessors}.{forward.Name}(_handle{Separator(forward)}{forward.Arguments});");
     }
 
+    /// <summary>
     /// What tells a call that changes a collection from one that reads it, which is what the
     /// analyzer reads and what nothing else can tell from a method name.
+    /// </summary>
     internal static void Marker(SourceWriter writer, ForwardModel forward)
     {
         if (forward.Collection is { } collection)
@@ -261,11 +267,15 @@ internal static class AccessorEmitter
         ForwardModel forward,
         string accessors,
         string field,
-        string? name = null)
+        string? name = null,
+        bool hidden = false)
     {
         var called = name ?? forward.Name;
 
         writer.Line();
+
+        if (hidden)
+            writer.Line(ArchetypeNames.Hidden);
 
         if (forward.IsProperty)
         {
@@ -277,12 +287,14 @@ internal static class AccessorEmitter
         writer.Line($"    => {accessors}.{forward.Name}({field}, _index{Separator(forward)}{forward.Arguments});");
     }
 
+    /// <summary>
     /// Writing one value of a replicated component. A native collection has no property to assign:
     /// the replicated emitter gives it a setter method, which copies the contents rather than taking
     /// the collection itself.
     /// Whether the write goes through the component's masks. A native collection has its own
     /// mutators rather than one setter, so it keeps the direct path until they get the same
     /// treatment.
+    /// </summary>
     internal static bool Marked(AccessorModel accessor, bool replicated)
         => replicated && !accessor.IsNativeContainer;
 

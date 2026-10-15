@@ -11,10 +11,10 @@ namespace ReadyM.Api.Multiplayer.Serialization;
 /// Unchanged* checks decide that, the Same* checks compare encodings alone.
 public static class Quantization
 {
-    /// The cutoff plain float fields use: a scalar change up to this is not a change.
+    /// <summary>The cutoff plain float fields use: a scalar change up to this is not a change.</summary>
     public const float ScalarDeadZone = 0.1f;
 
-    /// The cutoff plain vector fields use, as a squared distance: a move up to 0.1 is not a change.
+    /// <summary>The cutoff plain vector fields use, as a squared distance: a move up to 0.1 is not a change.</summary>
     public const float VectorDeadZoneSquared = 0.01f;
 
     // --- fixed-point range: 2^bits - 2 steps between min and max. An even count keeps both ends and the midpoint
@@ -198,8 +198,10 @@ public static class Quantization
         return new Vector4(x, y, z, w);
     }
 
+    /// <summary>
     /// Rounds to the nearest 16-bit float, ties to even. Values past the largest finite half clamp to it rather than
     /// becoming infinity, so a spike cannot poison an animation input.
+    /// </summary>
     public static ushort ToHalfBits(float value)
     {
         var bits = new FloatBits { Float = value }.Bits;
@@ -308,7 +310,7 @@ public static class Quantization
     public static bool UnchangedHalf(Vector4 a, Vector4 b)
         => Vector4.DistanceSquared(a, b) <= VectorDeadZoneSquared || SameHalf(a, b);
 
-    /// How far apart two angles in degrees are around the circle, from 0 to 180.
+    /// <summary>How far apart two angles in degrees are around the circle, from 0 to 180.</summary>
     public static float AngleDistance(float a, float b)
     {
         var difference = Math.Abs(((double)a - b) % 360.0);

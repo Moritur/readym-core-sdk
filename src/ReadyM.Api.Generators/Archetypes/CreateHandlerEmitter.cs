@@ -65,7 +65,7 @@ internal static class CreateHandlerEmitter
         writer.Line();
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {handler.Name}Registration"))
+        using (writer.Braces($"internal static class {handler.Name}Registration"))
         {
             if (ExtendsEmitter.HasModuleInitializer(compilation))
                 writer.Line("[global::System.Runtime.CompilerServices.ModuleInitializer]");
@@ -77,18 +77,21 @@ internal static class CreateHandlerEmitter
         }
     }
 
+    /// <summary>
     /// Where a service watching this shape hands its handler in. The components a shape is made of
     /// never leave the assembly that declared it, and a service watching one may sit anywhere, so
     /// the shape hands them over from the inside.
+    /// </summary>
     private static void EmitWatchPoint(SourceWriter writer, DeclarationModel model)
     {
         writer.Line();
+        writer.Line("/// <exclude />");
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
         writer.Line($"public static void ObserveCreated({ArchetypeNames.EntityHandler} handler)");
         writer.Line($"    => {ArchetypeNames.CreateHandlers}.Observe({model.QualifiedAccessors}.Components, handler);");
     }
 
-    /// A handler asks for what it needs by naming it, and the game's services answer.
+    /// <summary>A handler asks for what it needs by naming it, and the game's services answer.</summary>
     private static string Resolved(IParameterSymbol parameter)
         => $"{ArchetypeNames.CreateHandlers}.Services.Resolve<"
            + $"{parameter.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}>()";

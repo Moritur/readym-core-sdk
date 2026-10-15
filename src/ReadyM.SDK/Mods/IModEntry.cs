@@ -2,7 +2,7 @@
 
 namespace ReadyM.SDK.Mods;
 
-/// Implemented by the generated half of a [ModEntry] class.
+/// <summary>Implemented by the generated half of a [ModEntry] class.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public interface IModEntry
 {

@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
-/// Registers a shape against the archetypes it extends, so creating one carries it.
+/// <summary>Registers a shape against the archetypes it extends, so creating one carries it.</summary>
 internal static class ExtendsEmitter
 {
     public static void Emit(SourceWriter writer, DeclarationModel model, Compilation compilation)
@@ -16,7 +16,7 @@ internal static class ExtendsEmitter
         writer.Line();
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {name}"))
+        using (writer.Braces($"internal static class {name}"))
         {
             if (HasModuleInitializer(compilation))
                 writer.Line("[global::System.Runtime.CompilerServices.ModuleInitializer]");

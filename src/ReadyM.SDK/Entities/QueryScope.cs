@@ -4,7 +4,7 @@ using ReadyM.SDK.Exceptions;
 
 namespace ReadyM.SDK.Entities;
 
-/// Collects entity deletions during a query, so they can be deferred to after the query ends.
+/// <summary>Collects entity deletions during a query, so they can be deferred to after the query ends.</summary>
 /// <remarks>
 /// Deleting entities inside a query works, with an attempt to reference a deleted entity throwing.
 /// Creating new entities is forbidden, since it may resize the underlying array, thus invalidating chunk pointers.
@@ -14,8 +14,10 @@ internal struct QueryScope()
     private int _count;
     private int _depth;
 
+    /// <summary>
     /// Set while the deletions collected during a query are being applied. They are no longer
     /// pending by then and a delete handler has to be able to read the entity.
+    /// </summary>
     private bool _draining;
 
     internal HashSet<RawEntity> Pending { get; } = [];
@@ -30,10 +32,10 @@ internal struct QueryScope()
 
     internal void Enter() => _depth++;
 
-    /// True when the outermost query just ended with deletes to apply.
+    /// <summary>True when the outermost query just ended with deletes to apply.</summary>
     internal bool Leave() => --_depth == 0 && _count > 0;
 
-    /// False when the entity was already asked for.
+    /// <summary>False when the entity was already asked for.</summary>
     internal bool Mark(RawEntity rawEntity)
     {
         if (!Pending.Add(rawEntity))

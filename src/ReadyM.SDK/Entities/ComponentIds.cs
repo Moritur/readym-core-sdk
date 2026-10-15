@@ -3,7 +3,7 @@ using IComponent = Friflo.Engine.ECS.IComponent;
 
 namespace ReadyM.SDK.Entities;
 
-/// Static cache for resolving component IDs.
+/// <summary>Static cache for resolving component IDs.</summary>
 internal static class ComponentIds<T> where T : struct, IComponent
 {
     private static Entry? _last;

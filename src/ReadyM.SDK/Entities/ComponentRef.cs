@@ -12,7 +12,7 @@ internal readonly struct ComponentRef
     private readonly IntPtr _data;
     private readonly int _index;
 
-    /// An array a managed runtime owns.
+    /// <summary>An array a managed runtime owns.</summary>
     internal ComponentRef(Array heap, int index)
     {
         _heap = heap;
@@ -20,7 +20,7 @@ internal readonly struct ComponentRef
         _index = index;
     }
 
-    /// Memory that does not move, like on the AOT-compiled server.
+    /// <summary>Memory that does not move, like on the AOT-compiled server.</summary>
     internal ComponentRef(IntPtr data)
     {
         _heap = null;

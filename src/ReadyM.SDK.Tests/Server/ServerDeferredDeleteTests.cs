@@ -64,7 +64,7 @@ public class ServerDeferredDeleteTests : ServerSdkTest
         }
     }
 
-    /// The same through an archetype, which is what a body written against the identity path holds.
+    /// <summary>The same through an archetype, which is what a body written against the identity path holds.</summary>
     [Fact]
     public void An_archetype_of_a_deleted_entity_throws_when_read_again()
     {
@@ -134,7 +134,7 @@ public class ServerDeferredDeleteTests : ServerSdkTest
         Assert.Equal(4, remaining);
     }
 
-    /// Deleting every entity a query visits leaves nothing behind.
+    /// <summary>Deleting every entity a query visits leaves nothing behind.</summary>
     [Fact]
     public void A_query_may_delete_everything_it_visits()
     {
@@ -183,7 +183,7 @@ public class ServerDeferredDeleteTests : ServerSdkTest
         Assert.Equal(0, CountIdentities(Entities.Query<Npc>()));
     }
 
-    /// A mixin's view spans every archetype carrying it, so this deletes across both.
+    /// <summary>A mixin's view spans every archetype carrying it, so this deletes across both.</summary>
     [Fact]
     public void Delete_takes_a_mixin_view_inside_a_query()
     {
@@ -196,7 +196,7 @@ public class ServerDeferredDeleteTests : ServerSdkTest
         Assert.Equal(0, CountIdentities(Entities.Query<Position>()));
     }
 
-    /// One of a tuple still names the entity all of them are on.
+    /// <summary>One of a tuple still names the entity all of them are on.</summary>
     [Fact]
     public void Delete_takes_one_part_of_a_multi_shape_query()
     {
@@ -210,7 +210,7 @@ public class ServerDeferredDeleteTests : ServerSdkTest
 
     // -- the identity path, at every width --------------------------------------------------------
 
-    /// A multi-shape loop opens a scope the same way a single-shape one does.
+    /// <summary>A multi-shape loop opens a scope the same way a single-shape one does.</summary>
     [Fact]
     public void A_delete_inside_a_multi_shape_identity_loop_is_held()
     {
@@ -249,7 +249,7 @@ public class ServerDeferredDeleteTests : ServerSdkTest
         });
     }
 
-    /// The widest loop, so no arity is left without a scope.
+    /// <summary>The widest loop, so no arity is left without a scope.</summary>
     [Fact]
     public void A_delete_inside_a_six_shape_identity_loop_is_held()
     {

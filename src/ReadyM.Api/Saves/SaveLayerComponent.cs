@@ -8,7 +8,7 @@ namespace ReadyM.Api.Saves;
 /// </summary>
 /// <remarks>Not networked: it only matters to the server's save.</remarks>
 [DeriveSavableComponent]
-public partial struct SaveLayerComponent : IComponent
+internal partial struct SaveLayerComponent : IComponent
 {
     private SaveLayer _layer;
 

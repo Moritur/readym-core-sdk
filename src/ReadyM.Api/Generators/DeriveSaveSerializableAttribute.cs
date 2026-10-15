@@ -7,4 +7,4 @@ namespace ReadyM.Api.Generators;
 /// Use <see cref="DeriveSavableComponentAttribute"/> for a component instead.
 /// </summary>
 [AttributeUsage(AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
-public sealed class DeriveSaveSerializableAttribute : Attribute;
+internal sealed class DeriveSaveSerializableAttribute : Attribute;

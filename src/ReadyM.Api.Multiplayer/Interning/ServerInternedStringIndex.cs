@@ -8,8 +8,8 @@ using Yooni.Native.Serialization;
 
 namespace ReadyM.Api.Multiplayer.Interning;
 
-/// Gives every new string the next id and queues it for the clients.
-public sealed class ServerInternedStringIndex : IInternedStringIndex
+/// <summary>Gives every new string the next id and queues it for the clients.</summary>
+internal sealed class ServerInternedStringIndex : IInternedStringIndex
 {
     public const int DefaultCapacity = 65536;
 
@@ -77,14 +77,14 @@ public sealed class ServerInternedStringIndex : IInternedStringIndex
         return false;
     }
 
-    /// Writes the strings added since the last append, then forgets them.
+    /// <summary>Writes the strings added since the last append, then forgets them.</summary>
     public void WritePendingAppend(NetDataWriter writer)
     {
         Write(writer, _firstPending);
         _firstPending = _names.Count;
     }
 
-    /// Writes every string, for a player joining.
+    /// <summary>Writes every string, for a player joining.</summary>
     public void WriteAll(NetDataWriter writer)
         => Write(writer, 0);
 

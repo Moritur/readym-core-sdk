@@ -5,7 +5,7 @@ using ReadyM.SDK.Services;
 
 namespace ReadyM.SDK.Server.Systems;
 
-/// Wraps the [Service]s that declared an update into a Friflo system.
+/// <summary>Wraps the [Service]s that declared an update into a Friflo system.</summary>
 [Obsolete("Obsolete")]
 internal sealed class ModSystemUpdates(IDependencyContainer services) : ModSystemBase
 {
@@ -14,7 +14,7 @@ internal sealed class ModSystemUpdates(IDependencyContainer services) : ModSyste
 
     private ulong _count;
 
-    /// Registers the one updater a container needs, whichever mod asks first.
+    /// <summary>Registers the one updater a container needs, whichever mod asks first.</summary>
     [Obsolete("Obsolete")]
     public static void Wire(IDependencyContainer services)
     {

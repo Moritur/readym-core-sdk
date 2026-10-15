@@ -73,7 +73,7 @@ public class ArchetypeQueryBenchmarks : ServerWorld
         _sink += total;
     }
 
-    /// The develop-branch SDK: one crossing, then a delegate per entity with the components by ref.
+    /// <summary>The develop-branch SDK: one crossing, then a delegate per entity with the components by ref.</summary>
     [Benchmark(Description = "v0 EcsApi.Query")]
     public float V0Query()
     {

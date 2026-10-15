@@ -50,15 +50,12 @@ internal class ClientSendEntityCreatedSystem(NetworkedComponentJobRegistry netJo
     {
         base.OnUpdate(SendContext.Global);
 
+        // A player's scope is global, like the player entity itself, so it does not wait for an area
+        if (state.LocalPlayerEntry is { } localPlayer)
+            base.OnUpdate(SendContext.FromPlayer(localPlayer.PlayerId, localPlayer.PlayerEntity));
+
         if (state is { CurrentAreaEntry: not null, LocalPlayerEntry: not null })
         {
-            // Send player scoped updates
-            {
-                var scopeEntity = state.LocalPlayerEntry.Value.PlayerEntity;
-                var context = SendContext.FromPlayer(state.LocalPlayerEntry.Value.PlayerId, scopeEntity);
-                base.OnUpdate(context);
-            }
-
             // Send area scoped updates
             {
                 var scopeEntity = state.CurrentAreaEntry.Value.AreaEntity;

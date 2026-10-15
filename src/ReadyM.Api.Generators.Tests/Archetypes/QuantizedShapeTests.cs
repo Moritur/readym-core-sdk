@@ -8,8 +8,10 @@ using static ReadyM.Api.Generators.Tests.DeriveTestAssert;
 
 namespace ReadyM.Api.Generators.Tests.Archetypes;
 
+/// <summary>
 /// [Quantize], [QuantizeAngle] and [HalfPrecision] on a shape's property: honoured where the shape's own component
 /// replicates, refused where they would do nothing.
+/// </summary>
 public class QuantizedShapeTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk =

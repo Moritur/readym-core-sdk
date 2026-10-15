@@ -156,7 +156,7 @@ internal class NativeDictionaryFieldTypeSupportImpl : NativeContainerFieldTypeSu
 
         context.AppendLine();
 
-        context.AppendLine($"public void {context.Member.GeneratedPropertyName}_SetFromApi({FullyQualifiedTypeName(symbol)} value, int id)");
+        context.AppendLine($"private void {context.Member.GeneratedPropertyName}_SetFromApi({FullyQualifiedTypeName(symbol)} value, int id)");
         using (context.WithCodeBlock())
         {
             EmitSetterBody(symbol, context, true);

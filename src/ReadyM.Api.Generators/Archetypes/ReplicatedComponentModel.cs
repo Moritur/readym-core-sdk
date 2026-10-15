@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
-/// Describes a component that does not exist yet, in the terms the replicated emitter speaks.
+/// <summary>Describes a component that does not exist yet, in the terms the replicated emitter speaks.</summary>
 /// <remarks>
 /// A component written by hand is read back off its own symbol. One a shape declares is emitted in
 /// the same pass, so there is no symbol to read: its name, accessibility and members are stated
@@ -13,8 +13,10 @@ namespace ReadyM.Api.Generators.Archetypes;
 /// </remarks>
 internal static class ReplicatedComponentModel
 {
+    /// <summary>
     /// Null when the shape cannot be described, which is a shape whose properties are not in this
     /// compilation. Nothing can be emitted for one of those anyway.
+    /// </summary>
     public static DeriveTargetModel? For(DeclarationModel model, Compilation compilation)
     {
         if (model.Accessors.Count == 0)
@@ -59,7 +61,9 @@ internal static class ReplicatedComponentModel
             DeriveComponentUtils.GetMaskInfo(target, compilation));
     }
 
+    /// <summary>
     /// Fields, including private ones, which is what a component declared as properties amounts to.
     /// The same default a hand-written component takes.
+    /// </summary>
     private const byte DefaultMode = (1 << 0) | (1 << 2);
 }

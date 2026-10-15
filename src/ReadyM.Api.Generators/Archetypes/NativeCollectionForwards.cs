@@ -4,7 +4,7 @@ using static ReadyM.Api.Generators.DeriveCSharpUtils;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
-/// What a replicated component exposes for a value that is a native collection.
+/// <summary>What a replicated component exposes for a value that is a native collection.</summary>
 /// <remarks>
 /// The component is generated in the same pass, so its members cannot be read off a symbol: this
 /// says what the field support will have put there. It is the one place that knows, and everything
@@ -75,7 +75,7 @@ internal static class NativeCollectionForwards
         params (string Modifier, string Type, string Name)[] parameters)
         => new(name, returnType, parameters, owns: owns);
 
-    /// A member that changes the collection, which makes it a write like any other.
+    /// <summary>A member that changes the collection, which makes it a write like any other.</summary>
     private static ForwardModel Changes(
         (string Field, string Token, string Owns) collection,
         string name,

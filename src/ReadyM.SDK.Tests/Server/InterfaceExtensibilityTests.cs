@@ -83,7 +83,7 @@ public class InterfaceExtensibilityTests : ServerSdkTest
         Assert.False(bare.Handle.Is<QuestGiver>());
     }
 
-    /// An author still calls the member the generator emits, which wins over the extension.
+    /// <summary>An author still calls the member the generator emits, which wins over the extension.</summary>
     [Fact]
     public void A_generated_archetype_keeps_its_own_members()
     {
@@ -141,7 +141,7 @@ public class InterfaceExtensibilityTests : ServerSdkTest
         Assert.Equal(PositionAccessors.Components.Count, SlotsOf<BareView>());
     }
 
-    /// The default is not just compilable: a query driven by such a view reads the right values.
+    /// <summary>The default is not just compilable: a query driven by such a view reads the right values.</summary>
     [Fact]
     public void A_query_over_a_view_without_a_slot_count_reads_correctly()
     {

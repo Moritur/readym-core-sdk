@@ -1,5 +1,9 @@
+using System.ComponentModel;
+
 namespace ReadyM.Api.Saves;
 
+/// <exclude />
+[EditorBrowsable(EditorBrowsableState.Never)]
 public interface ISaveReader
 {
     void BeginObject();

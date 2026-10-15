@@ -11,7 +11,7 @@ internal enum DeriveQuantizationKind
     Half,
 }
 
-/// How a field marked [Quantize], [QuantizeAngle] or [HalfPrecision] goes over the wire.
+/// <summary>How a field marked [Quantize], [QuantizeAngle] or [HalfPrecision] goes over the wire.</summary>
 internal sealed class DeriveQuantization(DeriveQuantizationKind kind, float min, float max, int bits)
 {
     private const string Runtime = "global::ReadyM.Api.Multiplayer.Serialization.Quantization";
@@ -53,7 +53,9 @@ internal sealed class DeriveQuantization(DeriveQuantizationKind kind, float min,
         return result;
     }
 
+    /// <summary>
     /// The reasons this quantization cannot apply to a field of <paramref name="type"/>, empty when it can.
+    /// </summary>
     public IEnumerable<string> Problems(ITypeSymbol type)
     {
         var isFloat = type.SpecialType == SpecialType.System_Single;
@@ -84,8 +86,10 @@ internal sealed class DeriveQuantization(DeriveQuantizationKind kind, float min,
         }
     }
 
+    /// <summary>
     /// A C# expression that is true when writing <paramref name="b"/> over <paramref name="a"/> is no change: it stays
     /// within the plain fields' cutoff or encodes the same.
+    /// </summary>
     public string UnchangedExpression(string a, string b)
         => Kind switch
         {
@@ -94,7 +98,7 @@ internal sealed class DeriveQuantization(DeriveQuantizationKind kind, float min,
             _ => $"{Runtime}.UnchangedHalf({a}, {b})",
         };
 
-    /// A C# statement writing <paramref name="value"/> to <c>writer</c>.
+    /// <summary>A C# statement writing <paramref name="value"/> to <c>writer</c>.</summary>
     public string WriteStatement(string value)
         => Kind switch
         {
@@ -103,7 +107,7 @@ internal sealed class DeriveQuantization(DeriveQuantizationKind kind, float min,
             _ => $"{Runtime}.WriteHalf(writer, {value});",
         };
 
-    /// A C# expression reading a value of <paramref name="type"/> from <c>reader</c>.
+    /// <summary>A C# expression reading a value of <paramref name="type"/> from <c>reader</c>.</summary>
     public string ReadExpression(ITypeSymbol type)
     {
         var suffix = type.SpecialType == SpecialType.System_Single ? null : type.Name;
@@ -116,7 +120,7 @@ internal sealed class DeriveQuantization(DeriveQuantizationKind kind, float min,
         };
     }
 
-    /// The C++ counterpart of <see cref="UnchangedExpression"/>.
+    /// <summary>The C++ counterpart of <see cref="UnchangedExpression"/>.</summary>
     public string CppUnchangedExpression(string a, string b)
         => Kind switch
         {

@@ -2,7 +2,7 @@
 
 namespace ReadyM.SDK.Chunks;
 
-/// A query that walks chunks rather than entity IDs.
+/// <summary>A query that walks chunks rather than entity IDs.</summary>
 public readonly ref struct ChunkQuery<TView>
     where TView : IArchetypeChunkView<TView>, allows ref struct
 {
@@ -12,6 +12,8 @@ public readonly ref struct ChunkQuery<TView>
 
     public Enumerator GetEnumerator() => new(_source);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public ref struct Enumerator
     {
         private readonly ChunkBuffer? _buffer;
@@ -52,7 +54,7 @@ public readonly ref struct ChunkQuery<TView>
 
         public readonly TView Current => _chunk.At(_index);
 
-        /// Walks entities within a chunk, and binds the next chunk when one runs out.
+        /// <summary>Walks entities within a chunk, and binds the next chunk when one runs out.</summary>
         public bool MoveNext()
         {
             if (_buffer is null)

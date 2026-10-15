@@ -5,7 +5,7 @@ using Yooni.Native.Container;
 
 namespace ReadyM.Relay.Server.Sdk.Interop;
 
-/// The relay's index, used by the mod-generated code.
+/// <summary>The relay's index, used by the mod-generated code.</summary>
 internal sealed unsafe class RelayInternedStringIndex(InternedStringsPointers pointers) : IInternedStringIndex
 {
     private readonly TryGetInternedIdDelegate _tryGetId

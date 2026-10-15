@@ -37,27 +37,27 @@ public class ServerNetworkedCreateTests : ServerSdkTest
 
     // -- what decides it ---------------------------------------------------------------------------
 
-    /// Nothing about a guard leaves this machine, so the relay is never asked to name it.
+    /// <summary>Nothing about a guard leaves this machine, so the relay is never asked to name it.</summary>
     [Fact]
     public void A_shape_with_nothing_to_send_is_created_local()
         => Assert.Null(Relay.NetworkedOf(IdentityOf(Entities.Create<Guard>())));
 
-    /// Beacon is declared replicated, so the entity has to be one the client can name.
+    /// <summary>Beacon is declared replicated, so the entity has to be one the client can name.</summary>
     [Fact]
     public void A_shape_that_replicates_is_created_networked()
         => Assert.NotNull(Relay.NetworkedOf(IdentityOf(Entities.Create<Beacon>())));
 
-    /// Probe holds what Beacon does and stays on the server, without a binding to say where.
+    /// <summary>Probe holds what Beacon does and stays on the server, without a binding to say where.</summary>
     [Fact]
     public void A_local_archetype_stays_local_whatever_it_includes()
         => Assert.Null(Relay.NetworkedOf(IdentityOf(Entities.Create<Probe>())));
 
-    /// Nothing Waypoint holds is sent, and the entity still is: its presence is the message.
+    /// <summary>Nothing Waypoint holds is sent, and the entity still is: its presence is the message.</summary>
     [Fact]
     public void A_replicated_archetype_with_nothing_that_sends_is_networked()
         => Assert.NotNull(Relay.NetworkedOf(IdentityOf(Entities.Create<Waypoint>())));
 
-    /// A query asks for components, not for how the entity came to have them, so it finds both.
+    /// <summary>A query asks for components, not for how the entity came to have them, so it finds both.</summary>
     [Fact]
     public void A_query_over_a_replicated_mixin_finds_local_entities_too()
     {
@@ -72,7 +72,7 @@ public class ServerNetworkedCreateTests : ServerSdkTest
         Assert.Equal(2, found);
     }
 
-    /// It lands on the archetype the game registered, not on a fresh one only the server knows.
+    /// <summary>It lands on the archetype the game registered, not on a fresh one only the server knows.</summary>
     [Fact]
     public void A_networked_entity_is_made_of_the_archetype_the_game_bound()
     {
@@ -98,7 +98,7 @@ public class ServerNetworkedCreateTests : ServerSdkTest
 
     // -- who owns it -------------------------------------------------------------------------------
 
-    /// Null is the server's own, which is what a server making an entity means.
+    /// <summary>Null is the server's own, which is what a server making an entity means.</summary>
     [Fact]
     public void A_networked_entity_is_the_servers_unless_a_player_is_named()
         => Assert.Null(Relay.NetworkedOf(IdentityOf(Entities.Create<Beacon>()))!.Value.Owner);
@@ -121,7 +121,7 @@ public class ServerNetworkedCreateTests : ServerSdkTest
         Assert.False(onBase);
     }
 
-    /// An owner is named alongside a scope or not at all, so there is no unscoped overload to reach.
+    /// <summary>An owner is named alongside a scope or not at all, so there is no unscoped overload to reach.</summary>
     [Fact]
     public void An_owner_is_only_ever_named_with_a_scope()
     {
@@ -146,7 +146,7 @@ public class ServerNetworkedCreateTests : ServerSdkTest
         Assert.Equal(IdentityOf(area).Id, made.Scope!.Value.Id);
     }
 
-    /// Scope and owner are decided apart, so a scoped create still carries the owner it was given.
+    /// <summary>Scope and owner are decided apart, so a scoped create still carries the owner it was given.</summary>
     [Fact]
     public void A_scoped_networked_entity_keeps_its_owner_too()
     {
@@ -157,14 +157,14 @@ public class ServerNetworkedCreateTests : ServerSdkTest
         Assert.Equal(IdentityOf(area).Id, made.Scope!.Value.Id);
     }
 
-    /// A local shape in a scope is still local: the scope says where it lives, not who hears of it.
+    /// <summary>A local shape in a scope is still local: the scope says where it lives, not who hears of it.</summary>
     [Fact]
     public void A_local_entity_in_a_scope_stays_local()
         => Assert.Null(Relay.NetworkedOf(IdentityOf(Entities.Create<Guard>(Area()))));
 
     // -- going away --------------------------------------------------------------------------------
 
-    /// Deleting one reaches the relay, which is the only thing that can tell the other side.
+    /// <summary>Deleting one reaches the relay, which is the only thing that can tell the other side.</summary>
     [Fact]
     public void Deleting_a_networked_entity_reaches_the_relay()
     {

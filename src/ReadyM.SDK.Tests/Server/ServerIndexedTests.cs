@@ -35,7 +35,7 @@ public class ServerIndexedTests : ServerSdkTest
 
     // -- agreeing with a query whatever the index saw --------------------------------------------
 
-    /// Writes the value the way a delta from a client lands, without the accessor seeing it.
+    /// <summary>Writes the value the way a delta from a client lands, without the accessor seeing it.</summary>
     private void WritePastTheIndex(Passenger passenger, int ticket)
     {
         var raw = IdentityOf(passenger);
@@ -79,7 +79,7 @@ public class ServerIndexedTests : ServerSdkTest
         Assert.False(Entities.TryLookup<Ticketed, int>(12, out _));
     }
 
-    /// Found by walking once, then answered from the index like any other value.
+    /// <summary>Found by walking once, then answered from the index like any other value.</summary>
     [Fact]
     public void A_value_found_by_walking_is_remembered()
     {
@@ -117,7 +117,7 @@ public class ServerIndexedTests : ServerSdkTest
         Assert.Equal(20, found.Fare);
     }
 
-    /// Two entities on different values, so one cannot evict the other.
+    /// <summary>Two entities on different values, so one cannot evict the other.</summary>
     [Fact]
     public void Two_entities_keep_their_own_entries()
     {
@@ -133,7 +133,7 @@ public class ServerIndexedTests : ServerSdkTest
         Assert.Equal(IdentityOf(second).Id, EntityHandle.Of(b).Id);
     }
 
-    /// An indexed value still reads from a chunk, which is where a query gets it.
+    /// <summary>An indexed value still reads from a chunk, which is where a query gets it.</summary>
     [Fact]
     public void An_indexed_value_reads_from_a_chunk()
     {

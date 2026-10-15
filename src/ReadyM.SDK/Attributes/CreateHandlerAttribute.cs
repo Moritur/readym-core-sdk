@@ -1,6 +1,6 @@
 namespace ReadyM.SDK.Attributes;
 
-/// Runs this method on an entity right after it is created.
+/// <summary>Runs this method on an entity right after it is created.</summary>
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class CreateHandlerAttribute : Attribute
 {

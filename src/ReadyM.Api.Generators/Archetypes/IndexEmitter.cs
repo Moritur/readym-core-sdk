@@ -2,7 +2,7 @@
 
 namespace ReadyM.Api.Generators.Archetypes;
 
-/// Declares a shape as indexed, and registers which component holds the index behind it.
+/// <summary>Declares a shape as indexed, and registers which component holds the index behind it.</summary>
 internal static class IndexEmitter
 {
     /// <summary>The extra contract an indexed shape carries, so a lookup can name it.</summary>
@@ -17,7 +17,7 @@ internal static class IndexEmitter
         writer.Line();
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {model.Name}Index"))
+        using (writer.Braces($"internal static class {model.Name}Index"))
         {
             if (ExtendsEmitter.HasModuleInitializer(compilation))
                 writer.Line("[global::System.Runtime.CompilerServices.ModuleInitializer]");

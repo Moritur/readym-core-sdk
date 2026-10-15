@@ -5,7 +5,7 @@ using ReadyM.Api.Generators.Archetypes;
 
 namespace ReadyM.Api.Generators.Mods;
 
-/// What a class has to look like to be a mod's config, for the generator and the analyzer alike.
+/// <summary>What a class has to look like to be a mod's config, for the generator and the analyzer alike.</summary>
 internal static class ModConfigShape
 {
     public const string DefaultFileName = "config.json";
@@ -53,7 +53,7 @@ internal static class ModConfigShape
         => symbol.GetAttributes().Any(attribute
             => attribute.AttributeClass?.ToDisplayString() == ArchetypeNames.ModConfigAttribute);
 
-    /// The name the attribute gave, or the default where it named none.
+    /// <summary>The name the attribute gave, or the default where it named none.</summary>
     private static string FileNameOf(INamedTypeSymbol config)
     {
         var attribute = config.GetAttributes().FirstOrDefault(a
@@ -65,7 +65,7 @@ internal static class ModConfigShape
         return attribute.ConstructorArguments[0].Value as string ?? DefaultFileName;
     }
 
-    /// What the reader needs of it: new() on a concrete, closed class.
+    /// <summary>What the reader needs of it: new() on a concrete, closed class.</summary>
     private static bool IsCreatable(INamedTypeSymbol config)
         => config is { IsAbstract: false, IsStatic: false, TypeParameters.Length: 0 }
            && config.InstanceConstructors.Any(constructor

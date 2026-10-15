@@ -92,7 +92,7 @@ public class ArchetypeTests : ClientSdkTest
         Assert.Equal(9, looted.Rarity);
     }
 
-    /// The wider shape still reaches the narrower one, which is what the optional include was for.
+    /// <summary>The wider shape still reaches the narrower one, which is what the optional include was for.</summary>
     [Fact]
     public void A_query_for_the_wider_shape_reaches_both()
     {

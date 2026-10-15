@@ -39,8 +39,10 @@ internal class ServerRpcEventGenerator : IIncrementalGenerator
         node is ClassDeclarationSyntax cls &&
         cls.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
 
+    /// <summary>
     /// The class, plus what its target lets the registration carry. A pair rather than a symbol,
     /// so the pipeline is never handed a whole compilation to compare.
+    /// </summary>
     private static (INamedTypeSymbol? Symbol, bool ModuleInitializer) Transform(
         GeneratorSyntaxContext context, CancellationToken _)
     {
@@ -135,7 +137,6 @@ internal class ServerRpcEventGenerator : IIncrementalGenerator
         var ns = classSymbol.ContainingNamespace.ToDisplayString();
         var className = classSymbol.Name;
         var fullClassName = classSymbol.ToDisplayString();
-        var access = classSymbol.DeclaredAccessibility.ToString().ToLower();
         var baseList = HasOwnBase(classSymbol) ? string.Empty : $" : {RpcBaseFqn}";
 
         var sb = new StringBuilder($$"""
@@ -151,7 +152,7 @@ internal class ServerRpcEventGenerator : IIncrementalGenerator
 
                                      namespace {{ns}};
 
-                                     {{access}} partial class {{className}}{{baseList}}
+                                     partial class {{className}}{{baseList}}
                                      {
 
                                      """);
@@ -201,7 +202,7 @@ internal class ServerRpcEventGenerator : IIncrementalGenerator
         }
 
         sb.AppendLine($$"""
-                            protected void OnServerEvent(ServerEventHeader header, NetDataReader reader)
+                            private void OnServerEvent(ServerEventHeader header, NetDataReader reader)
                             {
                                 switch ((RelayMessageCode)(header.EventCode - {{serverOffset}}))
                                 {
@@ -216,7 +217,7 @@ internal class ServerRpcEventGenerator : IIncrementalGenerator
         {
             sb.AppendLine($$"""
 
-                                protected void OnClientEvent(CustomRelayEventHeader header, NetDataReader reader)
+                                private void OnClientEvent(CustomRelayEventHeader header, NetDataReader reader)
                                 {
                                     switch ((RelayMessageCode)(header.EventCode - {{clientOffset}}))
                                     {

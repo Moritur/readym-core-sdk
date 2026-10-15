@@ -2,7 +2,7 @@
 
 namespace ReadyM.SDK.Archetypes;
 
-/// What each archetype gains from the mods that are loaded, which is what creating one carries.
+/// <summary>What each archetype gains from the mods that are loaded, which is what creating one carries.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class ArchetypeRegistry
 {
@@ -62,7 +62,7 @@ public static class ArchetypeRegistry
             return Tagged.TryGetValue(archetype, out var held) ? [.. held] : [];
     }
 
-    /// Called by generated code for each [Extends]. Safe to call more than once for the same pair.
+    /// <summary>Called by generated code for each [Extends]. Safe to call more than once for the same pair.</summary>
     /// <param name="shape">The shape that added them, which is what says whose components they are.</param>
     public static void Extend(Type archetype, Type shape, ComponentSet components)
     {
@@ -78,7 +78,7 @@ public static class ArchetypeRegistry
         }
     }
 
-    /// Only the added components the SDK generated.
+    /// <summary>Only the added components the SDK generated.</summary>
     internal static IReadOnlyList<Type> GeneratedAddedTo(Type archetype)
     {
         lock (Gate)
@@ -132,7 +132,7 @@ public static class ArchetypeRegistry
         }
     }
 
-    /// The shape a set belongs to, or null for one nothing declared.
+    /// <summary>The shape a set belongs to, or null for one nothing declared.</summary>
     internal static Type? ShapeOf(ComponentSet components)
     {
         lock (Gate)

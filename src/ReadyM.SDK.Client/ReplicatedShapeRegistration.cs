@@ -8,9 +8,11 @@ using ReadyM.SDK.Attributes;
 
 namespace ReadyM.SDK.Client;
 
+/// <summary>
 /// Tells the client which components arrive over the wire, taken from the shapes mods declared.
 /// A game registers this after its own components, so the ids line up with the server, which
 /// numbers everything a mod declared after everything it registered itself.
+/// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class ReplicatedShapeRegistration : INetworkedComponentRegistration
 {

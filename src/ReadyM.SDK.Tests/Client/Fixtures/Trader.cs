@@ -3,8 +3,10 @@ using ReadyM.SDK.Tests.ExternalMod;
 
 namespace ReadyM.SDK.Tests.Client.Fixtures;
 
+/// <summary>
 /// Includes a mixin and an archetype declared in another assembly, whose components this assembly
 /// cannot name.
+/// </summary>
 [Archetype(replicated: false)]
 [Include(typeof(Placement))]
 [Include(typeof(Wallet))]

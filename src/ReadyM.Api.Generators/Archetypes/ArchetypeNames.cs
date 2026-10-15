@@ -30,6 +30,17 @@ internal static class ArchetypeNames
 
     public const string EntityHandle = "global::ReadyM.SDK.Entities.EntityHandle";
     public const string ComponentSet = "global::ReadyM.SDK.Archetypes.ComponentSet";
+
+    /// <summary>Keeps a generated type or member out of IntelliSense and the docs.</summary>
+    /// <summary>
+    /// A cref to a member of a shape, for a generated member to inherit its docs from. Null for a generic shape, whose
+    /// type arguments a cref would have to spell out.
+    /// </summary>
+    public static string? DocSource(INamedTypeSymbol type, string member)
+        => type.IsGenericType ? null : $"{type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}.{member}";
+
+    public const string Hidden = "[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]";
+
     public const string Queryable = "global::ReadyM.SDK.Archetypes.IArchetypeQueryable";
     public const string Shape = "global::ReadyM.SDK.Archetypes.IEntityShape";
     public const string Archetype = "global::ReadyM.SDK.Archetypes.IArchetype";
@@ -38,7 +49,7 @@ internal static class ArchetypeNames
     public const string Registry = "global::ReadyM.SDK.Archetypes.ArchetypeRegistry";
     public const string Indexed = "global::ReadyM.SDK.Archetypes.IIndexed";
     
-    /// Matched against a symbol's ToDisplayString, which carries no global:: prefix.
+    /// <summary>Matched against a symbol's ToDisplayString, which carries no global:: prefix.</summary>
     public const string ScopeMarker = "ReadyM.SDK.Archetypes.IScope";
     public const string Scope = "global::ReadyM.SDK.Archetypes.Scope";
     public const string IndexRegistry = "global::ReadyM.SDK.Archetypes.IndexRegistry";
@@ -67,7 +78,7 @@ internal static class ArchetypeNames
 
     public const string RpcHandlersForAttribute = Namespace + ".RpcHandlersForAttribute";
 
-    /// The 0.x spelling of [RpcHandlersFor], which lives in the multiplayer API rather than here.
+    /// <summary>The 0.x spelling of [RpcHandlersFor], which lives in the multiplayer API rather than here.</summary>
     public const string ServerRpcForAttribute = "ReadyM.Api.Multiplayer.ServerRpcForAttribute";
 
     public const string RpcHandlerRegistry = "global::ReadyM.Api.Multiplayer.RPC.RpcHandlerRegistry";
@@ -110,7 +121,7 @@ internal static class ArchetypeNames
     public const string NetworkedComponent = "global::ReadyM.Api.Multiplayer.ECS.Components.INetworkedComponent";
 
     public const string RawEntity = "global::Friflo.Engine.ECS.RawEntity";
-    /// The class holding the GetEnumerator that puts a shape on the chunk path.
+    /// <summary>The class holding the GetEnumerator that puts a shape on the chunk path.</summary>
     public static string ChunkQueryOf(INamedTypeSymbol declaration) => declaration.Name + "ChunkQuery";
 
     /// <summary>The chunk-backed twin of a declaration.</summary>
@@ -149,7 +160,7 @@ internal static class ArchetypeNames
         return ns.Length == 0 ? "global::" + ComponentOf(declaration) : $"global::{ns}.{ComponentOf(declaration)}";
     }
 
-    /// The accessor class a consumer in any assembly goes through.
+    /// <summary>The accessor class a consumer in any assembly goes through.</summary>
     public static string QualifiedAccessorsOf(INamedTypeSymbol declaration)
     {
         var ns = NamespaceOf(declaration);
@@ -170,9 +181,11 @@ internal static class ArchetypeNames
         return ns.Length == 0 ? $"{symbol.Name}.{kind}.g.cs" : $"{ns}.{symbol.Name}.{kind}.g.cs";
     }
 
+    /// <summary>
     /// The field a value is held in, which is its name with a lower first letter. Lowering it can
     /// land on a keyword, and a value called Sealed, Class or Event is an ordinary thing for a mod
     /// to want, so the name is escaped where it has to be rather than refused.
+    /// </summary>
     public static string FieldOf(string accessorName)
     {
         var field = accessorName.ToLowerFirst();

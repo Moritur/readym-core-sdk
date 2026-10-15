@@ -25,7 +25,7 @@ public class ServerQueryTests : ServerSdkTest
         Assert.Equal(1, CountIdentities(Entities.Query<Boulder>()));
     }
 
-    /// A mixin's query is over its own component, so it matches every archetype that includes it.
+    /// <summary>A mixin's query is over its own component, so it matches every archetype that includes it.</summary>
     [Fact]
     public void A_mixin_query_reaches_every_archetype_that_includes_it()
     {
@@ -36,7 +36,7 @@ public class ServerQueryTests : ServerSdkTest
         Assert.Equal(1, CountIdentities(Entities.Query<Vitals>()));
     }
 
-    /// PositionComponent lives in a pinned heap the AOT side owns, so its slot carries an address.
+    /// <summary>PositionComponent lives in a pinned heap the AOT side owns, so its slot carries an address.</summary>
     [Fact]
     public void A_value_the_relay_holds_by_address_is_read_through_the_archetype()
     {
@@ -47,7 +47,7 @@ public class ServerQueryTests : ServerSdkTest
         Assert.Equal(4f, entity.Y);
     }
 
-    /// VitalsComponent lives in a heap the mod owns, so its slot carries a heap handle and an index.
+    /// <summary>VitalsComponent lives in a heap the mod owns, so its slot carries a heap handle and an index.</summary>
     [Fact]
     public void A_value_the_relay_holds_by_heap_handle_is_read_through_the_archetype()
     {

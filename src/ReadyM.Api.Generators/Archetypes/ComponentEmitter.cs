@@ -23,7 +23,7 @@ internal static class ComponentEmitter
     public static void EmitMarker(SourceWriter writer, string name)
         => writer.Line($"internal struct {name} : {ArchetypeNames.Component};");
 
-    /// The values alone, for a component whose other half is emitted by the replicated emitter.
+    /// <summary>The values alone, for a component whose other half is emitted by the replicated emitter.</summary>
     /// <remarks>
     /// A hand-written networked component declares its own fields and the emitter adds everything
     /// around them. A generated one has nobody to declare them, so they come from here, in a partial
@@ -36,6 +36,11 @@ internal static class ComponentEmitter
         // allocation follow the fields, so they belong on the half that declares them.
         var contracts = Contracts(accessors, index is null ? null : $"{ArchetypeNames.IndexedComponent}<{index.Type}>");
 
+        // The other half declares the masks, so the struct has fields in two declarations. Under the
+        // default sequential layout that leaves their order undefined, which the compiler warns about in
+        // every mod (CS0282). Nothing reads this component by memory layout: it crosses the wire through
+        // its generated serialization, field by field. A hand-written networked component says the same.
+        writer.Line("[global::System.Runtime.InteropServices.StructLayout(global::System.Runtime.InteropServices.LayoutKind.Auto)]");
         using (writer.Braces($"internal partial struct {name}{contracts}"))
         {
             foreach (var accessor in accessors)
@@ -60,9 +65,11 @@ internal static class ComponentEmitter
         return carried.Count == 0 ? string.Empty : " : " + string.Join(", ", carried);
     }
 
+    /// <summary>
     /// Creates the collections the component holds. A native collection is a handle to memory
     /// nobody has taken yet, so reading or adding before this has run faults. The store calls it
     /// once, as the entity is created.
+    /// </summary>
     private static void EmitInit(SourceWriter writer, IReadOnlyList<AccessorModel> accessors)
     {
         var collections = accessors.Where(accessor => accessor.IsNativeContainer).ToList();
@@ -94,7 +101,7 @@ internal static class ComponentEmitter
         }
     }
 
-    /// Friflo asks the component itself for the value it is indexed by.
+    /// <summary>Friflo asks the component itself for the value it is indexed by.</summary>
     private static void EmitIndexedValue(SourceWriter writer, AccessorModel? index)
     {
         if (index is null)

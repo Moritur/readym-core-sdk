@@ -7,9 +7,11 @@ using ReadyM.Api.Generators.Archetypes;
 
 namespace ReadyM.Api.Generators.Services;
 
+/// <summary>
 /// Completes a <c>[Service]</c> class: the lifetime and the update a game calls, the handlers it
 /// watches shapes coming and going with, and the registration that makes it one instance anything
 /// can ask for.
+/// </summary>
 [Generator]
 internal class ServiceGenerator : IIncrementalGenerator
 {
@@ -91,7 +93,7 @@ internal class ServiceGenerator : IIncrementalGenerator
 
             writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-            using (writer.Braces("public static class Registration"))
+            using (writer.Braces("internal static class Registration"))
             {
                 // A module initializer runs this where the target has one, and the mod loader runs
                 // it for every assembly it loads. Watching a shape appends, so saying it twice
@@ -169,10 +171,12 @@ internal class ServiceGenerator : IIncrementalGenerator
         return " : " + string.Join(", ", interfaces);
     }
 
+    /// <summary>
     /// The switch anything can read, and what the SDK calls once it has moved it. Enabled has no
     /// setter and the state sits in ServiceSwitch rather than here, so a service cannot switch
     /// itself behind the back of its own OnEnabled and OnDisabled: the two halves of a partial class
     /// are one class, so a field written here would be the service's to write too.
+    /// </summary>
     private static void Switch(SourceWriter writer, ServiceShape.Service read)
     {
         writer.Line(
@@ -198,7 +202,7 @@ internal class ServiceGenerator : IIncrementalGenerator
         writer.Line();
     }
 
-    /// Start and the first OnEnabled, in that order: a service is set up before it is told it runs.
+    /// <summary>Start and the first OnEnabled, in that order: a service is set up before it is told it runs.</summary>
     private static void Started(SourceWriter writer, ServiceShape.Service read)
     {
         writer.Line("private bool _started;");
@@ -234,8 +238,10 @@ internal class ServiceGenerator : IIncrementalGenerator
         writer.Line();
     }
 
+    /// <summary>
     /// One end of a hosted lifetime. A service may declare only the other one, and the interface
     /// still wants both.
+    /// </summary>
     private static void Lifetime(SourceWriter writer, string signature, IMethodSymbol? method)
     {
         if (method is null)
@@ -253,9 +259,11 @@ internal class ServiceGenerator : IIncrementalGenerator
         writer.Line();
     }
 
+    /// <summary>
     /// The shape is what the handler is handed in to, since the component behind it never leaves the
     /// assembly that declared it. The service is resolved as the handler runs, not now: the
     /// container is still being filled, and the switch is read then for the same reason.
+    /// </summary>
     private static void Watch(
         SourceWriter writer,
         string service,

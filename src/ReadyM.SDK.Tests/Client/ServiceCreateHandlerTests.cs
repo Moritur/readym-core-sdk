@@ -3,8 +3,10 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// A [CreateHandler(typeof(Shape))] in a service watches a shape the service did not declare, and
 /// the shape it watches may live in another assembly.
+/// </summary>
 public class ServiceCreateHandlerTests : ClientSdkTest
 {
     [Fact]
@@ -16,7 +18,7 @@ public class ServiceCreateHandlerTests : ClientSdkTest
         Assert.Equal(2, Container.Resolve<Bookkeeping>().Seen.Count);
     }
 
-    /// The shape's own handler runs first, over the whole entity, so a watcher reads what it left.
+    /// <summary>The shape's own handler runs first, over the whole entity, so a watcher reads what it left.</summary>
     [Fact]
     public void A_service_sees_what_the_shape_set_for_itself()
     {

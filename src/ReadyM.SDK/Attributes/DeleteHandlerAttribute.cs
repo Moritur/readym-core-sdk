@@ -1,6 +1,6 @@
 namespace ReadyM.SDK.Attributes;
 
-/// Runs this method on an entity just before it is deleted.
+/// <summary>Runs this method on an entity just before it is deleted.</summary>
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class DeleteHandlerAttribute : Attribute
 {
@@ -8,6 +8,6 @@ public sealed class DeleteHandlerAttribute : Attribute
 
     public DeleteHandlerAttribute(Type shape) => Shape = shape;
 
-    /// The shape watched from a service. Null on a shape's own handler, which watches itself.
+    /// <summary>The shape watched from a service. Null on a shape's own handler, which watches itself.</summary>
     public Type? Shape { get; }
 }

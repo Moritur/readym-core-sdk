@@ -33,7 +33,7 @@ public class ServerExplicitComponentTests : ServerSdkTest
         Assert.Equal(9, Relay.Get<RelayMetadataComponent>(IdentityOf(networked)).Owner);
     }
 
-    /// The archetype has no marker, so its set is just the two components it names.
+    /// <summary>The archetype has no marker, so its set is just the two components it names.</summary>
     [Fact]
     public void An_archetype_over_borrowed_storage_carries_no_marker()
     {
@@ -71,7 +71,7 @@ public class ServerExplicitComponentTests : ServerSdkTest
         Assert.Equal(33, Relay.Get<RelayMetadataComponent>(IdentityOf(networked)).Owner);
     }
 
-    /// A mixin over borrowed storage is a shape in its own right.
+    /// <summary>A mixin over borrowed storage is a shape in its own right.</summary>
     [Fact]
     public void A_borrowed_mixin_can_be_queried_on_its_own()
     {

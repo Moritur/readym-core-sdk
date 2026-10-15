@@ -3,9 +3,11 @@ using ReadyM.SDK.Archetypes.Core;
 
 namespace ReadyM.SDK.Tests;
 
+/// <summary>
 /// The relay names the shapes every game has as strings, because it does not reference the SDK a
 /// mod writes against. A rename here would otherwise go unnoticed until a mod's extensions
 /// quietly stopped arriving.
+/// </summary>
 public class ArchetypeShapeNameTests
 {
     public static TheoryData<WellKnownArchetype, Type> Shapes => new()

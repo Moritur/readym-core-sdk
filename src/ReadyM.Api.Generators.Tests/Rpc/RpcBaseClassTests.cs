@@ -14,8 +14,10 @@ public class RpcBaseClassTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk = [typeof(ReadyM.Api.Multiplayer.ServerRpcForAttribute).Assembly];
 
+    /// <summary>
     /// A client mod has no reference to the server SDK, which is what the generators read the side
     /// off. The test assembly references everything, so this is how a client project is described.
+    /// </summary>
     private static readonly string[] Client =
     [
         typeof(ReadyM.Relay.Server.Sdk.Rpc.ServerRpcHandlersBase).Assembly.GetName().Name!,
@@ -50,14 +52,14 @@ public class RpcBaseClassTests(ITestOutputHelper output)
 
     // -- which side a baseless class lands on ------------------------------------------------------
 
-    /// Only a server mod can reach the server SDK, which is what makes this a server mod.
+    /// <summary>Only a server mod can reach the server SDK, which is what makes this a server mod.</summary>
     [Fact]
     public void A_baseless_class_in_a_server_project_is_given_the_server_base()
     {
         var generated = Run(new ServerRpcHandlerGenerator(), Baseless, Server);
 
         Assert.Contains(
-            "public partial class Rpc : global::ReadyM.Relay.Server.Sdk.Rpc.ServerRpcHandlersBase",
+            "\npartial class Rpc : global::ReadyM.Relay.Server.Sdk.Rpc.ServerRpcHandlersBase",
             generated);
         Assert.Contains("partial void OnPing(global::ReadyM.Relay.Server.Sdk.Rpc.RpcContext context, int value);", generated);
         Assert.Contains("public void SendPong(global::ReadyM.Api.Idents.PlayerId recipient, int value)", generated);
@@ -68,13 +70,15 @@ public class RpcBaseClassTests(ITestOutputHelper output)
     {
         var generated = Run(new ServerRpcEventGenerator(), Baseless, Client);
 
-        Assert.Contains("public partial class Rpc : global::ReadyM.Api.Multiplayer.RPC.RpcBase", generated);
+        Assert.Contains("\npartial class Rpc : global::ReadyM.Api.Multiplayer.RPC.RpcBase", generated);
         Assert.Contains("public void SendPing(int value)", generated);
         Assert.Contains("partial void OnPong(int value);", generated);
     }
 
+    /// <summary>
     /// Both generators run on a server mod, so exactly one of them has to claim the class or the two
     /// halves each bring an InitRpc.
+    /// </summary>
     [Fact]
     public void The_client_generator_writes_nothing_in_a_server_project()
         => Assert.Empty(Run(new ServerRpcEventGenerator(), Baseless, Server));
@@ -101,12 +105,14 @@ public class RpcBaseClassTests(ITestOutputHelper output)
             }
             """, Server);
 
-        Assert.Contains("public partial class Rpc", generated);
+        Assert.Contains("\npartial class Rpc", generated);
         Assert.DoesNotContain("Rpc :", generated);
     }
 
+    /// <summary>
     /// The 0.x client base is this side's wherever it is compiled, so a server project that still
     /// holds one keeps generating the client half for it.
+    /// </summary>
     [Fact]
     public void A_class_that_writes_the_client_base_is_a_client_even_in_a_server_project()
     {

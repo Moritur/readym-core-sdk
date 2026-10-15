@@ -5,8 +5,10 @@ using Xunit;
 
 namespace ReadyM.Api.Generators.Tests.Services;
 
+/// <summary>
 /// The switch every [Service] carries, and the two hooks a service can declare to be told when it
 /// is moved. Both are found by their name, the way the rest of a service's lifetime is.
+/// </summary>
 public class ServiceSwitchTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk = [typeof(SDK.Attributes.ServiceAttribute).Assembly];
@@ -28,8 +30,10 @@ public class ServiceSwitchTests(ITestOutputHelper output)
         return string.Concat(result.GeneratedSyntaxTrees.Select(tree => tree.ToString()));
     }
 
+    /// <summary>
     /// What the compiler makes of the two halves together, which is what refuses an assignment the
     /// generated half never offered a setter for.
+    /// </summary>
     private Diagnostic[] Compiled(string services)
     {
         var result = SourceGeneratorTestHelper.RunGenerators(
@@ -66,14 +70,16 @@ public class ServiceSwitchTests(ITestOutputHelper output)
     public void A_service_that_ticks_carries_the_switch()
         => Assert.Contains("public bool Enabled => _switch.On;", Generated(Ticking));
 
-    /// Including one with nothing to update, so a mod can switch off anything it can name.
+    /// <summary>Including one with nothing to update, so a mod can switch off anything it can name.</summary>
     [Fact]
     public void A_service_with_nothing_to_update_carries_it_too()
         => Assert.Contains("public bool Enabled => _switch.On;", Generated(Held));
 
+    /// <summary>
     /// A service that moved its own switch would skip its own OnEnabled and OnDisabled. Enabled has
     /// no setter, and what it reads is held in a ServiceSwitch only the SDK can move, so there is no
     /// field to write instead: the two halves of a partial class are one class.
+    /// </summary>
     [Fact]
     public void A_service_cannot_switch_itself()
     {
@@ -92,7 +98,7 @@ public class ServiceSwitchTests(ITestOutputHelper output)
     public void A_service_with_nothing_to_update_is_still_a_service()
         => Assert.Contains("partial class Settings : global::ReadyM.SDK.Services.IService", Generated(Held));
 
-    /// IUpdatingService is an IService, so one that ticks says the one and means both.
+    /// <summary>IUpdatingService is an IService, so one that ticks says the one and means both.</summary>
     [Fact]
     public void A_service_that_ticks_names_only_the_updating_one()
     {
@@ -114,7 +120,7 @@ public class ServiceSwitchTests(ITestOutputHelper output)
             < update.IndexOf("Time = time;", StringComparison.Ordinal));
     }
 
-    /// Nothing was declared, so there is nothing to tell it about and the switch moves on its own.
+    /// <summary>Nothing was declared, so there is nothing to tell it about and the switch moves on its own.</summary>
     [Fact]
     public void A_service_that_declared_neither_hook_has_nothing_to_run()
     {
@@ -143,7 +149,7 @@ public class ServiceSwitchTests(ITestOutputHelper output)
         Assert.Contains("OnDisabled();", generated);
     }
 
-    /// Both ends are two sides of one branch, so exactly one runs for a switch that moved.
+    /// <summary>Both ends are two sides of one branch, so exactly one runs for a switch that moved.</summary>
     [Fact]
     public void Declaring_both_puts_them_on_the_two_sides_of_one_branch()
     {
@@ -159,15 +165,17 @@ public class ServiceSwitchTests(ITestOutputHelper output)
         Assert.DoesNotContain("if (!enabled)", generated);
     }
 
+    /// <summary>
     /// Or the first OnEnabled would never be reached: nothing builds a service that only ticks until
     /// the first tick, which is after the game said it was ready.
+    /// </summary>
     [Fact]
     public void Declaring_OnEnabled_makes_a_service_started()
         => Assert.Contains(
             "global::ReadyM.SDK.Services.IStartedService.Start()",
             Generated(Hooks("private void OnEnabled() { }")));
 
-    /// A service is set up before it is told it is about to run.
+    /// <summary>A service is set up before it is told it is about to run.</summary>
     [Fact]
     public void Start_comes_before_the_first_OnEnabled()
     {
@@ -184,13 +192,15 @@ public class ServiceSwitchTests(ITestOutputHelper output)
             < scopeStart.IndexOf("OnEnabled();", StringComparison.Ordinal));
     }
 
-    /// Something may have switched it off while the mods were loading, which is before any of this.
+    /// <summary>Something may have switched it off while the mods were loading, which is before any of this.</summary>
     [Fact]
     public void The_first_OnEnabled_is_skipped_when_it_was_already_switched_off()
         => Assert.Contains("if (Enabled)", Generated(Hooks("private void OnEnabled() { }")));
 
+    /// <summary>
     /// The handlers go with the update: a disabled service is not told about shapes coming or going
     /// either, so it does not act on a world it was not watching.
+    /// </summary>
     [Fact]
     public void A_disabled_service_is_not_told_about_the_shapes_it_watches()
     {
@@ -199,8 +209,10 @@ public class ServiceSwitchTests(ITestOutputHelper output)
         Assert.Equal(2, Occurrences(generated, "if (!service.Enabled)"));
     }
 
+    /// <summary>
     /// The watch itself stays on, since taking it off and putting it back would move the handler to
     /// the end of the list every time a service is switched.
+    /// </summary>
     [Fact]
     public void A_service_that_can_be_switched_still_registers_its_watches()
     {
@@ -240,8 +252,10 @@ public class ServiceSwitchTests(ITestOutputHelper output)
         return found;
     }
 
+    /// <summary>
     /// The two hooks are read the way the rest of the lifetime is, so a shape they cannot be called
     /// in is refused rather than quietly ignored.
+    /// </summary>
     [Theory]
     [InlineData("public void OnEnabled() { }")]
     [InlineData("private void OnEnabled(bool enabled) { }")]

@@ -24,7 +24,7 @@ internal static class ChunkAccess
         return ref Unsafe.AsRef<T>((void*)comp.Data);
     }
 
-    /// Advances by the stride the owning side reported, not by this side's view of the struct size.
+    /// <summary>Advances by the stride the owning side reported, not by this side's view of the struct size.</summary>
     internal static ref T At<T>(ref T first, int index, int stride) where T : struct
         => ref Unsafe.As<byte, T>(ref Unsafe.Add(ref Unsafe.As<T, byte>(ref first), (nint)index * stride));
 }

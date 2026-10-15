@@ -3,7 +3,7 @@ using Friflo.Engine.ECS;
 
 namespace ReadyM.SDK.TestHarness;
 
-/// The index the relay keeps for a component it owns, as the harness has to model it.
+/// <summary>The index the relay keeps for a component it owns, as the harness has to model it.</summary>
 internal abstract class FakeIndex
 {
     internal abstract object Read(IntPtr data);

@@ -7,31 +7,32 @@ using Yooni.Native.Serialization;
 namespace ReadyM.Api.Idents;
 
 /// <summary>
-/// Identifies an area within the game world.
-/// Areas can be main Chapter maps, sub-areas such as the Zodiac Village, or hidden boss arenas.
-/// If going somewhere requires a loading screen, it's probably a different area.
+/// Identifies an area: a part of the game world behind a loading screen, such as a whole map or a single interior.
 /// </summary>
-/// <param name="id">The underlying ID value. This is not guaranteed to be stable across game versions, and should not be used for anything other than debugging or logging purposes.</param>
 [DeriveJsonSerializable]
 public partial struct AreaId : INetSerializable, IEquatable<AreaId>
 {
     private NativeString256 _id;
 
+    /// <summary>An area id from its native string.</summary>
     public AreaId(NativeString256 id)
     {
         _id = id;
     }
     
+    /// <summary>An area id from its string form.</summary>
     public AreaId(string id)
     {
         _id = new NativeString256(id, true);
     }
     
+    /// <summary>An area id from a number, stored as its decimal text.</summary>
     public AreaId(int id)
     {
         _id = new NativeString256(id.ToString(), true);
     }
 
+    /// <summary>No area.</summary>
     public static AreaId Invalid => default;
 
     internal string RawValue => _id.ToString();
@@ -49,6 +50,7 @@ public partial struct AreaId : INetSerializable, IEquatable<AreaId>
         _id.Deserialize(reader);
     }
 
+    /// <summary>Whether both ids name the same area.</summary>
     public bool Equals(AreaId other)
         => _id == other._id;
 
@@ -58,9 +60,11 @@ public partial struct AreaId : INetSerializable, IEquatable<AreaId>
     public override int GetHashCode()
         => _id.GetHashCode();
 
+    /// <summary>Whether both ids name the same area.</summary>
     public static bool operator ==(AreaId left, AreaId right)
         => left._id == right._id;
 
+    /// <summary>Whether the ids name different areas.</summary>
     public static bool operator !=(AreaId left, AreaId right)
         => left._id != right._id;
 

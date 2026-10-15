@@ -14,8 +14,10 @@ public class ClientToClientsTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk = [typeof(Multiplayer.ClientToClientsAttribute).Assembly];
 
+    /// <summary>
     /// What a client mod cannot reach, which is how the generators tell the two sides apart. The
     /// test assembly references it, so a client project has to be described by what it leaves out.
+    /// </summary>
     private static readonly string[] AsAClientMod =
     [
         typeof(ReadyM.Relay.Server.Sdk.Rpc.ServerRpcHandlersBase).Assembly.GetName().Name!,
@@ -50,8 +52,10 @@ public class ClientToClientsTests(ITestOutputHelper output)
 
     // -- the manifest ------------------------------------------------------------------------------
 
+    /// <summary>
     /// The two spaces are numbered from their own ends, so a peer-to-peer name never takes a code a
     /// server RPC would have had.
+    /// </summary>
     [Fact]
     public void A_peer_to_peer_name_is_assigned_out_of_the_client_code_space()
     {
@@ -74,7 +78,7 @@ public class ClientToClientsTests(ITestOutputHelper output)
         Assert.DoesNotContain("ChatMessageCode =\n        (RelayMessageCode)(RelayMessageCode.MinServerRpcEvent", manifest);
     }
 
-    /// Each space is handed out by its own provider, so each carries its own size and offset.
+    /// <summary>Each space is handed out by its own provider, so each carries its own size and offset.</summary>
     [Fact]
     public void Each_space_carries_its_own_count_and_offset()
     {
@@ -88,7 +92,7 @@ public class ClientToClientsTests(ITestOutputHelper output)
 
     // -- the client class --------------------------------------------------------------------------
 
-    /// Both ends of a peer-to-peer RPC are the same class, since every client runs it.
+    /// <summary>Both ends of a peer-to-peer RPC are the same class, since every client runs it.</summary>
     [Fact]
     public void A_peer_to_peer_rpc_gets_a_sender_and_a_handler_on_the_client()
     {
@@ -98,7 +102,7 @@ public class ClientToClientsTests(ITestOutputHelper output)
         Assert.Contains("partial void OnChatMessage(global::ReadyM.Api.Idents.PlayerId sender, string text);", generated);
     }
 
-    /// It is relayed rather than routed, and the mode the contract named is what the relay is told.
+    /// <summary>It is relayed rather than routed, and the mode the contract named is what the relay is told.</summary>
     [Fact]
     public void It_is_sent_by_relay_mode_out_of_the_client_offset()
     {
@@ -109,12 +113,12 @@ public class ClientToClientsTests(ITestOutputHelper output)
         Assert.Contains("ServerRpcManifest.ChatMessageCode + global::Mod.Common.ServerRpcManifest.ClientOffset", generated);
     }
 
-    /// The local player is the sender the message carries, so there is nothing to send without one.
+    /// <summary>The local player is the sender the message carries, so there is nothing to send without one.</summary>
     [Fact]
     public void It_sends_nothing_before_this_client_has_a_player_id()
         => Assert.Contains("if (!RelayClient.PlayerId.HasValue)", ClientCode());
 
-    /// The receiver is told who sent it, which is the one thing it cannot work out for itself.
+    /// <summary>The receiver is told who sent it, which is the one thing it cannot work out for itself.</summary>
     [Fact]
     public void The_handler_is_handed_the_player_it_came_from()
     {
@@ -124,18 +128,37 @@ public class ClientToClientsTests(ITestOutputHelper output)
         Assert.Contains("RunOnGameThread(() => OnChatMessage(sender, text));", generated);
     }
 
-    /// A separate dispatcher, because the two spaces arrive through different relay callbacks.
+    /// <summary>A separate dispatcher, because the two spaces arrive through different relay callbacks.</summary>
     [Fact]
     public void It_is_dispatched_and_registered_through_the_client_rpc_handlers()
     {
         var generated = ClientCode();
 
-        Assert.Contains("protected void OnClientEvent(CustomRelayEventHeader header, NetDataReader reader)", generated);
+        Assert.Contains("private void OnClientEvent(CustomRelayEventHeader header, NetDataReader reader)", generated);
         Assert.Contains("RelayClient.AddClientRpcMessageHandler(", generated);
         Assert.Contains("RelayClient.RemoveClientRpcMessageHandler(", generated);
     }
 
-    /// The other two directions are untouched by it, and still go through the server's own offset.
+    /// <summary>
+    /// Handler classes are usually sealed, and a protected member of a sealed class is a warning (CS0628)
+    /// in every mod that has one. Only the class itself hands its dispatchers to the relay.
+    /// </summary>
+    [Fact]
+    public void A_sealed_handler_class_gets_no_warning_about_its_dispatchers()
+    {
+        var result = SourceGeneratorTestHelper.RunGenerators(
+            [("Client.cs", Client.Replace("\npartial class ModRpc", "public sealed partial class ModRpc"))],
+            [new ServerRpcEventGenerator()],
+            output,
+            Sdk,
+            alsoReferenceMetadata: [ContractsRun().OutputCompilation.ToMetadataReference()],
+            withoutReferences: AsAClientMod);
+
+        Assert.DoesNotContain(result.OutputDiagnostics, d => d.Id == "CS0628");
+        Assert.DoesNotContain(result.OutputDiagnostics, d => d.Severity == DiagnosticSeverity.Error);
+    }
+
+    /// <summary>The other two directions are untouched by it, and still go through the server's own offset.</summary>
     [Fact]
     public void The_server_directions_are_unchanged()
     {
@@ -146,14 +169,14 @@ public class ClientToClientsTests(ITestOutputHelper output)
         Assert.Contains("RelayClient.AddServerRpcMessageHandler(", generated);
     }
 
-    /// The class only names its contracts, so the base it needs is written for it.
+    /// <summary>The class only names its contracts, so the base it needs is written for it.</summary>
     [Fact]
     public void A_class_without_a_base_of_its_own_is_given_one()
         => Assert.Contains(
-            "public partial class ModRpc : global::ReadyM.Api.Multiplayer.RPC.RpcBase",
+            "\npartial class ModRpc : global::ReadyM.Api.Multiplayer.RPC.RpcBase",
             ClientCode());
 
-    /// And one that still writes the 0.x base keeps it, or the two halves would disagree.
+    /// <summary>And one that still writes the 0.x base keeps it, or the two halves would disagree.</summary>
     [Fact]
     public void A_class_that_names_its_own_base_is_left_with_it()
     {
@@ -170,14 +193,16 @@ public class ClientToClientsTests(ITestOutputHelper output)
             }
             """);
 
-        Assert.Contains("public partial class ModRpc", generated);
+        Assert.Contains("\npartial class ModRpc", generated);
         Assert.DoesNotContain("ModRpc :", generated);
     }
 
     // -- what it refuses ---------------------------------------------------------------------------
 
+    /// <summary>
     /// Overloads of a name share one wire code, and the two spaces number theirs separately, so a
     /// name has to sit in one of them.
+    /// </summary>
     [Fact]
     public void A_name_that_mixes_the_two_spaces_is_refused()
         => Assert.Contains(
@@ -214,7 +239,7 @@ public class ClientToClientsTests(ITestOutputHelper output)
                 """),
             diagnostic => diagnostic.Id == "SRPC007");
 
-    /// Saying nothing at all is still refused, and the message now offers all three.
+    /// <summary>Saying nothing at all is still refused, and the message now offers all three.</summary>
     [Fact]
     public void A_contract_method_with_no_direction_is_still_refused()
         => Assert.Contains(

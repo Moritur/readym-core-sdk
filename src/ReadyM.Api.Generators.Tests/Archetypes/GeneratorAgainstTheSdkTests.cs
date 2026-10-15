@@ -17,7 +17,7 @@ namespace ReadyM.Api.Generators.Tests.Archetypes;
 /// </remarks>
 public class GeneratorAgainstTheSdkTests(ITestOutputHelper output)
 {
-    /// The assemblies a mod is compiled against, both halves, as a test host sees them.
+    /// <summary>The assemblies a mod is compiled against, both halves, as a test host sees them.</summary>
     private static readonly Assembly[] Sdk =
     [
         typeof(SDK.Attributes.ArchetypeAttribute).Assembly,
@@ -143,6 +143,24 @@ public class GeneratorAgainstTheSdkTests(ITestOutputHelper output)
     public void The_generator_does_not_report_the_fast_path_as_disabled()
     {
         var reported = Run().DriverRunResult.Diagnostics;
+
+        Assert.DoesNotContain(reported, diagnostic => diagnostic.Id == "READYM001");
+    }
+
+    /// <summary>
+    /// A mod's shared project, as the Common package compiles it: the chunk types without either half's query
+    /// type. It cannot query, so there is no fast path to report as off.
+    /// </summary>
+    [Fact]
+    public void A_shared_project_does_not_report_the_fast_path_as_disabled()
+    {
+        var reported = SourceGeneratorTestHelper.RunGenerators(
+            [("Declarations.cs", Declarations)],
+            [new ArchetypeGenerator(), new ArchetypeMixinGenerator(), new ChunkCombinationGenerator()],
+            output,
+            [typeof(SDK.Attributes.ArchetypeAttribute).Assembly, typeof(SDK.Chunks.ChunkSlot).Assembly],
+            withoutReferences: ["ReadyM.SDK.Client", "ReadyM.SDK.Server"])
+            .DriverRunResult.Diagnostics;
 
         Assert.DoesNotContain(reported, diagnostic => diagnostic.Id == "READYM001");
     }

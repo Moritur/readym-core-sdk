@@ -9,7 +9,7 @@ namespace ReadyM.Api.Multiplayer.ECS.Components;
 /// Marks an entity as part of a player's save and records where its state came from. Written by the server only. Not savable.
 /// </summary>
 [DeriveINetworkedComponent(emitDirtyMask: false)]
-public partial struct PlayerSaveStateComponent : IServerAuthoritative
+internal partial struct PlayerSaveStateComponent : IServerAuthoritative
 {
     private byte _dirtyMask;
     private byte _apiMask;

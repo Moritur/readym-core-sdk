@@ -5,7 +5,9 @@ using Xunit;
 
 namespace ReadyM.Api.Generators.Tests.Archetypes;
 
+/// <summary>
 /// [Interned] on a shape's property: honoured where the shape's own component replicates, refused where it would do nothing.
+/// </summary>
 public class InternedShapeTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk =

@@ -59,7 +59,7 @@ internal sealed class FakeArchetype(int[] componentIds, FakeHeap[] heaps)
         return at < 0 ? null : heaps[at];
     }
 
-    /// Writes one chunk slot per requested component, or reports that this archetype does not match.
+    /// <summary>Writes one chunk slot per requested component, or reports that this archetype does not match.</summary>
     internal unsafe bool Fill(int[] wanted, ChunkComponent* comps)
     {
         for (var i = 0; i < wanted.Length; i++)

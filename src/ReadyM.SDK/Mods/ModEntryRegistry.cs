@@ -5,21 +5,23 @@ using ReadyM.Api.DI;
 
 namespace ReadyM.SDK.Mods;
 
-/// Holds the entry class each mod assembly declares, until there is a container to build it from.
+/// <summary>Holds the entry class each mod assembly declares, until there is a container to build it from.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class ModEntryRegistry
 {
     private static readonly ConcurrentDictionary<Assembly, Declaration> Declared = new();
 
-    /// Called by generated code for the one [ModEntry] class an assembly declares.
+    /// <summary>Called by generated code for the one [ModEntry] class an assembly declares.</summary>
     public static void Declare<TEntry>() where TEntry : class, IModEntry
         => Declared[typeof(TEntry).Assembly] = new Declaration<TEntry>();
 
+    /// <summary>
     /// Whether this assembly is a mod written against the SDK rather than against a base class (old SDK v0).
+    /// </summary>
     public static bool Declares(Assembly assembly) 
         => Declared.ContainsKey(assembly);
 
-    /// Builds the entry class out of the container and runs what it declared, if anything.
+    /// <summary>Builds the entry class out of the container and runs what it declared, if anything.</summary>
     public static IModEntry? Init(Assembly assembly, IDependencyContainer container, string modDirectory)
     {
         if (!Declared.TryGetValue(assembly, out var declaration))
@@ -36,7 +38,9 @@ public static class ModEntryRegistry
         return entry;
     }
 
+    /// <summary>
     /// Initializes the entry point of every assembly given, in the order given, and says how many ran.
+    /// </summary>
     public static int InitAll(
         IEnumerable<(Assembly Assembly, string Directory)> loaded,
         IDependencyContainer container,

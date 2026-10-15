@@ -20,6 +20,8 @@ internal sealed class DeriveMemberModel(
     public bool Interned { get; } = interned;
     public DeriveQuantization? Quantization { get; } = quantization;
 
+    /// <summary>
     /// How many of [Quantize], [QuantizeAngle] and [HalfPrecision] the field carries; more than one is an error.
+    /// </summary>
     public int QuantizationAttributeCount { get; } = quantizationAttributeCount;
 }

@@ -2,7 +2,7 @@ using Friflo.Engine.ECS;
 
 namespace ReadyM.SDK.Entities;
 
-/// The entities a query matched when the loop started.
+/// <summary>The entities a query matched when the loop started.</summary>
 /// <remarks>
 /// Nesting works because a query fills its buffer before the loop body runs, so an inner query rents a different one.
 /// </remarks>
@@ -18,7 +18,7 @@ internal sealed class EntityBuffer
 
     public RawEntity this[int index] => _entities[index];
 
-    /// Snapshots what a query matched, so the loop body is free to change the world.
+    /// <summary>Snapshots what a query matched, so the loop body is free to change the world.</summary>
     public static EntityBuffer Fill(ArchetypeQuery query)
     {
         var buffer = Rent();
@@ -57,7 +57,7 @@ internal sealed class EntityBuffer
         _entities[Count++] = entity;
     }
 
-    /// Reserves room for count more entities and returns the window to write them into.
+    /// <summary>Reserves room for count more entities and returns the window to write them into.</summary>
     public Span<RawEntity> Reserve(int count)
     {
         var required = Count + count;

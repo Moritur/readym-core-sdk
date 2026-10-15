@@ -108,11 +108,21 @@ internal abstract class CSharpFieldTypeSupportImplBase : ICSharpFieldTypeSupport
         context.AppendLine();
     }
 
+    /// <summary>
+    /// The field's own doc comment, copied rather than inherited: the field is private, so the API reference cannot
+    /// follow an inheritdoc to it.
+    /// </summary>
+    private static void EmitDocComment(CSharpEmitFieldSupportContext context)
+    {
+        foreach (var line in DocComments.Of(context.Member.Source.Symbol))
+            context.AppendLine(line);
+    }
+
     public virtual void EmitAccessorMethods(ITypeSymbol symbol, CSharpEmitFieldSupportContext context)
     {
         if (context.Member.AccessorSettings.SkipAccessors)
         {
-            context.AppendLine($"/// <inheritdoc cref=\"{context.State.CurrentVar}\"/>");
+            EmitDocComment(context);
             context.AppendLine($"private {FullyQualifiedTypeName(symbol)} {context.Member.GeneratedPropertyName}");
             using (context.WithCodeBlock())
             {
@@ -132,7 +142,7 @@ internal abstract class CSharpFieldTypeSupportImplBase : ICSharpFieldTypeSupport
             accessorType = "bool";
         }
 
-        context.AppendLine($"/// <inheritdoc cref=\"{context.State.CurrentVar}\"/>");
+        EmitDocComment(context);
         context.AppendLine($"public {accessorType} {context.Member.GeneratedPropertyName}");
         using (context.WithCodeBlock())
         {
@@ -159,6 +169,8 @@ internal abstract class CSharpFieldTypeSupportImplBase : ICSharpFieldTypeSupport
 
     public void EmitNotifyChangesMethods(ITypeSymbol sourceType, CSharpEmitFieldSupportContext context)
     {
+        context.AppendLine("/// <exclude />");
+        context.AppendLine("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
         context.AppendLine($"public void {context.Member.GeneratedPropertyName}NotifyChanged(int id)");
         using (context.WithCodeBlock())
         {

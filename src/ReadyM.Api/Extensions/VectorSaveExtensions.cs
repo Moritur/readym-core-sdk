@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace ReadyM.Api.Extensions;
 
-public static class VectorSaveExtensions
+internal static class VectorSaveExtensions
 {
     public static void WriteSave(this in Vector2 vector, ISaveWriter writer, ISaveWriteContext context)
     {

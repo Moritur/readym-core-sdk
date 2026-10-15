@@ -26,7 +26,7 @@ public class GeneratedShapesTests : ClientSdkTest
     public void Applying_it_reports_that_it_ran()
         => Assert.True(GeneratedShapes.Apply(typeof(CoreArea).Assembly));
 
-    /// An assembly with no shapes of its own has nothing to run.
+    /// <summary>An assembly with no shapes of its own has nothing to run.</summary>
     [Fact]
     public void An_assembly_without_shapes_reports_nothing_to_do()
         => Assert.False(GeneratedShapes.Apply(typeof(object).Assembly));
@@ -62,7 +62,7 @@ public class GeneratedShapesTests : ClientSdkTest
         Assert.Equal(before, ArchetypeRegistry.SetFor(typeof(CoreArea), ComponentsOf<CoreArea>()).Count);
     }
 
-    /// The registrations still hold after re-running, which is what a second call must not undo.
+    /// <summary>The registrations still hold after re-running, which is what a second call must not undo.</summary>
     [Fact]
     public void What_it_registered_still_holds_afterwards()
     {

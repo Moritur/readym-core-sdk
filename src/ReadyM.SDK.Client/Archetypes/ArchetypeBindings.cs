@@ -3,7 +3,7 @@ using ReadyM.Api.Idents;
 
 namespace ReadyM.SDK.Client.Archetypes;
 
-/// What archetype this game registered for each shape, collected as the archetypes are registered.
+/// <summary>What archetype this game registered for each shape, collected as the archetypes are registered.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class ArchetypeBindings
 {

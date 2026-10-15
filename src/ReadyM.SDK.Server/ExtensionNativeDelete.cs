@@ -10,7 +10,7 @@ internal static class ExtensionNativeDelete
 
     public static void Use(IEntityApi api) => _api = api;
 
-    /// Called for every entity the host is about to delete, whoever asked for it.
+    /// <summary>Called for every entity the host is about to delete, whoever asked for it.</summary>
     public static void Run(RawEntity entity)
     {
         if (!DeleteHandlerRegistry.Any || _api is null)

@@ -67,7 +67,7 @@ internal class ClientState : IDisposable
         public Entity CellEntity { get; internal set; }
         public NetworkId CellNetworkId { get; internal set; }
 
-        /// Players for whom this cell is considered active.
+        /// <summary>Players for whom this cell is considered active.</summary>
         public List<PlayerId> CellPlayers { get; internal set; }
     }
 

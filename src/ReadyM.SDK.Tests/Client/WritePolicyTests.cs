@@ -10,9 +10,11 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// What a write through a replicated shape does on a client, where the component's policy decides
 /// whether it lands and what it means. A refused write changes nothing and says so, which is the
 /// half that would otherwise go unnoticed.
+/// </summary>
 public class WritePolicyTests
 {
     private readonly EntityStore _store = new();
@@ -31,7 +33,7 @@ public class WritePolicyTests
     private static T Shaped<T>(EntityHandle handle) where T : struct, IArchetypeQueryable
         => new() { Handle = handle };
 
-    /// The same entity, carrying the mixin whose value is a collection.
+    /// <summary>The same entity, carrying the mixin whose value is a collection.</summary>
     private Rig SpawnWithRoster(bool owned)
     {
         var policy = new Policy { GameCopiesIn = owned, SetsFromApi = owned };
@@ -59,8 +61,10 @@ public class WritePolicyTests
         Assert.False(DirtyOf(rig));
     }
 
+    /// <summary>
     /// A collection changes through its own members rather than by assignment, and the rule it keeps
     /// is the same one: changing it is the game reporting what it holds.
+    /// </summary>
     [Fact]
     public void A_refused_mirror_leaves_a_collection_alone()
     {
@@ -83,8 +87,10 @@ public class WritePolicyTests
         Assert.True(EntityHandle.Of(rig).GetComponent<RosterComponent>().IsDirty);
     }
 
+    /// <summary>
     /// A changed collection is dirty, which is not the same as claimed, so the game keeps reporting
     /// it. The field entry used to read the dirty mask here and would have stopped after one.
+    /// </summary>
     [Fact]
     public void A_collection_the_game_owns_takes_more_than_one_mirror()
     {
@@ -96,8 +102,10 @@ public class WritePolicyTests
         Assert.Equal(2, rig.MembersCount);
     }
 
+    /// <summary>
     /// A value the API claimed is the client's until it is shown to the game, and a mirror waits its
     /// turn. A collection reads the same mask a value does, which it did not before.
+    /// </summary>
     [Fact]
     public void A_claimed_collection_refuses_a_mirror()
     {
@@ -121,7 +129,7 @@ public class WritePolicyTests
         Assert.False(FromApiOf(rig));
     }
 
-    /// Reporting what the game did: it replicates, and nothing claims the value from the game.
+    /// <summary>Reporting what the game did: it replicates, and nothing claims the value from the game.</summary>
     [Fact]
     public void An_allowed_mirror_writes_without_claiming_the_value()
     {
@@ -145,7 +153,7 @@ public class WritePolicyTests
         Assert.True(FromApiOf(rig));
     }
 
-    /// The game must not report over a value the mod has claimed and it has not been shown yet.
+    /// <summary>The game must not report over a value the mod has claimed and it has not been shown yet.</summary>
     [Fact]
     public void A_claimed_value_survives_a_report_from_the_game()
     {

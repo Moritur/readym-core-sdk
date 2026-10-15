@@ -3,8 +3,10 @@ using ReadyM.SDK.Entities;
 
 namespace ReadyM.SDK.Server.Entities;
 
+/// <summary>
 /// Every entity a scope holds that carries all 2 shapes. Walked by identity: a scope's entities
 /// are scattered through the archetypes they belong to, so there are no chunks to hand back.
+/// </summary>
 public readonly ref struct ScopedQuery<T1, T2>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -23,6 +25,8 @@ public readonly ref struct ScopedQuery<T1, T2>
 
     public Enumerator GetEnumerator() => new(_api, _scope);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public struct Enumerator : IDisposable
     {
         private readonly IEntityApi? _api;
@@ -74,8 +78,10 @@ public readonly ref struct ScopedQuery<T1, T2>
     }
 }
 
+/// <summary>
 /// Every entity a scope holds that carries all 3 shapes. Walked by identity: a scope's entities
 /// are scattered through the archetypes they belong to, so there are no chunks to hand back.
+/// </summary>
 public readonly ref struct ScopedQuery<T1, T2, T3>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -95,6 +101,8 @@ public readonly ref struct ScopedQuery<T1, T2, T3>
 
     public Enumerator GetEnumerator() => new(_api, _scope);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public struct Enumerator : IDisposable
     {
         private readonly IEntityApi? _api;
@@ -147,8 +155,10 @@ public readonly ref struct ScopedQuery<T1, T2, T3>
     }
 }
 
+/// <summary>
 /// Every entity a scope holds that carries all 4 shapes. Walked by identity: a scope's entities
 /// are scattered through the archetypes they belong to, so there are no chunks to hand back.
+/// </summary>
 public readonly ref struct ScopedQuery<T1, T2, T3, T4>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -169,6 +179,8 @@ public readonly ref struct ScopedQuery<T1, T2, T3, T4>
 
     public Enumerator GetEnumerator() => new(_api, _scope);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public struct Enumerator : IDisposable
     {
         private readonly IEntityApi? _api;
@@ -222,8 +234,10 @@ public readonly ref struct ScopedQuery<T1, T2, T3, T4>
     }
 }
 
+/// <summary>
 /// Every entity a scope holds that carries all 5 shapes. Walked by identity: a scope's entities
 /// are scattered through the archetypes they belong to, so there are no chunks to hand back.
+/// </summary>
 public readonly ref struct ScopedQuery<T1, T2, T3, T4, T5>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -245,6 +259,8 @@ public readonly ref struct ScopedQuery<T1, T2, T3, T4, T5>
 
     public Enumerator GetEnumerator() => new(_api, _scope);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public struct Enumerator : IDisposable
     {
         private readonly IEntityApi? _api;
@@ -299,8 +315,10 @@ public readonly ref struct ScopedQuery<T1, T2, T3, T4, T5>
     }
 }
 
+/// <summary>
 /// Every entity a scope holds that carries all 6 shapes. Walked by identity: a scope's entities
 /// are scattered through the archetypes they belong to, so there are no chunks to hand back.
+/// </summary>
 public readonly ref struct ScopedQuery<T1, T2, T3, T4, T5, T6>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -323,6 +341,8 @@ public readonly ref struct ScopedQuery<T1, T2, T3, T4, T5, T6>
 
     public Enumerator GetEnumerator() => new(_api, _scope);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public struct Enumerator : IDisposable
     {
         private readonly IEntityApi? _api;

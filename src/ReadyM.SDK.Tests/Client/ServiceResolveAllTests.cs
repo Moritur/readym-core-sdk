@@ -3,8 +3,10 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// A [Service] is registered by its own type, so a host that wants every service playing a role asks the
 /// registry rather than the container.
+/// </summary>
 public class ServiceResolveAllTests : ClientSdkTest
 {
     [Fact]
@@ -15,7 +17,7 @@ public class ServiceResolveAllTests : ClientSdkTest
         Assert.Equal(new[] { "alpha", "zulu" }, greeters.Select(greeter => greeter.Greet()));
     }
 
-    /// The same instances the container hands out by name, not copies.
+    /// <summary>The same instances the container hands out by name, not copies.</summary>
     [Fact]
     public void Resolve_all_gives_the_one_instance_of_each()
     {
@@ -24,7 +26,7 @@ public class ServiceResolveAllTests : ClientSdkTest
         Assert.Same(Container.Resolve<AlphaGreeter>(), greeters[0]);
     }
 
-    /// Every other fixture service is declared too, and none of them comes back.
+    /// <summary>Every other fixture service is declared too, and none of them comes back.</summary>
     [Fact]
     public void Resolve_all_skips_services_that_do_not_play_the_role()
     {

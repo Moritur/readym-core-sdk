@@ -3,8 +3,10 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// What a shape and a service asked to run as an entity goes. Unlike a create handler, these run
 /// wherever the entity is, so a client lets go of what it hung off a replicated entity too.
+/// </summary>
 public class DeleteHandlerTests : ClientSdkTest
 {
     [Fact]
@@ -15,7 +17,7 @@ public class DeleteHandlerTests : ClientSdkTest
         Assert.Contains("shape", Container.Resolve<Ledger>().Order);
     }
 
-    /// The entity is still whole while a handler runs, which is the only reason one is worth having.
+    /// <summary>The entity is still whole while a handler runs, which is the only reason one is worth having.</summary>
     [Fact]
     public void A_handler_can_still_read_the_entity()
     {
@@ -32,8 +34,10 @@ public class DeleteHandlerTests : ClientSdkTest
         Assert.Contains("service", Container.Resolve<Ledger>().Order);
     }
 
+    /// <summary>
     /// The mirror of creation, where the shape's own handler goes first: what a shape set up for
     /// itself is still there while whatever was built on top is let go.
+    /// </summary>
     [Fact]
     public void A_watcher_goes_first_and_the_shape_last()
     {
@@ -42,7 +46,7 @@ public class DeleteHandlerTests : ClientSdkTest
         Assert.Equal(["service", "shape"], Container.Resolve<Ledger>().Order);
     }
 
-    /// Nothing else is touched. A handler is keyed on the shape, not on anything being deleted.
+    /// <summary>Nothing else is touched. A handler is keyed on the shape, not on anything being deleted.</summary>
     [Fact]
     public void A_shape_that_was_not_deleted_hears_nothing()
     {
@@ -102,7 +106,7 @@ public class DeleteHandlerTests : ClientSdkTest
         Assert.Equal(0, turnstile.Inside);
     }
 
-    /// Deleting inside a query is held until the loop ends, and the handlers run when it does.
+    /// <summary>Deleting inside a query is held until the loop ends, and the handlers run when it does.</summary>
     [Fact]
     public void One_deleted_inside_a_query_runs_them_when_the_loop_ends()
     {

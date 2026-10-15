@@ -7,9 +7,11 @@ using ReadyM.SDK.Services;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// What the mods declared reaches the container in its own step, which a host runs once their
 /// assemblies are in and before any of their code does. Getting that order wrong used to leave a
 /// [Service] unresolvable in a mod's entry point and never ticking afterwards, with nothing said.
+/// </summary>
 public class ModDeclarationOrderTests
 {
     [Fact]
@@ -24,7 +26,7 @@ public class ModDeclarationOrderTests
         Assert.True(ServiceRegistry.RegisteredFor(container));
     }
 
-    /// Asked of each container on its own, because a process may hold more than one.
+    /// <summary>Asked of each container on its own, because a process may hold more than one.</summary>
     [Fact]
     public void Registering_one_container_says_nothing_about_another()
     {

@@ -60,11 +60,33 @@ internal sealed class ChunkNames
         public bool Supports(int arity) => arities.Contains(arity);
     }
 
-    /// Whether a compilation could use the fast path at all.
+    /// <summary>Whether a compilation could use the fast path at all.</summary>
     public static bool ChunkAssemblyReferenced(Compilation compilation)
     {
         foreach (var assembly in compilation.SourceModule.ReferencedAssemblySymbols)
             if (assembly.Name == ChunkAssembly)
+                return true;
+
+        return false;
+    }
+
+    /// <summary>Whether a compilation that references the chunk assembly finds what it needs from it.</summary>
+    /// <remarks>
+    /// A mod's shared project references the chunk types but neither half, so it has no query to walk and
+    /// nothing is missing. Only a missing chunk type, or a half without its query type, means a rename.
+    /// </remarks>
+    public static bool FastPathMissing(Compilation compilation)
+    {
+        if (!ChunkAssemblyReferenced(compilation) || Resolve(compilation) is not null)
+            return false;
+
+        return Find(compilation, "ComponentChunk") is null || HalfReferenced(compilation);
+    }
+
+    private static bool HalfReferenced(Compilation compilation)
+    {
+        foreach (var assembly in compilation.SourceModule.ReferencedAssemblySymbols)
+            if (assembly.Name is "ReadyM.SDK.Client" or "ReadyM.SDK.Server")
                 return true;
 
         return false;

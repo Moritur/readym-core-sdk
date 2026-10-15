@@ -9,17 +9,17 @@ public static class ReplicationRegistry
 {
     private static readonly ConcurrentDictionary<Type, Delivery> Deliveries = new();
 
-    /// Called by generated code for a replicated shape.
+    /// <summary>Called by generated code for a replicated shape.</summary>
     public static void Register<TComponent>(Delivery delivery)
         where TComponent : struct, Friflo.Engine.ECS.IComponent
         => Deliveries[typeof(TComponent)] = delivery;
 
-    public static IReadOnlyList<ReplicatedComponent> Snapshot()
+    internal static IReadOnlyList<ReplicatedComponent> Snapshot()
         => [.. Deliveries.Select(entry => new ReplicatedComponent(entry.Key, entry.Value))];
 
-    public static IReadOnlyList<ReplicatedComponent> InWireOrder()
+    internal static IReadOnlyList<ReplicatedComponent> InWireOrder()
         => [.. Snapshot().OrderBy(replicated => replicated.Component.FullName, StringComparer.Ordinal)];
 
-    /// Only for tests, which need each case to start from nothing.
+    /// <summary>Only for tests, which need each case to start from nothing.</summary>
     internal static void Clear() => Deliveries.Clear();
 }

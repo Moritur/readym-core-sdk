@@ -123,7 +123,7 @@ public class ServerScopedQueryTests : ServerSdkTest
         Assert.Equal(7, Relay.Get<PatrolComponent>(IdentityOf(guard)).route);
     }
 
-    /// The flow a mod writes: find the scope by its index, then narrow to it.
+    /// <summary>The flow a mod writes: find the scope by its index, then narrow to it.</summary>
     [Fact]
     public void A_scope_found_by_its_index_can_be_queried()
     {
@@ -142,7 +142,7 @@ public class ServerScopedQueryTests : ServerSdkTest
         Assert.Equal(8, routes);
     }
 
-    /// Deleting inside a scoped loop is held, the same as in any other query.
+    /// <summary>Deleting inside a scoped loop is held, the same as in any other query.</summary>
     [Fact]
     public void A_delete_inside_a_scoped_query_is_held()
     {
@@ -200,7 +200,7 @@ public class ServerScopedQueryTests : ServerSdkTest
         Assert.Equal(2, CountIn(south));
     }
 
-    /// A scope that is gone cannot hold anything.
+    /// <summary>A scope that is gone cannot hold anything.</summary>
     [Fact]
     public void Creating_in_a_scope_that_is_gone_is_refused()
     {
@@ -211,7 +211,7 @@ public class ServerScopedQueryTests : ServerSdkTest
         Assert.Throws<InvalidEntityException>(() => Entities.Create<Guard>(north));
     }
 
-    /// Creating is refused inside a query, scope or no scope.
+    /// <summary>Creating is refused inside a query, scope or no scope.</summary>
     [Fact]
     public void Creating_in_a_scope_inside_a_query_is_refused()
     {
@@ -263,7 +263,7 @@ public class ServerScopedQueryTests : ServerSdkTest
         Assert.Equal(3, routes);
     }
 
-    /// The widest a query goes, narrowed to one scope.
+    /// <summary>The widest a query goes, narrowed to one scope.</summary>
     [Fact]
     public void Six_shapes_can_be_scoped()
     {
@@ -296,7 +296,7 @@ public class ServerScopedQueryTests : ServerSdkTest
         Assert.Equal(1, visited);
     }
 
-    /// An entity in the scope missing one of the shapes is not visited.
+    /// <summary>An entity in the scope missing one of the shapes is not visited.</summary>
     [Fact]
     public void A_scoped_multi_shape_query_still_needs_every_shape()
     {
@@ -324,8 +324,10 @@ public class ServerScopedQueryTests : ServerSdkTest
         Assert.Equal(0, count);
     }
 
+    /// <summary>
     /// Deleting inside a scoped loop over several shapes is held until it ends, the same as any
     /// other query, which is what says the loop opened a query scope and closed it again.
+    /// </summary>
     [Fact]
     public void A_delete_inside_a_scoped_multi_shape_query_is_held()
     {

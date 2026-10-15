@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
-/// Registers the tags a shape declares, so every entity created as it carries them.
+/// <summary>Registers the tags a shape declares, so every entity created as it carries them.</summary>
 internal static class TagEmitter
 {
     public static void Emit(SourceWriter writer, DeclarationModel model, Compilation compilation)
@@ -14,7 +14,7 @@ internal static class TagEmitter
         writer.Line();
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {model.Name}Tags"))
+        using (writer.Braces($"internal static class {model.Name}Tags"))
         {
             if (ExtendsEmitter.HasModuleInitializer(compilation))
                 writer.Line("[global::System.Runtime.CompilerServices.ModuleInitializer]");

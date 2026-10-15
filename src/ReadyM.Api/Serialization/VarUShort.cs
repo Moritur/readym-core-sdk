@@ -3,9 +3,11 @@ using LiteNetLib.Utils;
 
 namespace ReadyM.Api.Serialization;
 
+/// <summary>
 /// Variable-length unsigned short.
 /// Most significant bit of each byte is used as a continuation flag.
 /// The remaining 7 bits are used to store the value.
+/// </summary>
 [DeriveJsonSerializable]
 public partial struct VarUShort(ushort value) : INetSerializable, IEquatable<VarUShort>
 {
@@ -13,7 +15,7 @@ public partial struct VarUShort(ushort value) : INetSerializable, IEquatable<Var
 
     public ushort Value { get; private set; } = value;
 
-    /// How many bytes the value takes on the wire.
+    /// <summary>How many bytes the value takes on the wire.</summary>
     public static int SizeOf(ushort value)
         => value switch
         {

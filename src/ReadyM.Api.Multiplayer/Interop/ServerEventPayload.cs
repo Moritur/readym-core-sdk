@@ -6,7 +6,7 @@ using ReadyM.Api.Idents;
 namespace ReadyM.Api.Multiplayer.Interop;
 
 [StructLayout(LayoutKind.Sequential)]
-public struct ServerEventPayload
+internal struct ServerEventPayload
 {
     public PlayerId Player;
     public AreaId Area;

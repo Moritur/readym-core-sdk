@@ -42,10 +42,13 @@ using ReadyM.Api.Interop.Registry;
 
 namespace {ns};
 
-public partial struct {name} : IInteropType
+partial struct {name} : IInteropType
 {{
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public static int Id;
-    public int GetClassId() => Id;
+
+    int IInteropType.GetClassId() => Id;
 }}
 ";
         return (name, code);

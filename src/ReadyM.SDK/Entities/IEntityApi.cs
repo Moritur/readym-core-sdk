@@ -9,10 +9,12 @@ namespace ReadyM.SDK.Entities;
 
 internal interface IEntityApi
 {
+    /// <summary>
     /// What this side calls the component type. Asked once per type, see <see cref="ComponentIds{T}"/>.
+    /// </summary>
     int ComponentIdOf(Type type);
 
-    /// Where the component lives, or a default that is not <c>Found</c> if it is absent.
+    /// <summary>Where the component lives, or a default that is not <c>Found</c> if it is absent.</summary>
     /// <exception cref="InvalidEntityException">The entity is gone, or a running query asked for it to be.</exception>
     ComponentRef Locate(RawEntity rawEntity, int componentId);
 
@@ -39,14 +41,14 @@ internal interface IEntityApi
     bool TryFindByIndex<TComponent, TKey>(TKey key, out RawEntity entity)
         where TComponent : struct, IIndexedComponent<TKey>;
 
-    /// Whether a write of this kind would be applied to the component.
+    /// <summary>Whether a write of this kind would be applied to the component.</summary>
     bool Allows(RawEntity rawEntity, Type component, WriteKind kind);
 
-    /// Whether a mirror of this value would be applied, for a write that carries its own.
+    /// <summary>Whether a mirror of this value would be applied, for a write that carries its own.</summary>
     bool Mirrors<TComponent, TValue>(RawEntity rawEntity, in TComponent component, Field<TComponent, TValue> field)
         where TComponent : struct, IComponent;
 
-    /// Writes one value, as the game reporting it or as an override of it.
+    /// <summary>Writes one value, as the game reporting it or as an override of it.</summary>
     /// <returns><c>false</c> when the write does not belong on this side.</returns>
     bool Write<TComponent, TValue>(
         RawEntity rawEntity,
@@ -56,12 +58,12 @@ internal interface IEntityApi
         WriteKind kind)
         where TComponent : struct, IComponent;
 
-    /// Does this component's data sync direction is from ECS to game?
+    /// <summary>Does this component's data sync direction is from ECS to game?</summary>
     bool ShouldApplyToGame(RawEntity rawEntity, Type component);
 
     bool IsAlive(RawEntity rawEntity);
 
-    /// Whether the entity carries every component of the set. An empty set matches anything.
+    /// <summary>Whether the entity carries every component of the set. An empty set matches anything.</summary>
     bool HasComponents(RawEntity rawEntity, ComponentSet components);
 
     /// <param name="owner">
@@ -76,9 +78,9 @@ internal interface IEntityApi
     /// </summary>
     bool Delete(RawEntity rawEntity);
 
-    /// Called by a query as it starts, so deletes inside can be deferred.
+    /// <summary>Called by a query as it starts, so deletes inside can be deferred.</summary>
     void EnterQuery();
 
-    /// Called by a query as it ends, so deletes deferred inside can be applied.
+    /// <summary>Called by a query as it ends, so deletes deferred inside can be applied.</summary>
     void LeaveQuery();
 }

@@ -21,12 +21,14 @@ internal sealed class DeriveTargetInfo(
 {
     public bool IsExternal { get; } = isExternal;
 
+    /// <summary>
     /// How the component is declared. Given explicitly for a component that is being generated, so
     /// it does not have to exist as a symbol before it can be emitted.
+    /// </summary>
     public string Accessibility { get; } = accessibility
         ?? symbol.DeclaredAccessibility.ToString().ToLowerInvariant();
 
-    /// The component's own name, qualified. Same reason: a generated component has no symbol to ask.
+    /// <summary>The component's own name, qualified. Same reason: a generated component has no symbol to ask.</summary>
     public string QualifiedName { get; } = qualifiedName
         ?? DeriveCSharpUtils.FullyQualifiedTypeName(symbol);
 

@@ -50,4 +50,20 @@ internal class CSharpFieldSupportRegistry
         CSharpSerializationImpls,
         new FallbackTypeSerializationImpl()
     );
+
+    /// <summary>Whether a value of this type can be sent, rather than throwing when it is.</summary>
+    internal static bool CanSend(ITypeSymbol type)
+    {
+        // An entity reference is supported only to say, at run time, that it cannot be sent.
+        if (!EmitSerializeVisitor.TryGetImpl(type, false, out var impl) || impl is EntitySerializationImpl)
+            return false;
+
+        if (SerializationHelper.IsNativeList(type, out var item))
+            return CanSend(item);
+
+        if (SerializationHelper.IsNativeDictionary(type, out var key, out var value, out _))
+            return CanSend(key) && CanSend(value);
+
+        return true;
+    }
 }

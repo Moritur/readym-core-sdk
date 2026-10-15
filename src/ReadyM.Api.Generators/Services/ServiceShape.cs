@@ -7,7 +7,7 @@ using ReadyM.Api.Generators.Archetypes;
 
 namespace ReadyM.Api.Generators.Services;
 
-/// What a class has to look like to be a service, for the generator and the analyzer alike.
+/// <summary>What a class has to look like to be a service, for the generator and the analyzer alike.</summary>
 internal static class ServiceShape
 {
     public const string UpdateName = "Update";
@@ -165,7 +165,7 @@ internal static class ServiceShape
         => method.GetAttributes().FirstOrDefault(attribute
             => attribute.AttributeClass?.ToDisplayString() == ArchetypeNames.UpdateOrderAttribute);
 
-    /// The services one end of the constraint names, refusing anything that does not tick.
+    /// <summary>The services one end of the constraint names, refusing anything that does not tick.</summary>
     private static IReadOnlyList<INamedTypeSymbol> Targets(
         AttributeData attribute,
         string name,
@@ -197,12 +197,12 @@ internal static class ServiceShape
         return found;
     }
 
-    /// Whether the type is a service the SDK ticks, which is all that can be ordered against.
+    /// <summary>Whether the type is a service the SDK ticks, which is all that can be ordered against.</summary>
     public static bool Updates(INamedTypeSymbol type)
         => IsService(type)
            && type.GetMembers(UpdateName).OfType<IMethodSymbol>().Any(Callable);
 
-    /// One duck-typed method the SDK calls, or null when the service declared none it can call.
+    /// <summary>One duck-typed method the SDK calls, or null when the service declared none it can call.</summary>
     private static IMethodSymbol? ReadHook(
         INamedTypeSymbol service,
         string name,
@@ -260,7 +260,7 @@ internal static class ServiceShape
         return found;
     }
 
-    /// The named handler attribute on a method, however it was written, or null for anything else.
+    /// <summary>The named handler attribute on a method, however it was written, or null for anything else.</summary>
     private static AttributeData? Handler(IMethodSymbol method, string attributeName)
     {
         foreach (var attribute in method.GetAttributes())
@@ -270,7 +270,7 @@ internal static class ServiceShape
         return null;
     }
 
-    /// Only a shape carries the watch point a service hands its handler in to.
+    /// <summary>Only a shape carries the watch point a service hands its handler in to.</summary>
     private static bool IsShape(INamedTypeSymbol type)
         => type.GetAttributes().Any(attribute
             => attribute.AttributeClass?.ToDisplayString() is ArchetypeNames.ArchetypeAttribute
@@ -278,8 +278,10 @@ internal static class ServiceShape
 
     private static bool Callable(IMethodSymbol method) => Hidden(method) && method.Parameters.Length == 0;
 
+    /// <summary>
     /// Everything the SDK calls on a service is the service's own business, so it stays private:
     /// the generated half sits inside the class and reaches it anyway.
+    /// </summary>
     private static bool Hidden(IMethodSymbol method)
         => !method.IsStatic
            && method.ReturnsVoid
@@ -309,35 +311,37 @@ internal static class ServiceShape
 
         public IMethodSymbol? Stop { get; } = stop;
 
-        /// Run as its update starts ticking, which is at startup unless something disabled it.
+        /// <summary>Run as its update starts ticking, which is at startup unless something disabled it.</summary>
         public IMethodSymbol? OnEnabled { get; } = onEnabled;
 
-        /// Run once its update has stopped ticking.
+        /// <summary>Run once its update has stopped ticking.</summary>
         public IMethodSymbol? OnDisabled { get; } = onDisabled;
 
-        /// Shapes it is told about as they are created.
+        /// <summary>Shapes it is told about as they are created.</summary>
         public IReadOnlyList<(IMethodSymbol Method, INamedTypeSymbol Shape)> Watching { get; } = watching;
 
-        /// Shapes it is told about just before they go.
+        /// <summary>Shapes it is told about just before they go.</summary>
         public IReadOnlyList<(IMethodSymbol Method, INamedTypeSymbol Shape)> Leaving { get; } = leaving;
 
-        /// Where its update runs relative to the others.
+        /// <summary>Where its update runs relative to the others.</summary>
         public Ordering Order { get; } = order;
 
         public ImmutableArray<Diagnostic> Problems { get; } = problems;
 
+        /// <summary>
         /// Started by the SDK once the host says its game is up. OnEnabled counts, since the first
         /// one fires then and a service declaring only that would otherwise not be built to see it.
+        /// </summary>
         public bool Started => Start is not null || OnEnabled is not null;
 
-        /// Only a Stop needs the container to dispose it, which is what ends a service.
+        /// <summary>Only a Stop needs the container to dispose it, which is what ends a service.</summary>
         public bool Disposable => Stop is not null;
 
         public static Service Refused(Diagnostic problem)
             => new(null, null, null, null, null, [], [], Ordering.Default, [problem]);
     }
 
-    /// What [UpdateOrder] said, or what it means to have left it off.
+    /// <summary>What [UpdateOrder] said, or what it means to have left it off.</summary>
     internal readonly struct Ordering(int priority, IReadOnlyList<INamedTypeSymbol> before, IReadOnlyList<INamedTypeSymbol> after)
     {
         public const int DefaultPriority = 100;
@@ -350,7 +354,7 @@ internal static class ServiceShape
 
         public static Ordering Default => new(DefaultPriority, [], []);
 
-        /// Whether anything was said, which is what decides if the registration carries it.
+        /// <summary>Whether anything was said, which is what decides if the registration carries it.</summary>
         public bool IsDefault => Priority == DefaultPriority && Before.Count == 0 && After.Count == 0;
     }
 }

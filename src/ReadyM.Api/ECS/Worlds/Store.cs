@@ -113,12 +113,16 @@ internal sealed partial class Store : IArchetypeRegistry, IArchetypeNames
 
     private readonly ILogger _logger;
 
+    /// <summary>
     /// Runs native init for components the mod host owns. Those are registered here as opaque stride components, so
     /// <see cref="NativeInitCallback"/> cannot see them and the mod side has to do it. Null when no mod host is
     /// attached, which is always the case on the client.
+    /// </summary>
     private Action<ArchetypeId, RawEntity, bool>? _modPostCreateInit;
 
+    /// <summary>
     /// Tells the mod host an entity is about to be deleted, so that [DeleteHandler]s can run. Null on the client.
+    /// </summary>
     private Action<RawEntity>? _modEntityDeletedCallback;
 
     private Thread? _thread;

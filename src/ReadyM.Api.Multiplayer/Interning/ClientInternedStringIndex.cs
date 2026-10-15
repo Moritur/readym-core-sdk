@@ -8,8 +8,8 @@ using Yooni.Native.Serialization;
 
 namespace ReadyM.Api.Multiplayer.Interning;
 
-/// A client's copy of the server's index, filled only from what the server sends.
-public sealed class ClientInternedStringIndex(ILogger logger) : IInternedStringIndex
+/// <summary>A client's copy of the server's index, filled only from what the server sends.</summary>
+internal sealed class ClientInternedStringIndex(ILogger logger) : IInternedStringIndex
 {
     private readonly HashSet<uint> _reported = new();
 
@@ -40,7 +40,9 @@ public sealed class ClientInternedStringIndex(ILogger logger) : IInternedStringI
         return false;
     }
 
+    /// <summary>
     /// Adds the strings from an append, or replaces the copy with a whole index, which is the only append starting at 0.
+    /// </summary>
     public void ApplyAppend(NetDataReader reader)
     {
         var firstId = reader.GetVarUInt();

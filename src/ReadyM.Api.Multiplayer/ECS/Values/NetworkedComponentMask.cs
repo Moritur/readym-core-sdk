@@ -10,7 +10,7 @@ namespace ReadyM.Api.Multiplayer.ECS.Values;
 /// the server and its clients, so a mask means the same components on both.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-public struct NetworkedComponentMask : INetSerializable, IEquatable<NetworkedComponentMask>
+internal struct NetworkedComponentMask : INetSerializable, IEquatable<NetworkedComponentMask>
 {
     private ulong _bits0;
     private ulong _bits1;

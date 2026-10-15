@@ -5,7 +5,7 @@ using Yooni.Native.Serialization;
 
 namespace ReadyM.Api.Multiplayer.Interning;
 
-/// Writes and reads a string marked [Interned]. Called by generated code.
+/// <summary>Writes and reads a string marked [Interned]. Called by generated code.</summary>
 public static class InternedStringCodec
 {
     // One varint: 0 when the string follows, and the id plus one otherwise

@@ -131,12 +131,12 @@ public static class ServiceOrdering
     }
 }
 
-/// What services asked for cannot be done, because the order would have to come back on itself.
+/// <summary>What services asked for cannot be done, because the order would have to come back on itself.</summary>
 public sealed class ServiceOrderException(string cycle)
     : InvalidOperationException(
         $"Services order their updates in a cycle, so there is no order that satisfies them: {cycle}. "
         + "Remove one of the [UpdateOrder] constraints in that loop.")
 {
-    /// The loop, as the services in it.
+    /// <summary>The loop, as the services in it.</summary>
     public string Cycle { get; } = cycle;
 }

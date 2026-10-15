@@ -56,7 +56,7 @@ public class ServerScopeLookupTests : ServerSdkTest
         Assert.Equal(1, area.AreaId);
     }
 
-    /// A scope is itself held, so it answers for what is above it.
+    /// <summary>A scope is itself held, so it answers for what is above it.</summary>
     [Fact]
     public void A_scope_reports_the_scope_holding_it()
     {

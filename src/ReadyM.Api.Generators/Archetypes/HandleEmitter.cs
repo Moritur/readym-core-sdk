@@ -25,6 +25,8 @@ internal static class HandleEmitter
     {
         writer.Line($"private readonly {ArchetypeNames.EntityHandle} _handle;");
         writer.Line();
+        writer.Line("/// <exclude />");
+        writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
         writer.Line($"public {model.Name}({ArchetypeNames.EntityHandle} handle) => _handle = handle;");
         writer.Line();
 
@@ -39,7 +41,7 @@ internal static class HandleEmitter
         writer.Line();
         writer.Line($"{ArchetypeNames.ComponentSet} {ArchetypeNames.Queryable}.Components => {model.QualifiedAccessors}.Components;");
         writer.Line();
-        writer.Line("/// This entity, which it already is: a loop over this shape hands over the shape itself.");
+        writer.Line("/// <summary>This entity, which it already is: a loop over this shape hands over the shape itself.</summary>");
         writer.Line("/// <remarks>");
         writer.Line("/// Here so taking something out of a loop reads the same whichever way the loop walks. Whether a");
         writer.Line("/// shape is walked by chunk follows from what it includes, which the call site cannot see and which");
@@ -72,7 +74,7 @@ internal static class HandleEmitter
         };
     }
 
-    /// The modifier the declaration used, which the implementing part has to repeat.
+    /// <summary>The modifier the declaration used, which the implementing part has to repeat.</summary>
     private static string Keyword(AccessorModel accessor) => accessor.Accessibility switch
     {
         Microsoft.CodeAnalysis.Accessibility.Private => "private",
@@ -87,6 +89,7 @@ internal static class HandleEmitter
     /// What the value is called here, which an include puts its prefix in front of. The accessor
     /// class it is read through keeps the name the declaring shape gave it.
     /// </param>
+    /// <param name="inheritsFrom">For a value an include brings, the member it comes from, as a cref.</param>
     public static void Accessor(
         SourceWriter writer,
         AccessorModel accessor,
@@ -94,12 +97,20 @@ internal static class HandleEmitter
         bool partial,
         bool replicated = false,
         bool client = false,
-        string? name = null)
+        string? name = null,
+        bool hidden = false,
+        string? inheritsFrom = null)
     {
         if (!partial && !accessor.IsExposed)
             return;
 
         var called = name ?? accessor.Name;
+
+        if ((partial ? accessor.InheritsDocFrom : inheritsFrom) is { } source)
+            writer.Line($"/// <inheritdoc cref=\"{source}\"/>");
+
+        if (hidden)
+            writer.Line(ArchetypeNames.Hidden);
 
         var declaration = partial
             ? $"{Keyword(accessor)} partial {accessor.Type} {called}"

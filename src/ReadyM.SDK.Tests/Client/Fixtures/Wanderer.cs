@@ -20,14 +20,14 @@ public readonly partial struct Mood
     public partial float Spirit { get; set; }
 }
 
-/// Carries a managed field, so a query over it also covers a heap that cannot be pinned.
+/// <summary>Carries a managed field, so a query over it also covers a heap that cannot be pinned.</summary>
 [ArchetypeMixin]
 public readonly partial struct Label
 {
     public partial string Text { get; set; }
 }
 
-/// Six mixins on one entity, which is as wide as a query goes.
+/// <summary>Six mixins on one entity, which is as wide as a query goes.</summary>
 [Archetype(replicated: false)]
 [Include(typeof(Health))]
 [Include(typeof(Placement))]

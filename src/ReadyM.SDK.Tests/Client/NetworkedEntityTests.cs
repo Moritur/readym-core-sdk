@@ -73,7 +73,7 @@ public class NetworkedEntityTests : IDisposable
 
     public void Dispose() => _container.Dispose();
 
-    /// What a game does for each of its shapes, so a create lands on an archetype both sides name.
+    /// <summary>What a game does for each of its shapes, so a create lands on an archetype both sides name.</summary>
     private void Bind<T>() where T : struct, IArchetype
     {
         var components = ArchetypeRegistry.SetFor(typeof(T), default(T).Components);
@@ -89,33 +89,35 @@ public class NetworkedEntityTests : IDisposable
 
     // -- what decides it ---------------------------------------------------------------------------
 
-    /// Nothing about a prop leaves this machine, so nothing has to name it on another one.
+    /// <summary>Nothing about a prop leaves this machine, so nothing has to name it on another one.</summary>
     [Fact]
     public void A_shape_with_nothing_to_send_is_created_local()
         => Assert.False(Has<MetadataComponent>(Entities.Create<Prop>()));
 
-    /// Rig is declared replicated, so the entity has to be one the relay can name.
+    /// <summary>Rig is declared replicated, so the entity has to be one the relay can name.</summary>
     [Fact]
     public void A_shape_that_replicates_is_created_networked()
         => Assert.True(Has<MetadataComponent>(Entities.Create<Rig>()));
 
+    /// <summary>
     /// The same for a shape over a component the game declares. The SDK generated none of it, and it
     /// makes no difference: the archetype said so.
+    /// </summary>
     [Fact]
     public void A_shape_over_a_component_the_game_sends_is_networked_as_well()
         => Assert.True(Has<MetadataComponent>(Entities.Create<Borrowed>()));
 
-    /// Gauge carries the mixin Rig sends, and stays here anyway, without a binding to say where.
+    /// <summary>Gauge carries the mixin Rig sends, and stays here anyway, without a binding to say where.</summary>
     [Fact]
     public void A_local_archetype_stays_local_whatever_it_includes()
         => Assert.False(Has<MetadataComponent>(Entities.Create<Gauge>()));
 
-    /// Nothing Signpost holds is sent, and the entity still is: its presence is the message.
+    /// <summary>Nothing Signpost holds is sent, and the entity still is: its presence is the message.</summary>
     [Fact]
     public void A_replicated_archetype_with_nothing_that_sends_is_networked()
         => Assert.True(Has<MetadataComponent>(Entities.Create<Signpost>()));
 
-    /// A query asks for components, not for how the entity came to have them, so it finds both.
+    /// <summary>A query asks for components, not for how the entity came to have them, so it finds both.</summary>
     [Fact]
     public void A_query_over_a_replicated_mixin_finds_local_entities_too()
     {
@@ -132,7 +134,7 @@ public class NetworkedEntityTests : IDisposable
 
     // -- who owns it -------------------------------------------------------------------------------
 
-    /// A client makes entities of its own and nobody else's, so there is no owner to pass.
+    /// <summary>A client makes entities of its own and nobody else's, so there is no owner to pass.</summary>
     [Fact]
     public void A_networked_entity_belongs_to_the_player_that_made_it()
     {
@@ -159,8 +161,10 @@ public class NetworkedEntityTests : IDisposable
 
     // -- scope is a separate question --------------------------------------------------------------
 
+    /// <summary>
     /// Being in a scope and being networked are decided apart: a scope says where the entity lives,
     /// the components say whether anyone else hears about it.
+    /// </summary>
     [Fact]
     public void A_networked_entity_keeps_the_scope_it_was_made_in()
     {
@@ -208,7 +212,7 @@ public class NetworkedEntityTests : IDisposable
         Assert.False(EntityHandle.Of(rig).IsAlive());
     }
 
-    /// A local one has nobody to tell, and is simply gone.
+    /// <summary>A local one has nobody to tell, and is simply gone.</summary>
     [Fact]
     public void Deleting_a_local_entity_just_removes_it()
     {
@@ -233,8 +237,10 @@ public class NetworkedEntityTests : IDisposable
         Assert.Equal(_bound[typeof(Rig).FullName!], Archetype(rig));
     }
 
+    /// <summary>
     /// Minting one here would reach the server under a name only this side knows, so it is refused
     /// at the create rather than at the entity's first hop.
+    /// </summary>
     [Fact]
     public void A_replicating_shape_the_game_never_bound_cannot_be_created()
     {

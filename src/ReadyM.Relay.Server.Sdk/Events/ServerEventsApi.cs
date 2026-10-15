@@ -14,17 +14,28 @@ namespace ReadyM.Relay.Server.Sdk.Events;
 /// <summary>
 /// Provides an API for subscribing to server events.
 /// </summary>
-public sealed class ServerEventsApi : IDisposable
+[Obsolete("Will be made internal, use IServerEvents instead")]
+public sealed class ServerEventsApi : IServerEvents, IDisposable
 {
+    /// <summary>Fires when a player has connected and their player entity exists.</summary>
     public event Action<PlayerId, Entity>? OnPlayerConnected;
+    /// <summary>Fires when a player has left or dropped, after they left their area.</summary>
     public event Action<PlayerId, Entity, DisconnectReason>? OnPlayerDisconnected;
+    /// <summary>Fires when an area comes into use, as the first player enters it.</summary>
     public event Action<AreaId, Entity>? OnAreaCreated;
+    /// <summary>Fires when the last player has left an area, unless the server keeps it while empty.</summary>
     public event Action<AreaId, Entity>? OnAreaDeleted;
+    /// <summary>Fires when any player enters an area, the first one included.</summary>
     public event Action<PlayerId, AreaId>? OnPlayerJoinedArea;
+    /// <summary>Fires when any player leaves an area.</summary>
     public event Action<PlayerId, AreaId>? OnPlayerLeftArea;
+    /// <summary>Fires when a cell comes into use, as the first player loads it.</summary>
     public event Action<AreaId, CellId, Entity>? OnCellCreated;
+    /// <summary>Fires when the last player has unloaded a cell, unless the server keeps it while empty.</summary>
     public event Action<AreaId, CellId, Entity>? OnCellDeleted;
+    /// <summary>Fires when any player loads a cell, the first one included.</summary>
     public event Action<PlayerId, AreaId, CellId>? OnPlayerActivatedCell;
+    /// <summary>Fires when any player unloads a cell.</summary>
     public event Action<PlayerId, AreaId, CellId>? OnPlayerDeactivatedCell;
 
     /// <summary>
@@ -40,6 +51,7 @@ public sealed class ServerEventsApi : IDisposable
     private readonly INetworkTime _netTime;
     private readonly IChangeTrackingStore _changeTracking;
     private readonly ILogger _logger;
+    private bool _disposed;
 
     internal ServerEventsApi(
         ServerEventsPointers pointers,
@@ -66,8 +78,14 @@ public sealed class ServerEventsApi : IDisposable
         subscribe(_dispatch);
     }
 
+    /// <summary>Stops receiving the server's events.</summary>
     public void Dispose()
     {
+        // Registered as both this class and IServerEvents, so the container may dispose it twice
+        if (_disposed)
+            return;
+
+        _disposed = true;
         _unsubscribe(_dispatch);
         _pinnedDelegates.Dispose();
     }

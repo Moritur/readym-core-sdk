@@ -6,7 +6,9 @@ using ReadyM.Api.Generators.Archetypes;
 
 namespace ReadyM.Api.Generators.Mods;
 
+/// <summary>
 /// What a class has to look like to be a mod's entry point, for the generator and the analyzer alike.
+/// </summary>
 internal static class ModEntryShape
 {
     public const string InitName = "Init";
@@ -20,7 +22,7 @@ internal static class ModEntryShape
         isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor NotSealed = new(
-        "READYM028",
+        "READYM044",
         "Mod entry point is not sealed",
         "'{0}' is a mod entry point, and the loader builds exactly one of it. Deriving from it would "
         + "not give you a second one, so declare it sealed.",
@@ -29,7 +31,7 @@ internal static class ModEntryShape
         isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor NotAHook = new(
-        "READYM029",
+        "READYM045",
         "Mod entry point method cannot be run",
         "'{0}.{1}' cannot be called by the loader: it has to be a private instance method returning "
         + "void and taking nothing. An entry point asks for everything else in its constructor.",
@@ -66,7 +68,7 @@ internal static class ModEntryShape
         => symbol.GetAttributes().Any(attribute
             => attribute.AttributeClass?.ToDisplayString() == ArchetypeNames.ModEntryAttribute);
 
-    /// The init the loader calls, or null when the entry point declared none it can call.
+    /// <summary>The init the loader calls, or null when the entry point declared none it can call.</summary>
     private static IMethodSymbol? ReadInit(INamedTypeSymbol entry, Location at, List<Diagnostic> problems)
     {
         var named = entry.GetMembers(InitName).OfType<IMethodSymbol>().ToList();

@@ -135,8 +135,7 @@ internal class NativeListFieldTypeSupportImpl : NativeContainerFieldTypeSupportI
                 context.EmitConflict.EmitNotifyChanged(symbol, context.EmitConflictContext);
         }
 
-        context.AppendLine("/// <exclude />");
-        context.AppendLine($"public void {context.Member.GeneratedPropertyName}_SetFromApi({FullyQualifiedTypeName(symbol)} value, int id)");
+        context.AppendLine($"private void {context.Member.GeneratedPropertyName}_SetFromApi({FullyQualifiedTypeName(symbol)} value, int id)");
         using (context.WithCodeBlock())
         {
             EmitSetterBody(symbol, context, true);

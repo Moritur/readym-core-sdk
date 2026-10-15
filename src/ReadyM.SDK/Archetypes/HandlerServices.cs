@@ -8,7 +8,7 @@ public static class HandlerServices
 {
     private static IDependencyContainer? _services;
 
-    /// Call this once when the game initializes to wire up the DI for the handlers.
+    /// <summary>Call this once when the game initializes to wire up the DI for the handlers.</summary>
     public static void Use(IDependencyContainer services) => _services = services;
 
     public static IDependencyContainer Services

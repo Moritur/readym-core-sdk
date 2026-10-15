@@ -101,7 +101,7 @@ public class ServerChunkQueryTests : ServerSdkTest
         Assert.Equal([.. Enumerable.Range(0, 4).Select(i => $"npc {i}")], labels);
     }
 
-    /// The handle is how work that cannot happen inside the loop gets out of it.
+    /// <summary>The handle is how work that cannot happen inside the loop gets out of it.</summary>
     [Fact]
     public void A_view_hands_back_a_handle_for_the_entity_it_is_on()
     {
@@ -158,7 +158,7 @@ public class ServerChunkQueryTests : ServerSdkTest
         Assert.Equal(12, scanned.Count);
     }
 
-    /// A mixin is a shape in its own right, so a query over one takes the chunk path too.
+    /// <summary>A mixin is a shape in its own right, so a query over one takes the chunk path too.</summary>
     [Fact]
     public void A_query_over_a_single_mixin_crosses_the_boundary_once()
     {
@@ -202,7 +202,7 @@ public class ServerChunkQueryTests : ServerSdkTest
         Assert.Equal(4, Relay.SlotCalls);
     }
 
-    /// Two mixins without an archetype naming both, still one crossing.
+    /// <summary>Two mixins without an archetype naming both, still one crossing.</summary>
     [Fact]
     public void A_query_over_two_mixins_crosses_the_boundary_once()
     {
@@ -231,7 +231,7 @@ public class ServerChunkQueryTests : ServerSdkTest
         Assert.Equal(0, Relay.SlotCalls);
     }
 
-    /// Only entities carrying both are visited, so a shape missing one is skipped.
+    /// <summary>Only entities carrying both are visited, so a shape missing one is skipped.</summary>
     [Fact]
     public void A_query_over_two_mixins_skips_an_entity_missing_either()
     {
@@ -246,7 +246,7 @@ public class ServerChunkQueryTests : ServerSdkTest
         Assert.Equal(1, count);
     }
 
-    /// A write through either half of the pair lands in the relay.
+    /// <summary>A write through either half of the pair lands in the relay.</summary>
     [Fact]
     public void A_write_through_a_two_mixin_query_reaches_the_relay()
     {
@@ -276,7 +276,7 @@ public class ServerChunkQueryTests : ServerSdkTest
         Assert.Equal(2, count);
     }
 
-    /// Two archetypes means two chunks, so this covers the enumerator crossing a chunk boundary.
+    /// <summary>Two archetypes means two chunks, so this covers the enumerator crossing a chunk boundary.</summary>
     [Fact]
     public void A_scan_spanning_two_archetypes_visits_both()
     {

@@ -35,7 +35,7 @@ public class ExtendedMemberTests : ClientSdkTest
         Assert.Equal(5, climate.Temperature);
     }
 
-    /// A getter-only member on the mixin stays getter-only on the archetype.
+    /// <summary>A getter-only member on the mixin stays getter-only on the archetype.</summary>
     [Fact]
     public void A_value_without_a_setter_is_read_only_on_the_archetype()
     {
@@ -44,7 +44,7 @@ public class ExtendedMemberTests : ClientSdkTest
         Assert.Equal(0, area.Rainfall);
     }
 
-    /// The prefix is what keeps two mods from colliding on one name.
+    /// <summary>The prefix is what keeps two mods from colliding on one name.</summary>
     [Fact]
     public void A_prefixed_value_takes_the_name_the_mod_chose()
     {
@@ -80,7 +80,7 @@ public class ExtendedMemberTests : ClientSdkTest
             Assert.Equal(3, area.AmbientTemperature);
     }
 
-    /// What the remarks on the generated member point at, and it has to agree.
+    /// <summary>What the remarks on the generated member point at, and it has to agree.</summary>
     [Fact]
     public void Naming_the_mixin_in_the_query_reads_the_same_value()
     {

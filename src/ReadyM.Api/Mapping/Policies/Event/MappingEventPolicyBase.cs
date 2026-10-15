@@ -15,8 +15,10 @@ internal abstract class MappingEventPolicyBase<TEvent, TContext>(DataSideChannel
         return CanGameEventNotifyEcsImpl(context);
     }
 
+    /// <summary>
     /// Returns whether the event should be allowed to propagate to the ECS or not, based on the provided context.
     /// This is usually called in patches to game code.
+    /// </summary>
     protected abstract bool CanGameEventNotifyEcsImpl(in TContext context);
 
     /// <inheritdoc cref="CanEcsInvokeGameEventImpl"/>
@@ -29,13 +31,17 @@ internal abstract class MappingEventPolicyBase<TEvent, TContext>(DataSideChannel
         return CanEcsInvokeGameEventImpl(context);
     }
 
+    /// <summary>
     /// Returns whether the event should be allowed to propagate to the game or not, based on the provided context.
     /// This is usually called in network event handlers.
+    /// </summary>
     protected abstract bool CanEcsInvokeGameEventImpl(in TContext context);
 
+    /// <summary>
     /// Returns whether the game is allowed to run the game code related to the event locally, or not.
     /// This is used exclusively in game code patches, to avoid running events for entities we are not responsible for.
     /// Always returns <c>true</c> if the event is propagating from the ECS to the game, to allow the game code to run for the event.
+    /// </summary>
     public bool CanGameEventRunLocally(in TContext context)
     {
         if (sideChannel.HasData<PropagatingToGameScope<TEvent>>())
@@ -44,7 +50,9 @@ internal abstract class MappingEventPolicyBase<TEvent, TContext>(DataSideChannel
         return CanGameEventRunLocallyImpl(context);
     }
 
+    /// <summary>
     /// Returns whether the game is allowed to run the game code related to the event locally, or not.
     /// This is used exclusively in game code patches, to avoid running events for entities we are not responsible for.
+    /// </summary>
     protected abstract bool CanGameEventRunLocallyImpl(in TContext context);
 }

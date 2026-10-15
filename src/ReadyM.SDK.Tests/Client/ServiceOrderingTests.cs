@@ -29,12 +29,12 @@ public class ServiceOrderingTests
 
     // -- priority ----------------------------------------------------------------------------------
 
-    /// Lower runs earlier, which is the whole of what a priority says.
+    /// <summary>Lower runs earlier, which is the whole of what a priority says.</summary>
     [Fact]
     public void A_lower_priority_runs_first()
         => Assert.Equal("B A", Sort(Of<A>(100), Of<B>(0)));
 
-    /// Nothing distinguishes them, so the name does, and the same install always ticks the same way.
+    /// <summary>Nothing distinguishes them, so the name does, and the same install always ticks the same way.</summary>
     [Fact]
     public void Equal_priorities_fall_back_to_the_name()
         => Assert.Equal("A B", Sort(Of<B>(), Of<A>()));
@@ -49,19 +49,19 @@ public class ServiceOrderingTests
     public void After_puts_one_behind_another()
         => Assert.Equal("B A", Sort(Of<A>(after: [typeof(B)]), Of<B>()));
 
-    /// The constraint wins: A asks to be first and is still held until B has run.
+    /// <summary>The constraint wins: A asks to be first and is still held until B has run.</summary>
     [Fact]
     public void A_constraint_beats_a_priority()
         => Assert.Equal("B A", Sort(Of<A>(0, after: [typeof(B)]), Of<B>(100)));
 
-    /// Among what the constraints leave free, the priority still decides.
+    /// <summary>Among what the constraints leave free, the priority still decides.</summary>
     [Fact]
     public void The_priority_decides_what_the_constraints_leave_open()
         => Assert.Equal("C B A", Sort(Of<A>(100, after: [typeof(B)]), Of<B>(50), Of<C>(0)));
 
     // -- what cannot be ordered --------------------------------------------------------------------
 
-    /// A mod naming another mod's service is ordinary, and that mod may not be installed.
+    /// <summary>A mod naming another mod's service is ordinary, and that mod may not be installed.</summary>
     [Fact]
     public void A_target_that_is_not_here_is_dropped()
     {
@@ -87,7 +87,7 @@ public class ServiceOrderingTests
         Assert.Contains("B", refused.Cycle);
     }
 
-    /// Named rather than counted, so the message says which constraints to look at.
+    /// <summary>Named rather than counted, so the message says which constraints to look at.</summary>
     [Fact]
     public void A_longer_cycle_is_named()
     {
@@ -100,7 +100,7 @@ public class ServiceOrderingTests
         Assert.Contains("C", refused.Cycle);
     }
 
-    /// One service out of a loop is enough to keep the rest orderable.
+    /// <summary>One service out of a loop is enough to keep the rest orderable.</summary>
     [Fact]
     public void Everything_outside_a_loop_still_orders()
         => Assert.Equal("A B C", Sort(Of<A>(before: [typeof(B)]), Of<B>(before: [typeof(C)]), Of<C>()));

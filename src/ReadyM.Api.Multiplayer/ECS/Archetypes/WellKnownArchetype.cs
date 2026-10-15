@@ -1,6 +1,6 @@
 ﻿namespace ReadyM.Api.Multiplayer.ECS.Archetypes;
 
-/// The archetypes the server owns and a mod can add to.
+/// <summary>The archetypes the server owns and a mod can add to.</summary>
 /// <exclude/>
 public enum WellKnownArchetype
 {

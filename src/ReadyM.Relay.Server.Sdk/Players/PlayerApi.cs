@@ -11,7 +11,8 @@ namespace ReadyM.Relay.Server.Sdk.Players;
 /// <summary>
 /// Provides access to player events and actions on the server.
 /// </summary>
-public class PlayerApi
+[Obsolete("Will be made internal, use IPlayers instead")]
+public class PlayerApi : IPlayers
 {
     private readonly KickPlayerDelegate _kickPlayer;
     private readonly PinnedDelegateStore _pinnedDelegateStore = new();
@@ -36,12 +37,12 @@ public class PlayerApi
     /// <summary>
     /// Fired once the player has finished the handshake and their ECS entity exists.
     /// </summary>
-    [Obsolete("This API is being deprecated in favor of the more general ServerEventsApi.")]
+    [Obsolete("Use IServerEvents instead")]
 
     public event Action<PlayerConnectedEvent>? OnPlayerConnected;
 
     /// <summary>Fired when the player leaves, whichever way they left.</summary>
-    [Obsolete("This API is being deprecated in favor of the more general ServerEventsApi.")]
+    [Obsolete("Use IServerEvents instead")]
     public event Action<PlayerDisconnectedEvent>? OnPlayerDisconnected;
 
     /// <summary>

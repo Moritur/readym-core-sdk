@@ -8,8 +8,10 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// What [Service] makes of a class: one instance the container hands out by name, and an update a
 /// game can call without knowing what it is called.
+/// </summary>
 public class ServiceTests : ClientSdkTest
 {
     [Fact]
@@ -20,7 +22,7 @@ public class ServiceTests : ClientSdkTest
         Assert.Same(Container.Resolve<Counting>(), Container.Resolve<Counting>());
     }
 
-    /// Which is what lets one service be handed another, rather than reaching for a static.
+    /// <summary>Which is what lets one service be handed another, rather than reaching for a static.</summary>
     [Fact]
     public void A_service_is_handed_the_services_it_asked_for()
     {
@@ -35,8 +37,10 @@ public class ServiceTests : ClientSdkTest
         Assert.Equal(1, auditing.Seen);
     }
 
+    /// <summary>
     /// A service with nothing to run is still registered: holding one instance of something is
     /// reason enough to declare it.
+    /// </summary>
     [Fact]
     public void A_service_with_nothing_to_run_is_still_one_instance()
     {
@@ -47,7 +51,7 @@ public class ServiceTests : ClientSdkTest
         Assert.Equal(5, Container.Resolve<Settings>().Difficulty);
     }
 
-    /// A game updates what it is handed rather than naming any of them.
+    /// <summary>A game updates what it is handed rather than naming any of them.</summary>
     [Fact]
     public void A_game_updates_what_it_was_handed()
     {
@@ -60,8 +64,10 @@ public class ServiceTests : ClientSdkTest
         Assert.Equal(0.5f, Container.Resolve<Regeneration>().Healed);
     }
 
+    /// <summary>
     /// A game's loop hands every service its update all the same. A disabled one is what does
     /// nothing with it, so nothing has to be resolved again when it comes back.
+    /// </summary>
     [Fact]
     public void A_disabled_service_sits_out_the_games_loop()
     {
@@ -76,7 +82,7 @@ public class ServiceTests : ClientSdkTest
         Assert.Equal(0.5f, Container.Resolve<Regeneration>().Healed);
     }
 
-    /// And what it is handed is only the services that declared an update.
+    /// <summary>And what it is handed is only the services that declared an update.</summary>
     [Fact]
     public void A_game_is_not_handed_a_service_with_nothing_to_update()
     {
@@ -85,8 +91,10 @@ public class ServiceTests : ClientSdkTest
         Assert.DoesNotContain(ServiceRegistry.Resolve(Container), service => service is Settings);
     }
 
+    /// <summary>
     /// The whole client path: the game's loop updates the group, the group updates the services, and
     /// the clock it puts together is the one a service reads.
+    /// </summary>
     [Fact]
     public void A_games_loop_updates_every_declared_service()
     {
@@ -110,8 +118,10 @@ public class ServiceTests : ClientSdkTest
         Assert.Equal(1ul, recording.Last.Ticks);
     }
 
+    /// <summary>
     /// Nothing runs while the world is absent, and a skipped update is not counted: the spacing is
     /// in updates a service saw.
+    /// </summary>
     [Fact]
     public void Nothing_runs_or_counts_while_the_world_is_absent()
     {
@@ -127,9 +137,11 @@ public class ServiceTests : ClientSdkTest
         Assert.Equal(0, Container.Resolve<Counting>().Ticks);
     }
 
+    /// <summary>
     /// A container stops taking registrations once the game is running, so updating must only ever
     /// resolve. Registering is the loading window's business, and saying it again on every tick
     /// brought the server's polling thread down.
+    /// </summary>
     [Fact]
     public void Updating_never_registers_anything()
     {
@@ -143,7 +155,7 @@ public class ServiceTests : ClientSdkTest
         Assert.Equal(1, Container.Resolve<Counting>().Ticks);
     }
 
-    /// An update reads the clock off the service rather than being handed it.
+    /// <summary>An update reads the clock off the service rather than being handed it.</summary>
     [Fact]
     public void The_clock_a_service_reads_is_the_one_it_was_updated_with()
     {
@@ -157,8 +169,10 @@ public class ServiceTests : ClientSdkTest
         Assert.Equal(0.5f, regeneration.Healed);
     }
 
+    /// <summary>
     /// Answers what it is asked for and refuses to be added to, the way a container does once the
     /// game is running.
+    /// </summary>
     private sealed class Closed(IDependencyContainer inner) : IDependencyContainer
     {
         public T Resolve<T>() => inner.Resolve<T>();

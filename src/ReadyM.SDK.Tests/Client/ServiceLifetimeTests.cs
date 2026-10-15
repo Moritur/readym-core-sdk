@@ -6,8 +6,10 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// A [Service] is started when the host says its game is up, which is its own moment and later
 /// than the container being filled. A Stop still rides the container going away.
+/// </summary>
 public class ServiceLifetimeTests
 {
     [Fact]
@@ -34,7 +36,7 @@ public class ServiceLifetimeTests
         Assert.Equal(0, container.Resolve<Bookends>().Started);
     }
 
-    /// A host says it once, but says it on a container, and a process may hold more than one.
+    /// <summary>A host says it once, but says it on a container, and a process may hold more than one.</summary>
     [Fact]
     public void Saying_it_twice_starts_each_service_once()
     {
@@ -45,7 +47,7 @@ public class ServiceLifetimeTests
         Assert.Equal(1, container.Resolve<Bookends>().Started);
     }
 
-    /// Nothing has stopped yet, which is the half of the pair a test can easily get wrong.
+    /// <summary>Nothing has stopped yet, which is the half of the pair a test can easily get wrong.</summary>
     [Fact]
     public void Stop_does_not_run_on_the_way_up()
     {
@@ -65,7 +67,7 @@ public class ServiceLifetimeTests
         Assert.Equal(1, bookends.Stopped);
     }
 
-    /// A service with neither end is not hosted, so starting the game does not build it.
+    /// <summary>A service with neither end is not hosted, so starting the game does not build it.</summary>
     [Fact]
     public void A_service_with_neither_end_is_left_alone_until_something_asks_for_it()
     {

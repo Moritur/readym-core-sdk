@@ -3,7 +3,7 @@ using ReadyM.Api.Mapping.Tags;
 
 namespace ReadyM.SDK.Archetypes.Access;
 
-/// Called by generated code.
+/// <summary>Called by generated code.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class Shape
 {
@@ -13,7 +13,7 @@ public static class Shape
         => new(new ShapeAccess<TComponent>());
 }
 
-/// Strongly typed wrapper around shape accessors.
+/// <summary>Strongly typed wrapper around shape accessors.</summary>
 public readonly struct Shape<TShape>
     where TShape : struct, IArchetypeQueryable
 {

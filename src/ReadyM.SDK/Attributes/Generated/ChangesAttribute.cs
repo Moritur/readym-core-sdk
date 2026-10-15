@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace ReadyM.SDK.Attributes.Generated;
 
-/// Marks a generated member that changes a replicated collection, naming the token standing for it.
+/// <summary>Marks a generated member that changes a replicated collection, naming the token standing for it.</summary>
 /// <remarks>
 /// A collection has no setter to recognise, so what a value carries in its declaration this carries
 /// on the member. It is what tells a call that changes one from a call that reads it.

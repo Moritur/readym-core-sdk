@@ -25,7 +25,7 @@ public interface IArchetypeChunkView<out TSelf> : IEntityShape
     [EditorBrowsable(EditorBrowsableState.Never)]
     static virtual int SlotCount => TSelf.Components.Count;
 
-    /// The components a query has to ask for, in the order the slots arrive in.
+    /// <summary>The components a query has to ask for, in the order the slots arrive in.</summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     static abstract ComponentSet Components { get; }
 

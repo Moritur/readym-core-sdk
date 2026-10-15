@@ -9,8 +9,10 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// A component's policy and the directory holding it, so a test can drive the client's real write
 /// rule rather than restate it in a fake.
+/// </summary>
 internal sealed class Policy : IMappingDataPolicy<Entity>
 {
     public bool GameCopiesIn { get; init; }
@@ -26,7 +28,9 @@ internal sealed class Policy : IMappingDataPolicy<Entity>
     public bool CanGameSetLocally(in Entity context) => GameCopiesIn;
 }
 
+/// <summary>
 /// Answers for the components a write test goes through and, like the real one, refuses anything else.
+/// </summary>
 internal sealed class Directory(IMappingDataPolicy<Entity> policy) : IMappingPolicyDirectory
 {
     public IMappingDataPolicy<Entity> ForData(Type componentType)

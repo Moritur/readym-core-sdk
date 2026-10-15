@@ -8,8 +8,10 @@ using ReadyM.Relay.Client.State;
 
 namespace ReadyM.Relay.Client.Mapping.Policies;
 
+/// <summary>
 /// Register this ahead of PropagationDataPolicyFactory, whose server-authoritative policy knows
 /// nothing about ownership and would otherwise take these components.
+/// </summary>
 internal class ServerAuthoritativeDataPolicyFactory(ClientOwnershipManager ownership, DataSideChannel sideChannel)
     : IMappingDataPolicyFactory
 {

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
-/// Emits the wrapper a mapping handler is handed for one collection.
+/// <summary>Emits the wrapper a mapping handler is handed for one collection.</summary>
 internal static class CollectionAccessEmitter
 {
     public static string NameOf(DeclarationModel model, string collection) => model.Name + collection;
@@ -16,7 +16,7 @@ internal static class CollectionAccessEmitter
         return ns.Length == 0 ? "global::" + name : $"global::{ns}.{name}";
     }
 
-    /// The collections a shape holds, declared or named on a component it borrows.
+    /// <summary>The collections a shape holds, declared or named on a component it borrows.</summary>
     public static IEnumerable<(string Name, string? Held, IReadOnlyList<ForwardModel> Members)> Of(DeclarationModel model)
     {
         if (!model.IsReplicated)
@@ -38,7 +38,7 @@ internal static class CollectionAccessEmitter
         }
     }
 
-    /// What the component holds a borrowed collection in, read off its whole-collection setter.
+    /// <summary>What the component holds a borrowed collection in, read off its whole-collection setter.</summary>
     private static string? HeldAs(IReadOnlyList<ForwardModel> members, string collection)
     {
         foreach (var member in members)
@@ -64,10 +64,15 @@ internal static class CollectionAccessEmitter
         var handle = ArchetypeNames.EntityHandle;
 
         writer.Line();
+        writer.Line($"/// <summary>The {collection} collection of a {model.Name}.</summary>");
+
+        if (model.IsHidden)
+            writer.Line(ArchetypeNames.Hidden);
+
         writer.Line("#if NET");
-        writer.Line($"public readonly ref struct {name}");
+        writer.Line($"{model.Access} readonly ref struct {name}");
         writer.Line("#else");
-        writer.Line($"public readonly struct {name}");
+        writer.Line($"{model.Access} readonly struct {name}");
         writer.Line("#endif");
 
         using (writer.Braces(string.Empty))
@@ -82,7 +87,7 @@ internal static class CollectionAccessEmitter
         }
     }
 
-    /// The member as a collection reads it, with the value name taken back out.
+    /// <summary>The member as a collection reads it, with the value name taken back out.</summary>
     private static void Member(SourceWriter writer, ForwardModel forward, string value, string accessors)
     {
         var name = forward.Name.Replace(value, string.Empty);

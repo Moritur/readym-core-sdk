@@ -50,7 +50,7 @@ public abstract class ServerSdkTest
         Entities = new ServerEntities(Api);
     }
 
-    /// Found rather than listed, so a new fixture does not need remembering here.
+    /// <summary>Found rather than listed, so a new fixture does not need remembering here.</summary>
     private static IEnumerable<Type> ComponentsOfEveryFixture()
         => typeof(Npc).Assembly
             .GetTypes()
@@ -63,7 +63,7 @@ public abstract class ServerSdkTest
 
     protected IEntities Entities { get; }
 
-    /// Creates an entity carrying exactly what the archetype needs, without naming its components.
+    /// <summary>Creates an entity carrying exactly what the archetype needs, without naming its components.</summary>
     protected T Spawn<T>() where T : struct, IArchetypeQueryable
         => Wrap<T>(Relay.Create(ComponentsOf<T>().Types));
 
@@ -73,7 +73,7 @@ public abstract class ServerSdkTest
     protected static RawEntity IdentityOf<T>(in T archetype) where T : struct, IArchetypeQueryable
         => EntityHandle.Of(archetype).RawEntity;
 
-    /// Components is an explicit interface implementation, so it is reached through the constraint.
+    /// <summary>Components is an explicit interface implementation, so it is reached through the constraint.</summary>
     protected static ComponentSet ComponentsOf<T>() where T : struct, IArchetypeQueryable => default(T).Components;
 
     /// <summary>

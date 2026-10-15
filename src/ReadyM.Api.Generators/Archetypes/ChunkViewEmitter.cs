@@ -27,9 +27,9 @@ internal static class ChunkViewEmitter
         var slots = Slots(model);
         var fields = Held(slots).Select(slot => slot.Field).ToList();
 
-        writer.Line("/// Walks this shape by chunk. Valid only inside the loop that produced it.");
+        writer.Line("/// <summary>Walks this shape by chunk. Valid only inside the loop that produced it.</summary>");
 
-        using (writer.Braces($"public readonly ref struct {view} : {chunks.ChunkView}<{qualified}>"))
+        using (writer.Braces($"{model.Access} readonly ref struct {view} : {chunks.ChunkView}<{qualified}>"))
         {
             foreach (var field in fields)
                 writer.Line($"private readonly {chunks.ComponentChunk} {field};");
@@ -57,9 +57,10 @@ internal static class ChunkViewEmitter
     {
         var qualified = ArchetypeNames.QualifiedViewOf(model.Symbol);
 
+        writer.Line("/// <exclude />");
         writer.Line("[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]");
 
-        using (writer.Braces($"public static class {ArchetypeNames.ChunkQueryOf(model.Symbol)}"))
+        using (writer.Braces($"{model.Access} static class {ArchetypeNames.ChunkQueryOf(model.Symbol)}"))
         {
             // One per half in scope. A mod sees one; a project testing both sees two, and the
             // parameter types differ so they never collide.
@@ -115,11 +116,15 @@ internal static class ChunkViewEmitter
         writer.Line("[global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]");
         writer.Line($"public {qualified} At(int index) => new({string.Join(", ", moved)});");
         writer.Line();
+        writer.Line("/// <summary>");
         writer.Line("/// The way out to anything a chunk view cannot do, such as a structural change after the loop.");
+        writer.Line("/// </summary>");
         writer.Line($"public {ArchetypeNames.EntityHandle} Handle");
         writer.Line($"    => _prototype.For(global::System.Runtime.CompilerServices.Unsafe.Add(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in _entities), _index));");
         writer.Line();
+        writer.Line("/// <summary>");
         writer.Line("/// This entity as the shape, which is what a view cannot be: one outlives the loop, the other does not.");
+        writer.Line("/// </summary>");
         writer.Line("/// <remarks>");
         writer.Line("/// For collecting entities to act on afterwards. The shape reads through a handle rather than the");
         writer.Line("/// chunk, so it costs a lookup per value; inside the loop the view is the cheaper way to read.");
@@ -133,7 +138,8 @@ internal static class ChunkViewEmitter
 
         if (own is not null)
             foreach (var accessor in model.Accessors)
-                Property(writer, accessor, model.QualifiedAccessors, own.Field, model.IndexedBy is not null, writes);
+                Property(writer, accessor, model.QualifiedAccessors, own.Field, model.IndexedBy is not null, writes,
+                    inheritsFrom: ArchetypeNames.DocSource(model.Symbol, accessor.Name));
 
         foreach (var (include, accessor) in model.FlattenedAccessors())
         {
@@ -142,7 +148,8 @@ internal static class ChunkViewEmitter
 
             if (slot is not null)
                 Property(writer, accessor, include.Accessors, slot.Field,
-                    DeclarationModel.For(include.Type).IndexedBy is not null, writes, include.Named(accessor.Name));
+                    DeclarationModel.For(include.Type).IndexedBy is not null, writes, include.Named(accessor.Name), include.IsHidden,
+                    ArchetypeNames.DocSource(include.Type, accessor.Name));
         }
 
         if (own is not null)
@@ -156,7 +163,7 @@ internal static class ChunkViewEmitter
 
             if (slot is not null)
                 AccessorEmitter.ForwardedFromChunk(
-                    writer, forward, include.Accessors, slot.Field, include.Named(forward));
+                    writer, forward, include.Accessors, slot.Field, include.Named(forward), include.IsHidden);
         }
     }
 
@@ -167,7 +174,9 @@ internal static class ChunkViewEmitter
         string field,
         bool indexed,
         bool writes,
-        string? name = null)
+        string? name = null,
+        bool hidden = false,
+        string? inheritsFrom = null)
     {
         // A value the shape keeps to itself is not put on its chunk view either.
         if (!accessor.IsExposed)
@@ -176,6 +185,12 @@ internal static class ChunkViewEmitter
         var called = name ?? accessor.Name;
 
         writer.Line();
+
+        if (inheritsFrom is not null)
+            writer.Line($"/// <inheritdoc cref=\"{inheritsFrom}\"/>");
+
+        if (hidden)
+            writer.Line(ArchetypeNames.Hidden);
 
         if (!accessor.HasSetter || indexed || !writes)
         {
@@ -190,7 +205,7 @@ internal static class ChunkViewEmitter
         }
     }
 
-    /// The component set's order, which is what the query asks the owning side for.
+    /// <summary>The component set's order, which is what the query asks the owning side for.</summary>
     private static IReadOnlyList<Slot> Slots(DeclarationModel model)
         => model.ComponentOwners().Select((owner, index) => new Slot(index, owner)).ToList();
 

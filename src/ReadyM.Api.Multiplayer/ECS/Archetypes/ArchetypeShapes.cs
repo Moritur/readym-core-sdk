@@ -2,7 +2,7 @@
 
 namespace ReadyM.Api.Multiplayer.ECS.Archetypes;
 
-/// What the archetypes every game has are called in the SDK.
+/// <summary>What the archetypes every game has are called in the SDK.</summary>
 internal static class ArchetypeShapes
 {
     public const string World = "ReadyM.SDK.Archetypes.Core.World";

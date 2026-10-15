@@ -5,6 +5,9 @@
         <LangVersion>latest</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <!-- Never packed itself. Named apart from the ReadyM.SDK.Client package that ships this assembly, whose
+             project references this one: NuGet restore refuses two projects of the same name. -->
+        <PackageId>ReadyM.SDK.Client.Assembly</PackageId>
     </PropertyGroup>
 
     <ItemGroup>

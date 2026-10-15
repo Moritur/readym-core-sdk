@@ -4,8 +4,10 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// A shape marked [Replicated] gets a component that tracks its own changes, and every way of
 /// writing it has to go through that tracking rather than round it.
+/// </summary>
 public class ReplicatedComponentTests : ClientSdkTest
 {
     private static bool DirtyOf(Rig rig) => EntityHandle.Of(rig).GetComponent<TelemetryComponent>().IsDirty;
@@ -31,8 +33,10 @@ public class ReplicatedComponentTests : ClientSdkTest
         Assert.Equal(5, rig.Ticks);
     }
 
+    /// <summary>
     /// The chunk path writes straight into the component array, so it is the one that would slip
     /// past the tracking if the setter wrote the field.
+    /// </summary>
     [Fact]
     public void A_write_through_a_chunk_marks_it_dirty()
     {
@@ -49,7 +53,7 @@ public class ReplicatedComponentTests : ClientSdkTest
         Assert.Equal(7, rig.Ticks);
     }
 
-    /// Each value has its own bit, so clearing after one write does not hide the next.
+    /// <summary>Each value has its own bit, so clearing after one write does not hide the next.</summary>
     [Fact]
     public void Each_value_is_tracked_on_its_own()
     {
@@ -65,7 +69,7 @@ public class ReplicatedComponentTests : ClientSdkTest
         Assert.Equal(2f, rig.Load);
     }
 
-    /// A shape that never asked to replicate keeps a plain component, with nothing to track.
+    /// <summary>A shape that never asked to replicate keeps a plain component, with nothing to track.</summary>
     [Fact]
     public void A_local_shape_gets_no_tracking()
     {
@@ -78,7 +82,7 @@ public class ReplicatedComponentTests : ClientSdkTest
             contract => contract.Name == "INetworkedComponent");
     }
 
-    /// Nothing creates the collection here: the entity being created is what does that.
+    /// <summary>Nothing creates the collection here: the entity being created is what does that.</summary>
     private Rig WithMembers(params int[] values)
     {
         var rig = Entities.Create<Rig>();
@@ -89,8 +93,10 @@ public class ReplicatedComponentTests : ClientSdkTest
         return rig;
     }
 
+    /// <summary>
     /// The collection's own members reach the shape, so a mod adds one item rather than replacing
     /// the whole collection to change it.
+    /// </summary>
     [Fact]
     public void A_native_collection_carries_its_members_onto_the_shape()
     {
@@ -112,7 +118,7 @@ public class ReplicatedComponentTests : ClientSdkTest
         Assert.Equal(0, rig.MembersCount);
     }
 
-    /// Changing one item marks the component, the same as replacing the whole collection does.
+    /// <summary>Changing one item marks the component, the same as replacing the whole collection does.</summary>
     [Fact]
     public void Adding_to_a_native_collection_marks_it_dirty()
     {
@@ -126,8 +132,10 @@ public class ReplicatedComponentTests : ClientSdkTest
         Assert.Equal(1, rig.MembersCount);
     }
 
+    /// <summary>
     /// Creating the entity is what gives a native collection its memory, so a shape is usable the
     /// moment it exists and a mod never has to remember to allocate.
+    /// </summary>
     [Fact]
     public void A_native_collection_is_ready_as_soon_as_the_entity_exists()
     {

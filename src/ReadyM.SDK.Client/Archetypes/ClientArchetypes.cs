@@ -4,9 +4,9 @@ using ReadyM.SDK.Archetypes;
 
 namespace ReadyM.SDK.Client.Archetypes;
 
-public static class ClientArchetypes
+internal static class ClientArchetypes
 {
-    /// Returns how many components were added, which a game can log to see its shapes arrived.
+    /// <summary>Returns how many components were added, which a game can log to see its shapes arrived.</summary>
     /// <param name="idOf">
     /// Which archetype a shape is, or null for one this game does not register. Null is ordinary:
     /// a shape one mod declared and another extended is built from its component set, which the

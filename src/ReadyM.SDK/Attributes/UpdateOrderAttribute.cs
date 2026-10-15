@@ -16,9 +16,9 @@ public sealed class UpdateOrderAttribute(int priority = UpdateOrderAttribute.Def
 
     public int Priority { get; } = priority;
 
-    /// Services this one updates before.
+    /// <summary>Services this one updates before.</summary>
     public Type[]? Before { get; set; }
 
-    /// Services this one updates after.
+    /// <summary>Services this one updates after.</summary>
     public Type[]? After { get; set; }
 }

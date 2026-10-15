@@ -74,8 +74,10 @@ public class MixinsQueryBenchmarks : ServerWorld
         _sink += total;
     }
 
+    /// <summary>
     /// v0 draws no distinction between a mixin and an archetype, so this is the same call as the
     /// archetype comparison makes.
+    /// </summary>
     [Benchmark(Description = "v0 EcsApi.Query")]
     public float V0Query()
     {

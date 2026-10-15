@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Friflo.Engine.ECS;
 using ReadyM.Api.Attributes;
@@ -6,6 +7,8 @@ using ReadyM.Api.Multiplayer.Generators;
 
 namespace ReadyM.Api.Multiplayer.ECS.Components;
 
+/// <exclude />
+[EditorBrowsable(EditorBrowsableState.Never)]
 [DeriveINetworkedComponent(emitDirtyMask: false), NativeComponent]
 [StructLayout(LayoutKind.Sequential)]
 public partial struct CellScopeComponent : IIndexedComponent<FullCellId>

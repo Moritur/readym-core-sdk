@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using LiteNetLib.Utils;
 
@@ -8,6 +9,8 @@ namespace ReadyM.Api.Idents;
 /// Represents a unique identifier for an archetype in the ECS.
 /// Entities of a given archetype have a fixed set of components, never changed after creation.
 /// </summary>
+/// <exclude />
+[EditorBrowsable(EditorBrowsableState.Never)]
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct ArchetypeId(byte id) : IEquatable<ArchetypeId>, INetSerializable
 {

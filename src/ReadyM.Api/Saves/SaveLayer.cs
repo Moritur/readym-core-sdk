@@ -3,6 +3,8 @@
 /// <summary>
 /// Indicates the layer of a save: which kind of partition an entity is saved into.
 /// </summary>
+/// <exclude />
+[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
 public enum SaveLayer
 {
     /// <summary>

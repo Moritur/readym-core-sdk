@@ -4,7 +4,9 @@ using ReadyM.Api.Mapping.Tags;
 
 namespace ReadyM.SDK.Archetypes.Access;
 
+/// <summary>
 /// Names one of a shape's collections, the way <see cref="Value{TShape,TValue}"/> names one of its values.
+/// </summary>
 public readonly struct Collection<TShape, TAccess>
     where TShape : struct, IArchetypeQueryable
 #if NET
@@ -22,7 +24,7 @@ public readonly struct Collection<TShape, TAccess>
     }
 }
 
-/// Called by generated code.
+/// <summary>Called by generated code.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class Collection
 {

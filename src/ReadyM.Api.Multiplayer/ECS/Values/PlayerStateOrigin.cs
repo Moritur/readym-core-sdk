@@ -3,7 +3,7 @@
 /// <summary>
 /// Where the state of a player entity came from when the server created it.
 /// </summary>
-public enum PlayerStateOrigin : byte
+internal enum PlayerStateOrigin : byte
 {
     /// <summary>No saved data: the owning client fills the entity from the game.</summary>
     Game = 0,

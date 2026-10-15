@@ -3,12 +3,12 @@ using ReadyM.SDK.Attributes;
 
 namespace ReadyM.SDK.Tests.Client.Fixtures;
 
-/// Stands in for a tag a game's own systems ask about, such as who may delete an entity.
+/// <summary>Stands in for a tag a game's own systems ask about, such as who may delete an entity.</summary>
 public readonly struct WatchedTag : ITag;
 
 public readonly struct SecondTag : ITag;
 
-/// A shape whose entities carry tags from the moment they exist.
+/// <summary>A shape whose entities carry tags from the moment they exist.</summary>
 [Archetype(replicated: false)]
 [Tag(typeof(WatchedTag))]
 [Tag(typeof(SecondTag))]
@@ -17,7 +17,7 @@ public readonly partial struct Watched
     public partial int Marker { get; set; }
 }
 
-/// The same shape without any, so a test can tell tags apart from the archetype.
+/// <summary>The same shape without any, so a test can tell tags apart from the archetype.</summary>
 [Archetype(replicated: false)]
 public readonly partial struct Unwatched
 {

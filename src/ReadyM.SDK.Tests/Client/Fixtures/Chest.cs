@@ -10,7 +10,7 @@ public readonly partial struct Chest
     public partial int Gold { get; set; }
 }
 
-/// Everything a chest is, plus loot. Composition in place of an optional include.
+/// <summary>Everything a chest is, plus loot. Composition in place of an optional include.</summary>
 [Archetype(replicated: false)]
 [IncludeArchetype(typeof(Chest))]
 [Include(typeof(Loot))]

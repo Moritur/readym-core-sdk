@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using Friflo.Engine.ECS;
+using IComponent = Friflo.Engine.ECS.IComponent;
 
 namespace ReadyM.Api.ECS.Worlds;
 
@@ -10,6 +12,8 @@ namespace ReadyM.Api.ECS.Worlds;
 /// Builder class for creating archetypes in the ECS (Entity Component System) framework.
 /// It allows adding components, tags, and custom filters to define the structure of an archetype.
 /// </summary>
+/// <exclude />
+[EditorBrowsable(EditorBrowsableState.Never)]
 public class ArchetypeBuilder
 {
     /// <summary>False for an archetype whose entities never leave the server.</summary>
@@ -19,7 +23,7 @@ public class ArchetypeBuilder
     private readonly List<IArchetypeBuilderCallback> _filters = [];
 
     /// <summary>
-    /// Adds a component type to the archetype builder. The component type must be a value type and implement the <see cref="IComponent"/> interface.
+    /// Adds a component type to the archetype builder. The component type must be a value type and implement the <see cref="Friflo.Engine.ECS.IComponent"/> interface.
     /// </summary>
     internal ArchetypeBuilder Add(Type componentType)
     {

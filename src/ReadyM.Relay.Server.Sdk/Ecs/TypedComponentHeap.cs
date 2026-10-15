@@ -44,7 +44,7 @@ internal sealed class TypedComponentHeap<T> : IDisposable, IComponentArray where
     /// </remarks>
     public ref T GetRef(int index) => ref _components[index];
 
-    /// Read fresh every time: a resize swaps in a new array.
+    /// <summary>Read fresh every time: a resize swaps in a new array.</summary>
     public Array Components => _components;
 
     public TypedComponentHeap(int initialCapacity)

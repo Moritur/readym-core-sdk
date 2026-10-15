@@ -3,8 +3,10 @@ using ReadyM.SDK.Entities;
 
 namespace ReadyM.SDK.Client.Entities;
 
+/// <summary>
 /// Every entity a scope holds that carries the shape. Walked by identity: a scope's entities are
 /// scattered through the archetypes they belong to, so there are no chunks to hand back.
+/// </summary>
 public readonly struct ScopedQuery<T> where T : struct, IArchetypeQueryable
 {
     private readonly ClientEntityContext? _api;
@@ -18,6 +20,8 @@ public readonly struct ScopedQuery<T> where T : struct, IArchetypeQueryable
 
     public Enumerator GetEnumerator() => new(_api?.Api, _scope);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public struct Enumerator : IDisposable
     {
         private readonly IEntityApi? _api;

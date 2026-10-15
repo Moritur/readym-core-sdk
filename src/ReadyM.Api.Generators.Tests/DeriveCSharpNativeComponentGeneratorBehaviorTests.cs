@@ -75,7 +75,7 @@ public partial struct AppearanceComponent<T> : IComponent
             Environment.NewLine,
             result.GeneratedSyntaxTrees.Select(t => t.GetText().ToString()));
 
-        Assert.Contains("public partial struct AppearanceComponent<T>", generatedText);
+        Assert.Contains("\npartial struct AppearanceComponent<T>", generatedText);
         Assert.Contains(
             "public delegate* unmanaged<void*, Friflo.Engine.ECS.RawEntity, AppearanceComponent<T>*, void> OnEntityDeleteHandler;",
             generatedText);
@@ -130,7 +130,7 @@ public partial struct AppearanceComponent<TPayload> : IComponent
             Environment.NewLine,
             result.GeneratedSyntaxTrees.Select(t => t.GetText().ToString()));
 
-        Assert.Contains("public partial struct AppearanceComponent<TPayload>", generatedText);
+        Assert.Contains("\npartial struct AppearanceComponent<TPayload>", generatedText);
         Assert.Contains(
             "public delegate* unmanaged<void*, Friflo.Engine.ECS.RawEntity, AppearanceComponent<TPayload>*, void> OnEntityDeleteHandler;",
             generatedText);

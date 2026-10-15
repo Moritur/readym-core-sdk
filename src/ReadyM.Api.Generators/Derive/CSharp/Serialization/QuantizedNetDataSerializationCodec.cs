@@ -2,8 +2,10 @@ using System;
 
 namespace ReadyM.Api.Generators.Derive.CSharp.Serialization;
 
+/// <summary>
 /// The network codec for a field marked [Quantize], [QuantizeAngle] or [HalfPrecision]: floats and vectors go through
 /// the field's encoding, everything else is unchanged.
+/// </summary>
 internal sealed class QuantizedNetDataSerializationCodec(ICSharpSerializationCodec inner, DeriveQuantization quantization)
     : ICSharpSerializationCodec
 {

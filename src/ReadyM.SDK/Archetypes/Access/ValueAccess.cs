@@ -27,8 +27,10 @@ internal sealed class ValueAccess<TComponent, TValue>(Field<TComponent, TValue> 
         => handle.GetComponent<TComponent>().ClearApiFlag(field);
 }
 
+/// <summary>
 /// The value its component is indexed by. Friflo reads the key as the component is added, so a write
 /// that changed it where it lies would leave the entity filed under the key it used to hold.
+/// </summary>
 internal sealed class IndexedValueAccess<TComponent, TKey>(Field<TComponent, TKey> field) : ValueAccess<TKey>
     where TComponent : struct, IReadyComponent, IIndexedComponent<TKey>
 {
@@ -65,30 +67,32 @@ internal sealed class IndexedValueAccess<TComponent, TKey>(Field<TComponent, TKe
         => handle.GetComponent<TComponent>().ClearApiFlag(field);
 }
 
+/// <summary>
 /// What a token can ask about a value without knowing its type, which is what a collection needs:
 /// it is never handed over, only asked about and then changed where it lies.
+/// </summary>
 internal abstract class ValueAccess
 {
     internal abstract Type Component { get; }
 
     internal abstract int Field { get; }
 
-    /// Is the API mask non-zero?
+    /// <summary>Is the API mask non-zero?</summary>
     internal abstract bool WasSetFromApi(in EntityHandle handle);
 
-    /// Called after applying the value to the game.
+    /// <summary>Called after applying the value to the game.</summary>
     internal abstract void ClearApiFlag(in EntityHandle handle);
 }
 
-/// Allows accessing the value without the caller knowing which component it sits in.
+/// <summary>Allows accessing the value without the caller knowing which component it sits in.</summary>
 internal abstract class ValueAccess<TValue> : ValueAccess
 {
 
-    /// Writes, going through the policy and set-from-API checks.
+    /// <summary>Writes, going through the policy and set-from-API checks.</summary>
     internal abstract bool Write(in EntityHandle handle, TValue value, WriteKind kind);
 
     internal abstract TValue Read(in EntityHandle handle);
 
-    /// Unconditional write without touching the API mask.
+    /// <summary>Unconditional write without touching the API mask.</summary>
     internal abstract void Set(in EntityHandle handle, TValue value);
 }

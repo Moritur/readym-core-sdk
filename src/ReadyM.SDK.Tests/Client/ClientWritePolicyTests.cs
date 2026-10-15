@@ -12,9 +12,11 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// Which of a component's policy questions the client asks for each kind of write. Getting these
 /// two the wrong way round is invisible everywhere else: the write still lands, just under the
 /// wrong authority.
+/// </summary>
 public class ClientWritePolicyTests
 {
     private readonly EntityStore _store = new();
@@ -24,7 +26,7 @@ public class ClientWritePolicyTests
     private ClientEntityApi ApiWith(IMappingDataPolicy<Entity>? policy)
         => new(_store, NullLogger<ClientEntityApi>.Instance, policy is null ? null : new Lazy<IMappingPolicyDirectory>(() => new Directory(policy)));
 
-    /// The question a mirror asks is whether the game may copy into the ECS.
+    /// <summary>The question a mirror asks is whether the game may copy into the ECS.</summary>
     [Fact]
     public void A_mirror_asks_whether_the_game_may_copy_in()
     {
@@ -34,8 +36,10 @@ public class ClientWritePolicyTests
         Assert.False(api.Allows(AnEntity(), typeof(TelemetryComponent), WriteKind.Override));
     }
 
+    /// <summary>
     /// And an override asks whether the API may set it, which a server-authoritative component
     /// allows on an entity you own while refusing the mirror.
+    /// </summary>
     [Fact]
     public void An_override_asks_whether_the_api_may_set_it()
     {
@@ -45,7 +49,7 @@ public class ClientWritePolicyTests
         Assert.True(api.Allows(AnEntity(), typeof(TelemetryComponent), WriteKind.Override));
     }
 
-    /// Nothing maps it to the game, so nothing can refuse a write or overwrite it afterwards.
+    /// <summary>Nothing maps it to the game, so nothing can refuse a write or overwrite it afterwards.</summary>
     [Fact]
     public void A_component_no_policy_covers_takes_both()
     {
@@ -56,7 +60,7 @@ public class ClientWritePolicyTests
         Assert.True(api.Allows(AnEntity(), uncovered, WriteKind.Override));
     }
 
-    /// What a test or a benchmark builds, where no directory exists at all.
+    /// <summary>What a test or a benchmark builds, where no directory exists at all.</summary>
     [Fact]
     public void A_client_with_no_policies_takes_both()
     {

@@ -6,8 +6,10 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// Switching a service off and on again while the game runs, which a mod does through IServices and
 /// a service sees through its own OnEnabled and OnDisabled.
+/// </summary>
 public class ServiceSwitchTests
 {
     [Fact]
@@ -48,7 +50,7 @@ public class ServiceSwitchTests
         Assert.Equal(1, patrol.Ticks);
     }
 
-    /// The clock stops with it, so a service reads when it last ran rather than how long it was off.
+    /// <summary>The clock stops with it, so a service reads when it last ran rather than how long it was off.</summary>
     [Fact]
     public void A_disabled_service_is_not_handed_the_clock()
     {
@@ -73,7 +75,7 @@ public class ServiceSwitchTests
         Assert.Equal(1, patrol.Disables);
     }
 
-    /// The first one is the game starting it, which is why it is already one before anything asks.
+    /// <summary>The first one is the game starting it, which is why it is already one before anything asks.</summary>
     [Fact]
     public void OnEnabled_runs_once_at_startup_and_again_on_every_enable()
     {
@@ -89,7 +91,7 @@ public class ServiceSwitchTests
         Assert.Equal(2, patrol.Enables);
     }
 
-    /// Set up first, told it is about to run second. A service reads its own state in OnEnabled.
+    /// <summary>Set up first, told it is about to run second. A service reads its own state in OnEnabled.</summary>
     [Fact]
     public void Start_runs_before_the_first_OnEnabled()
     {
@@ -98,7 +100,7 @@ public class ServiceSwitchTests
         Assert.Equal(["Start", "OnEnabled"], container.Resolve<Opening>().Order);
     }
 
-    /// Declaring OnEnabled is enough to be hosted, or the first one would never be reached.
+    /// <summary>Declaring OnEnabled is enough to be hosted, or the first one would never be reached.</summary>
     [Fact]
     public void A_service_with_only_OnEnabled_is_still_started_by_the_game()
     {
@@ -135,8 +137,10 @@ public class ServiceSwitchTests
         Assert.Single(warnings.Logged);
     }
 
+    /// <summary>
     /// Which is the only way to do it: Enabled has no setter, so nothing can move the switch while
     /// leaving OnDisabled unrun.
+    /// </summary>
     [Fact]
     public void A_service_switches_itself_off_through_the_same_door()
     {
@@ -150,8 +154,10 @@ public class ServiceSwitchTests
         Assert.Equal(1, curfew.Disables);
     }
 
+    /// <summary>
     /// A service with nothing to update still carries the switch, since holding one instance of
     /// something is reason enough to declare it and reason enough to switch it off.
+    /// </summary>
     [Fact]
     public void A_service_with_nothing_to_update_still_carries_the_switch()
     {
@@ -162,7 +168,7 @@ public class ServiceSwitchTests
         Assert.False(container.Resolve<Settings>().Enabled);
     }
 
-    /// Disabling one says nothing about the next, which is what makes this usable across mods.
+    /// <summary>Disabling one says nothing about the next, which is what makes this usable across mods.</summary>
     [Fact]
     public void Switching_one_off_leaves_the_others_running()
     {
@@ -176,8 +182,10 @@ public class ServiceSwitchTests
         Assert.Equal(1, container.Resolve<Counting>().Ticks);
     }
 
+    /// <summary>
     /// One service at a time, since this container holds only what the switch needs. The skip is
     /// the service's own, so a game's loop reaches it the same way.
+    /// </summary>
     private static void Tick<TService>(IDependencyContainer container, float elapsed = 0f)
         where TService : class, IUpdatingService
         => container.Resolve<TService>().Update(new UpdateTime(0.5f, elapsed));
@@ -200,7 +208,7 @@ public class ServiceSwitchTests
 
     private sealed class Container : DependencyContainerBase;
 
-    /// Keeps what was warned about, since a double switch is reported rather than thrown.
+    /// <summary>Keeps what was warned about, since a double switch is reported rather than thrown.</summary>
     private sealed class Warnings : ILogger
     {
         public List<string> Logged { get; } = [];

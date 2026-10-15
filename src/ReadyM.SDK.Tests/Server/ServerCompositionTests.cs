@@ -74,7 +74,7 @@ public class ServerCompositionTests : ServerSdkTest
         Assert.Equal(0, Relay.SlotCalls);
     }
 
-    /// The wider query reaches the narrower entities by chunk as well.
+    /// <summary>The wider query reaches the narrower entities by chunk as well.</summary>
     [Fact]
     public void The_wider_query_reaches_both_archetypes_by_chunk()
     {
@@ -111,7 +111,7 @@ public class ServerCompositionTests : ServerSdkTest
         Assert.Equal(7, quest.QuestId);
     }
 
-    /// The generated conversions carry an entity between the two shapes.
+    /// <summary>The generated conversions carry an entity between the two shapes.</summary>
     [Fact]
     public void A_narrower_entity_converts_up_and_a_wider_one_reports_what_it_is()
     {

@@ -13,7 +13,7 @@ namespace ReadyM.Relay.Client.Utilities;
 ///
 /// Not thread-safe by design (we use a single network thread).
 /// </summary>
-public sealed class NetworkSessionStats
+internal sealed class NetworkSessionStats
 {
     private const int DefaultMaxValidPingMs = 1000;
 
@@ -394,7 +394,7 @@ public sealed class NetworkSessionStats
         }
     }
 
-    /// Writes a structured log with all stats.
+    /// <summary>Writes a structured log with all stats.</summary>
     public void DumpToLog(ILogger logger)
     {
         logger.LogInformation(

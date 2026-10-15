@@ -17,7 +17,7 @@ public readonly struct ChunkSlot
     internal readonly IntPtr Data;
     internal readonly int Stride;
 
-    /// An array the managed side owns. Its elements may hold references, so it is never pinned.
+    /// <summary>An array the managed side owns. Its elements may hold references, so it is never pinned.</summary>
     internal ChunkSlot(Array heap, int stride)
     {
         Heap = heap;
@@ -25,7 +25,7 @@ public readonly struct ChunkSlot
         Stride = stride;
     }
 
-    /// Memory that does not move, so an address is enough.
+    /// <summary>Memory that does not move, so an address is enough.</summary>
     internal ChunkSlot(IntPtr data, int stride)
     {
         Heap = null;

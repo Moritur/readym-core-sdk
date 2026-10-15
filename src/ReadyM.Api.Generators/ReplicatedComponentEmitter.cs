@@ -15,8 +15,10 @@ using static ReadyM.Api.Generators.DeriveCSharpUtils;
 
 namespace ReadyM.Api.Generators;
 
+/// <summary>
 /// Emits a component that replicates: the dirty and api masks, the change component, the
 /// accessors that mark a field changed, and the serialization either side of the wire.
+/// </summary>
 /// <remarks>
 /// Lifted out of <c>DeriveINetworkedComponentGenerator</c> so the archetype and mixin generators
 /// can reach it too. Generators cannot chain, so a generated component cannot be handed to another
@@ -27,12 +29,11 @@ namespace ReadyM.Api.Generators;
 /// </remarks>
 internal static class ReplicatedComponentEmitter
 {
-    /// A policy is the contract naming who may write the component, or null to leave it unsaid.
+    /// <summary>A policy is the contract naming who may write the component, or null to leave it unsaid.</summary>
     internal static string Emit(DeriveTargetModel model, string? policy = null)
     {
         var info = model.Source;
         var members = model.Members;
-        var access = model.Source.Accessibility; // public, internal, etc.
 
         if (model.MaskInfo.Bits < members.Count)
         {
@@ -72,7 +73,7 @@ internal static class ReplicatedComponentEmitter
         sb.Append($$"""
 namespace {{info.Namespace}};
 
-{{access}} partial struct {{info.Name}} : INetworkedComponent{{(policy is null ? string.Empty : ", " + policy)}}{{(hasDispose ? ", IDisposable" : string.Empty)}}{{(interned ? ", global::ReadyM.Api.Multiplayer.Interning.IInternedComponent" : string.Empty)}}
+partial struct {{info.Name}} : INetworkedComponent{{(policy is null ? string.Empty : ", " + policy)}}{{(hasDispose ? ", IDisposable" : string.Empty)}}{{(interned ? ", global::ReadyM.Api.Multiplayer.Interning.IInternedComponent" : string.Empty)}}
 {
 
 """);
@@ -130,10 +131,12 @@ namespace {{info.Namespace}};
 
         sb.AppendLine("""
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ClearDirty() => _dirtyMask = 0;
     
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public bool IsDirty => _dirtyMask != 0;
 """);
 
@@ -218,6 +221,7 @@ using {ns};
         sb.AppendLine($$"""
 
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     [global::Friflo.Engine.ECS.ComponentKey("{{model.Source.Name}}.ChangeComponent")]
     public struct ChangeComponent : global::Friflo.Engine.ECS.IComponent
     {
@@ -236,6 +240,8 @@ using {ns};
 """);
 
         sb.AppendLine("""
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public System.Type GetChangeComponent()
         => typeof(ChangeComponent);
     
@@ -324,6 +330,7 @@ using {ns};
     {
         sb.AppendLine("""
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public static class Fields
     {
 """);
@@ -348,17 +355,22 @@ using {ns};
 
         sb.AppendLine($"""
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ClearApiFlag() => _apiMask = 0;
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ClearApiFlag(int field) => _apiMask = ({model.MaskInfo!.Type.Name})(_apiMask & ~(({model.MaskInfo!.Type.Name})1 << field));
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public readonly bool ChangedFromApi => _apiMask != 0;
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void MarkChangedFromApi() => _apiMask = _dirtyMask;
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void MarkAllChangedFromApi() => _apiMask = unchecked(({model.MaskInfo!.Type.Name}){allFieldsLiteral});
 
@@ -418,6 +430,7 @@ using {ns};
 
         sb.AppendLine("""
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public void DeserializeTracking(NetDataReader reader, int id)
     {
 """);
@@ -445,6 +458,7 @@ using {ns};
     {
         sb.AppendLine("""
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public void WriteDelta(NetDataWriter writer)
     {
         var mask = _dirtyMask;
@@ -474,6 +488,7 @@ using {ns};
     {
         sb.AppendLine("""
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public void ReadDelta(NetDataReader reader)
     {
 """);
@@ -500,6 +515,7 @@ using {ns};
 
         sb.AppendLine("""
     /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public void ReadDeltaTracking(NetDataReader reader, int id)
     {
 """);
@@ -548,6 +564,8 @@ using {ns};
         CSharpClassState classState)
     {
         sb.AppendLine("""
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public void Dispose()
     {
 """);
@@ -574,7 +592,7 @@ using {ns};
         CSharpClassState classState)
     {
         sb.Append(@$"
-    public void Assign(in {model.Source.QualifiedName} value)
+    internal void Assign(in {model.Source.QualifiedName} value)
 ");
 
         sb.AppendLine("""

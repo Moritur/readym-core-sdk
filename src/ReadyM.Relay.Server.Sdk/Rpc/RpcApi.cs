@@ -15,6 +15,8 @@ namespace ReadyM.Relay.Server.Sdk.Rpc;
 /// <summary>
 /// Low-level API for handling RPC messages in the ReadyM Relay Server SDK.
 /// </summary>
+/// <exclude />
+[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
 public class RpcApi
 {
     private readonly AddServerRpcMessageHandlerDelegate _addServerRpcMessageHandler;
