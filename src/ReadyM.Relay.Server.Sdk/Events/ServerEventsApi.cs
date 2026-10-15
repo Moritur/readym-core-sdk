@@ -14,7 +14,8 @@ namespace ReadyM.Relay.Server.Sdk.Events;
 /// <summary>
 /// Provides an API for subscribing to server events.
 /// </summary>
-public sealed class ServerEventsApi : IDisposable
+[Obsolete("Will be made internal, use IServerEvents instead")]
+public sealed class ServerEventsApi : IServerEvents, IDisposable
 {
     /// <summary>Fires when a player has connected and their player entity exists.</summary>
     public event Action<PlayerId, Entity>? OnPlayerConnected;
@@ -50,6 +51,7 @@ public sealed class ServerEventsApi : IDisposable
     private readonly INetworkTime _netTime;
     private readonly IChangeTrackingStore _changeTracking;
     private readonly ILogger _logger;
+    private bool _disposed;
 
     internal ServerEventsApi(
         ServerEventsPointers pointers,
@@ -79,6 +81,11 @@ public sealed class ServerEventsApi : IDisposable
     /// <summary>Stops receiving the server's events.</summary>
     public void Dispose()
     {
+        // Registered as both this class and IServerEvents, so the container may dispose it twice
+        if (_disposed)
+            return;
+
+        _disposed = true;
         _unsubscribe(_dispatch);
         _pinnedDelegates.Dispose();
     }

@@ -37,12 +37,12 @@ public class PlayerApi : IPlayers
     /// <summary>
     /// Fired once the player has finished the handshake and their ECS entity exists.
     /// </summary>
-    [Obsolete("This API is being deprecated in favor of the more general ServerEventsApi.")]
+    [Obsolete("Use IServerEvents instead")]
 
     public event Action<PlayerConnectedEvent>? OnPlayerConnected;
 
     /// <summary>Fired when the player leaves, whichever way they left.</summary>
-    [Obsolete("This API is being deprecated in favor of the more general ServerEventsApi.")]
+    [Obsolete("Use IServerEvents instead")]
     public event Action<PlayerDisconnectedEvent>? OnPlayerDisconnected;
 
     /// <summary>
