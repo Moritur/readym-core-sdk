@@ -3,7 +3,9 @@
 /// <summary>
 /// Indicates the layer of a save: which kind of partition an entity is saved into.
 /// </summary>
-internal enum SaveLayer
+/// <exclude />
+[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
+public enum SaveLayer
 {
     /// <summary>
     /// The global world state: the World entity and everything not tied to an area, a cell or a player.

@@ -7,7 +7,7 @@ namespace ReadyM.Api.Saves;
 /// hand for a component whose fields the generator does not cover.
 /// </summary>
 /// <exclude />
-[EditorBrowsable(EditorBrowsableState.Never)]
+[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
 public interface ISavableComponent : ISaveSerializable, IComponent
 {
     string SaveName { get; }
