@@ -74,6 +74,12 @@ public class ExplicitComponentTests(ITestOutputHelper output)
             public int Value;
         }
 
+        public struct DocumentedComponent : IComponent
+        {
+            /// <summary>How much is left.</summary>
+            public int Amount;
+        }
+
         public class Actor;
 
         public class Character : Actor;
@@ -467,5 +473,38 @@ public class ExplicitComponentTests(ITestOutputHelper output)
         var at = Assert.Single(reported).Location;
 
         Assert.Contains("ExplicitCollection", at.SourceTree!.GetText().ToString(at.SourceSpan));
+    }
+
+    /// <summary>A value the shape leaves undocumented reads its docs from where it lives.</summary>
+    [Fact]
+    public void An_undocumented_value_inherits_the_component_member_docs()
+    {
+        var generated = Generated("""
+            [ArchetypeMixin]
+            [ExplicitComponent(typeof(global::Core.DocumentedComponent))]
+            public readonly partial struct Stock
+            {
+                public partial int Amount { get; set; }
+            }
+            """);
+
+        Assert.Contains("/// <inheritdoc cref=\"global::Core.DocumentedComponent.Amount\"/>", generated);
+    }
+
+    /// <summary>The generated part's comment is the one the compiler keeps, so it must not replace the shape's own.</summary>
+    [Fact]
+    public void A_documented_value_keeps_its_own_docs()
+    {
+        var generated = Generated("""
+            [ArchetypeMixin]
+            [ExplicitComponent(typeof(global::Core.DocumentedComponent))]
+            public readonly partial struct Stock
+            {
+                /// <summary>What the stock says is left.</summary>
+                public partial int Amount { get; set; }
+            }
+            """);
+
+        Assert.DoesNotContain("<inheritdoc", generated);
     }
 }

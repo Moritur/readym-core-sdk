@@ -35,6 +35,12 @@ internal sealed class AccessorModel(string name, string type, bool hasSetter, st
                             && support is NativeContainerFieldTypeSupportImplBase;
         IsIndex = property.GetAttributes().Any(attribute
             => attribute.AttributeClass?.ToDisplayString() == ArchetypeNames.IndexAttribute);
+
+        // The compiler keeps the implementing part's comment over the declaration's, so the generated part only gets one
+        // when the declaration has none.
+        if (component is not null && DocComments.Of(property).Count == 0
+                                  && Target(component, property) is { DeclaredAccessibility: not Accessibility.Private } target)
+            InheritsDocFrom = $"{target.ContainingType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}.{target.Name}";
     }
 
     public string Name { get; } = name;
@@ -45,6 +51,9 @@ internal sealed class AccessorModel(string name, string type, bool hasSetter, st
 
     /// <summary>Whether [Index] marks this as the value the shape is found by.</summary>
     public bool IsIndex { get; }
+
+    /// <summary>The component member an undocumented value takes its doc comment from, as a cref.</summary>
+    public string? InheritsDocFrom { get; }
 
     /// <summary>
     /// Whether the value is a native collection. A replicated component gives one of those a family

@@ -104,6 +104,9 @@ internal static class HandleEmitter
 
         var called = name ?? accessor.Name;
 
+        if (partial && accessor.InheritsDocFrom is { } source)
+            writer.Line($"/// <inheritdoc cref=\"{source}\"/>");
+
         if (hidden)
             writer.Line(ArchetypeNames.Hidden);
 
