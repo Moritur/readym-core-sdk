@@ -381,8 +381,6 @@ using {ns};
         CSharpClassState classState)
     {
         sb.AppendLine("""
-    /// <exclude />
-    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public void Serialize(NetDataWriter writer)
     {
 """);
@@ -409,8 +407,6 @@ using {ns};
         CSharpClassState classState)
     {
         sb.AppendLine("""
-    /// <exclude />
-    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public void Deserialize(NetDataReader reader)
     {
 """);

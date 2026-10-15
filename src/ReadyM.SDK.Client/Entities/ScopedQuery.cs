@@ -18,6 +18,8 @@ public readonly struct ScopedQuery<T> where T : struct, IArchetypeQueryable
 
     public Enumerator GetEnumerator() => new(_api?.Api, _scope);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public struct Enumerator : IDisposable
     {
         private readonly IEntityApi? _api;

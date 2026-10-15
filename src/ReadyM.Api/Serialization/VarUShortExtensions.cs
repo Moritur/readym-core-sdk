@@ -3,8 +3,10 @@ using LiteNetLib.Utils;
 
 namespace ReadyM.Api.Serialization;
 
+/// Writes and reads a <c>ushort</c> in the compact <see cref="VarUShort"/> encoding.
 public static class VarUShortExtensions
 {
+    /// Writes <paramref name="value"/> in as few bytes as it needs.
     public static void PutVarUShort(this NetDataWriter writer, ushort value)
     {
         var remaining = (uint)value;

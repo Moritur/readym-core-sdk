@@ -3,11 +3,13 @@ using ReadyM.SDK.Archetypes.Core;
 
 namespace ReadyM.SDK.Entities;
 
+/// Creating and finding entities, the same on the client and the server.
 public interface IEntitiesBase
 {
     /// Create a new entity of a given Archetype.
     T Create<T>() where T : struct, IArchetype;
 
+    /// The entity that stands for the whole session; throws until it exists.
     World World { get; }
 
     /// The entity whose indexed value is the key, as the shape carrying the index.

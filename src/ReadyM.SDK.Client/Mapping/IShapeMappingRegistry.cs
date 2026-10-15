@@ -2,6 +2,7 @@
 
 namespace ReadyM.SDK.Client.Mapping;
 
+/// Where a mod declares how its shapes map to and from game objects.
 public interface IShapeMappingRegistry
 {
     /// Everything this shape maps to and from one kind of game object.

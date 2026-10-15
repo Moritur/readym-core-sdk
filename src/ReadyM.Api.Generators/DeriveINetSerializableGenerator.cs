@@ -78,8 +78,6 @@ partial struct {info.Name}
         }
 
         sb.AppendLine("""
-    /// <exclude />
-    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     [Pure]
     public void Serialize(NetDataWriter writer)
     {
@@ -116,8 +114,6 @@ partial struct {info.Name}
 """);
 
         sb.AppendLine("""
-    /// <exclude />
-    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public void Deserialize(NetDataReader reader)
     {
 """);

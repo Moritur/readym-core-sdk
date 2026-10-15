@@ -1,5 +1,6 @@
 namespace ReadyM.SDK.Services;
 
+/// A service's clock for the current update.
 /// <param name="deltaTime">Seconds since the last update.</param>
 /// <param name="time">Seconds since the game started.</param>
 /// <param name="ticks">Updates that came before this one.</param>

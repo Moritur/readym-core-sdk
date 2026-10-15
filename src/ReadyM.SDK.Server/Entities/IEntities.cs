@@ -4,6 +4,7 @@ using ReadyM.SDK.Entities;
 
 namespace ReadyM.SDK.Server.Entities;
 
+/// Every entity on the server: create, query, look up and delete them.
 public interface IEntities : IEntitiesBase
 {
     /// Create a new entity of the given archetype, in a given scope, owned by the given player.

@@ -3,6 +3,7 @@ using ReadyM.SDK.Entities;
 
 namespace ReadyM.SDK.Client.Entities;
 
+/// The entities this client can see: query, look up, create and delete them.
 public interface IEntities : IEntitiesBase
 {
     /// <summary>

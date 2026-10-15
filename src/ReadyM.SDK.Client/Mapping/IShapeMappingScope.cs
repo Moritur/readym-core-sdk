@@ -3,6 +3,7 @@ using ReadyM.SDK.Archetypes.Access;
 
 namespace ReadyM.SDK.Client.Mapping;
 
+/// The mappings between one shape and one kind of game object.
 public interface IShapeMappingScope<TShape, out TContext>
     where TShape : struct, IArchetypeQueryable
 {

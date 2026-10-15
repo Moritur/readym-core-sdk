@@ -16,15 +16,25 @@ namespace ReadyM.Relay.Server.Sdk.Events;
 /// </summary>
 public sealed class ServerEventsApi : IDisposable
 {
+    /// Fires when a player has connected and their player entity exists.
     public event Action<PlayerId, Entity>? OnPlayerConnected;
+    /// Fires when a player has left or dropped, after they left their area.
     public event Action<PlayerId, Entity, DisconnectReason>? OnPlayerDisconnected;
+    /// Fires when an area comes into use, as the first player enters it.
     public event Action<AreaId, Entity>? OnAreaCreated;
+    /// Fires when the last player has left an area, unless the server keeps it while empty.
     public event Action<AreaId, Entity>? OnAreaDeleted;
+    /// Fires when any player enters an area, the first one included.
     public event Action<PlayerId, AreaId>? OnPlayerJoinedArea;
+    /// Fires when any player leaves an area.
     public event Action<PlayerId, AreaId>? OnPlayerLeftArea;
+    /// Fires when a cell comes into use, as the first player loads it.
     public event Action<AreaId, CellId, Entity>? OnCellCreated;
+    /// Fires when the last player has unloaded a cell, unless the server keeps it while empty.
     public event Action<AreaId, CellId, Entity>? OnCellDeleted;
+    /// Fires when any player loads a cell, the first one included.
     public event Action<PlayerId, AreaId, CellId>? OnPlayerActivatedCell;
+    /// Fires when any player unloads a cell.
     public event Action<PlayerId, AreaId, CellId>? OnPlayerDeactivatedCell;
 
     /// <summary>
@@ -66,6 +76,7 @@ public sealed class ServerEventsApi : IDisposable
         subscribe(_dispatch);
     }
 
+    /// Stops receiving the server's events.
     public void Dispose()
     {
         _unsubscribe(_dispatch);

@@ -12,6 +12,8 @@ public readonly ref struct ChunkQuery<TView>
 
     public Enumerator GetEnumerator() => new(_source);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public ref struct Enumerator
     {
         private readonly ChunkBuffer? _buffer;

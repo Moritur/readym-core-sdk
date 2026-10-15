@@ -23,6 +23,8 @@ public readonly struct ScopedQuery<T1, T2>
 
     public Enumerator GetEnumerator() => new(_api?.Api, _scope);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public struct Enumerator : IDisposable
     {
         private readonly IEntityApi? _api;
@@ -95,6 +97,8 @@ public readonly struct ScopedQuery<T1, T2, T3>
 
     public Enumerator GetEnumerator() => new(_api?.Api, _scope);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public struct Enumerator : IDisposable
     {
         private readonly IEntityApi? _api;
@@ -169,6 +173,8 @@ public readonly struct ScopedQuery<T1, T2, T3, T4>
 
     public Enumerator GetEnumerator() => new(_api?.Api, _scope);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public struct Enumerator : IDisposable
     {
         private readonly IEntityApi? _api;
@@ -245,6 +251,8 @@ public readonly struct ScopedQuery<T1, T2, T3, T4, T5>
 
     public Enumerator GetEnumerator() => new(_api?.Api, _scope);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public struct Enumerator : IDisposable
     {
         private readonly IEntityApi? _api;
@@ -323,6 +331,8 @@ public readonly struct ScopedQuery<T1, T2, T3, T4, T5, T6>
 
     public Enumerator GetEnumerator() => new(_api?.Api, _scope);
 
+    /// <exclude />
+    [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
     public struct Enumerator : IDisposable
     {
         private readonly IEntityApi? _api;

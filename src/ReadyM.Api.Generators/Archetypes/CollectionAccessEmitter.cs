@@ -64,6 +64,7 @@ internal static class CollectionAccessEmitter
         var handle = ArchetypeNames.EntityHandle;
 
         writer.Line();
+        writer.Line($"/// The {collection} collection of a {model.Name}.");
 
         if (model.IsHidden)
             writer.Line(ArchetypeNames.Hidden);

@@ -27,6 +27,7 @@ internal static class ValuesEmitter
         var component = model.QualifiedComponent;
 
         writer.Line();
+        writer.Line($"/// Tokens naming each of {model.Name}'s values, for mappings and overrides.");
 
         using (writer.Braces($"public static class {ClassName}"))
         {
@@ -38,6 +39,7 @@ internal static class ValuesEmitter
             foreach (var accessor in exposed)
             {
                 writer.Line();
+                writer.Line($"/// Names {model.Name}.{accessor.Name}.");
                 // The value the component is indexed by writes back through the index.
                 var of = accessor.IsIndex ? "OfIndexed" : "Of";
 
@@ -54,6 +56,7 @@ internal static class ValuesEmitter
                 var access = CollectionAccessEmitter.QualifiedNameOf(model, collection);
 
                 writer.Line();
+                writer.Line($"/// Names {model.Name}'s {collection} collection.");
                 writer.Line($"public static {ArchetypeNames.Collection}<{model.QualifiedName}, {access}> {collection} {{ get; }}");
                 writer.Line($"    = {ArchetypeNames.Collection}.Of<{model.QualifiedName}, {component}, {held}, {access}>(");
                 writer.Line($"        {component}.Fields.{collection},");
