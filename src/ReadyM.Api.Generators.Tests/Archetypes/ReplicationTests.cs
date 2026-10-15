@@ -917,4 +917,52 @@ public class ReplicationTests(ITestOutputHelper output)
                 private partial global::Yooni.Native.Container.NativeList<int> Items { get; set; }
             }
             """);
+
+    /// <summary>It compiled before, and the generated serializer threw the first time the entity was sent.</summary>
+    [Theory]
+    [InlineData("global::System.Collections.Generic.List<int>")]
+    [InlineData("global::System.Collections.Generic.Dictionary<string, int>")]
+    [InlineData("global::Yooni.Native.Container.NativeList<global::Friflo.Engine.ECS.Entity>")]
+    public void A_replicated_shape_cannot_hold_a_value_it_cannot_send(string type)
+        => AssertReports("READYM046", $$"""
+            [ArchetypeMixin]
+            [Replicated]
+            [Propagates(Propagation.ServerAuthoritative)]
+            public readonly partial struct Subject
+            {
+                private partial {{type}} Items { get; set; }
+            }
+            """);
+
+    [Fact]
+    public void A_local_shape_can_hold_a_plain_collection()
+    {
+        var reported = Report("""
+            [ArchetypeMixin]
+            public readonly partial struct Subject
+            {
+                public partial global::System.Collections.Generic.List<int> Items { get; set; }
+            }
+            """);
+
+        Assert.DoesNotContain(reported, d => d.Id is "READYM046" or "READYM018");
+    }
+
+    [Fact]
+    public void A_replicated_shape_can_hold_what_it_sends()
+    {
+        var reported = Report("""
+            [ArchetypeMixin]
+            [Replicated]
+            [Propagates(Propagation.ServerAuthoritative)]
+            public readonly partial struct Subject
+            {
+                public partial int Count { get; set; }
+                public partial global::Yooni.Native.Container.NativeString64 Name { get; set; }
+                private partial global::Yooni.Native.Container.NativeList<int> Items { get; set; }
+            }
+            """);
+
+        Assert.DoesNotContain(reported, d => d.Id == "READYM046");
+    }
 }

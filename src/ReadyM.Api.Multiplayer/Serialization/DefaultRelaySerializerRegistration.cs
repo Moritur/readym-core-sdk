@@ -80,5 +80,43 @@ internal class DefaultRelaySerializerRegistration : IRelaySerializerRegistration
             var z = stream.GetFloat();
             return new Vector3(x, y, z);
         });
+
+        serializer.RegisterType(typeof(Vector2), (stream, customObject) =>
+        {
+            var vector = (Vector2)customObject;
+            stream.Put(vector.X);
+            stream.Put(vector.Y);
+        }, stream =>
+        {
+            var x = stream.GetFloat();
+            var y = stream.GetFloat();
+            return new Vector2(x, y);
+        });
+
+        serializer.RegisterType(typeof(Vector4), (stream, customObject) =>
+        {
+            var vector = (Vector4)customObject;
+            stream.Put(vector.X);
+            stream.Put(vector.Y);
+            stream.Put(vector.Z);
+            stream.Put(vector.W);
+        }, stream =>
+        {
+            var x = stream.GetFloat();
+            var y = stream.GetFloat();
+            var z = stream.GetFloat();
+            var w = stream.GetFloat();
+            return new Vector4(x, y, z, w);
+        });
+
+        serializer.RegisterType(typeof(bool[]), (stream, customObject) => { stream.PutArray((bool[])customObject); }, stream => stream.GetBoolArray());
+        serializer.RegisterType(typeof(short[]), (stream, customObject) => { stream.PutArray((short[])customObject); }, stream => stream.GetShortArray());
+        serializer.RegisterType(typeof(ushort[]), (stream, customObject) => { stream.PutArray((ushort[])customObject); }, stream => stream.GetUShortArray());
+        serializer.RegisterType(typeof(uint[]), (stream, customObject) => { stream.PutArray((uint[])customObject); }, stream => stream.GetUIntArray());
+        serializer.RegisterType(typeof(long[]), (stream, customObject) => { stream.PutArray((long[])customObject); }, stream => stream.GetLongArray());
+        serializer.RegisterType(typeof(ulong[]), (stream, customObject) => { stream.PutArray((ulong[])customObject); }, stream => stream.GetULongArray());
+        serializer.RegisterType(typeof(float[]), (stream, customObject) => { stream.PutArray((float[])customObject); }, stream => stream.GetFloatArray());
+        serializer.RegisterType(typeof(double[]), (stream, customObject) => { stream.PutArray((double[])customObject); }, stream => stream.GetDoubleArray());
+        serializer.RegisterType(typeof(string[]), (stream, customObject) => { stream.PutArray((string[])customObject); }, stream => stream.GetStringArray());
     }
 }

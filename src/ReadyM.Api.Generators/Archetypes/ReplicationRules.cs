@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using ReadyM.Api.Generators.Derive.CSharp;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
@@ -83,6 +84,16 @@ internal static class ReplicationRules
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
+    public static readonly DiagnosticDescriptor ValueCannotBeSent = new(
+        "READYM046",
+        "Replicated value cannot be sent",
+        "'{0}.{1}' is a '{2}', which the SDK cannot send, so '{0}' would fail when it is replicated. "
+        + "Use a number, bool, enum, vector, NativeString, NativeList, NativeDictionary or a type with "
+        + "Serialize and Deserialize methods, or keep the value on a shape that does not replicate.",
+        "ReadyM",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
     /// <summary>What a shape says about propagating, and whether it is in a position to say it.</summary>
     public static ImmutableArray<Diagnostic> CheckPropagation(DeclarationModel model)
     {
@@ -115,19 +126,23 @@ internal static class ReplicationRules
                 ? [Diagnostic.Create(ComponentCannotReplicate, at, component.ToDisplayString(), model.Name)]
                 : [];
 
-        // Both rules hold whether or not the shape asked to replicate, because what a collection is
-        // reachable by, and what nothing is reachable by, is decided before anything is sent.
+        // The collection rules hold whether or not the shape asked to replicate, because what a collection
+        // is reachable by, and what nothing is reachable by, is decided before anything is sent.
         foreach (var accessor in model.Accessors)
         {
-            if (!accessor.IsNativeContainer)
-                continue;
-
             var declared = accessor.Declared?.Locations.FirstOrDefault() ?? at;
 
-            if (!model.IsReplicated)
-                found.Add(Diagnostic.Create(CollectionNeedsReplication, declared, model.Name, accessor.Name));
-            else if (accessor.IsExposed)
-                found.Add(Diagnostic.Create(CollectionIsExposed, declared, model.Name, accessor.Name));
+            if (accessor.IsNativeContainer)
+            {
+                if (!model.IsReplicated)
+                    found.Add(Diagnostic.Create(CollectionNeedsReplication, declared, model.Name, accessor.Name));
+                else if (accessor.IsExposed)
+                    found.Add(Diagnostic.Create(CollectionIsExposed, declared, model.Name, accessor.Name));
+            }
+
+            if (model.IsReplicated && accessor.Declared is { } property && !CSharpFieldSupportRegistry.CanSend(property.Type))
+                found.Add(Diagnostic.Create(ValueCannotBeSent, declared, model.Name, accessor.Name,
+                    property.Type.ToDisplayString()));
         }
 
         if (model.HasReplicatedAttribute && model.Accessors.Count == 0)
