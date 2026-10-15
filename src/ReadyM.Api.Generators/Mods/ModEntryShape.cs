@@ -22,7 +22,7 @@ internal static class ModEntryShape
         isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor NotSealed = new(
-        "READYM028",
+        "READYM044",
         "Mod entry point is not sealed",
         "'{0}' is a mod entry point, and the loader builds exactly one of it. Deriving from it would "
         + "not give you a second one, so declare it sealed.",
@@ -31,7 +31,7 @@ internal static class ModEntryShape
         isEnabledByDefault: true);
 
     public static readonly DiagnosticDescriptor NotAHook = new(
-        "READYM029",
+        "READYM045",
         "Mod entry point method cannot be run",
         "'{0}.{1}' cannot be called by the loader: it has to be a private instance method returning "
         + "void and taking nothing. An entry point asks for everything else in its constructor.",

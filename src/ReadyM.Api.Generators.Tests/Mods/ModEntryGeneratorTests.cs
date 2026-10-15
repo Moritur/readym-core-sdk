@@ -89,7 +89,7 @@ public class ModEntryGeneratorTests(ITestOutputHelper output)
 
     [Fact]
     public void An_entry_point_that_is_not_sealed_is_refused()
-        => AssertReports("READYM028", "[ModEntry] public partial class Entry { }");
+        => AssertReports("READYM044", "[ModEntry] public partial class Entry { }");
 
     /// <summary>A public init would be callable by anything, and the loader calls it exactly once.</summary>
     [Theory]
@@ -98,7 +98,7 @@ public class ModEntryGeneratorTests(ITestOutputHelper output)
     [InlineData("private int Init() => 0;")]
     [InlineData("private void Init(int unused) { }")]
     public void An_init_the_loader_cannot_call_is_refused(string init)
-        => AssertReports("READYM029", $"[ModEntry] public sealed partial class Entry {{ {init} }}");
+        => AssertReports("READYM045", $"[ModEntry] public sealed partial class Entry {{ {init} }}");
 
     /// <summary>A mod is entered once, so a second one is a question the loader has no answer to.</summary>
     [Fact]
