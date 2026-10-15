@@ -5,8 +5,10 @@ using Xunit;
 
 namespace ReadyM.Api.Generators.Tests.Mods;
 
+/// <summary>
 /// What [ModConfig] makes of a class, and what it refuses. The file it names and the fact that the
 /// SDK has to be able to build one are the whole of the contract, so both are worth pinning.
+/// </summary>
 public class ModConfigGeneratorTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk = [typeof(SDK.Attributes.ModConfigAttribute).Assembly];
@@ -42,7 +44,7 @@ public class ModConfigGeneratorTests(ITestOutputHelper output)
 
     // -- what it writes ----------------------------------------------------------------------------
 
-    /// Leaving the name out reads the one every mod uses, so most configs say nothing at all.
+    /// <summary>Leaving the name out reads the one every mod uses, so most configs say nothing at all.</summary>
     [Fact]
     public void A_config_reads_the_default_file()
         => Assert.Contains(
@@ -65,7 +67,7 @@ public class ModConfigGeneratorTests(ITestOutputHelper output)
     public void A_config_the_sdk_cannot_build_is_refused(string config)
         => AssertReports("READYM031", $"[ModConfig] {config}");
 
-    /// An empty name reads nothing, and silently falling back to the default would hide the typo.
+    /// <summary>An empty name reads nothing, and silently falling back to the default would hide the typo.</summary>
     [Fact]
     public void A_config_naming_no_file_is_refused()
         => AssertReports("READYM032", """[ModConfig("")] public sealed partial class Settings { }""");

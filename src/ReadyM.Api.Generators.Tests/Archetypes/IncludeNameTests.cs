@@ -5,8 +5,10 @@ using Xunit;
 
 namespace ReadyM.Api.Generators.Tests.Archetypes;
 
+/// <summary>
 /// Two members a shape would expose under one name are refused, whichever pair they come from. Keeping only the first,
 /// as the generator used to, sent every call to whichever include happened to be listed first.
+/// </summary>
 public class IncludeNameTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk =

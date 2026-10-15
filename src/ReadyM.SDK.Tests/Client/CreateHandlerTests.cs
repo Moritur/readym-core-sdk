@@ -2,14 +2,14 @@
 
 namespace ReadyM.SDK.Tests.Client;
 
-/// What a shape asked to run as one of its entities is created, which is where a default belongs.
+/// <summary>What a shape asked to run as one of its entities is created, which is where a default belongs.</summary>
 public class CreateHandlerTests : ClientSdkTest
 {
     [Fact]
     public void A_shape_sets_its_own_default_as_the_entity_appears()
         => Assert.Equal(7, Entities.Create<Parcel>().Mark);
 
-    /// The archetype's own handler runs as well as the one on what it includes.
+    /// <summary>The archetype's own handler runs as well as the one on what it includes.</summary>
     [Fact]
     public void An_archetype_runs_its_own_as_well_as_what_it_includes()
     {
@@ -19,7 +19,7 @@ public class CreateHandlerTests : ClientSdkTest
         Assert.Equal(1, crate.Seal);
     }
 
-    /// Every shape on the entity gets its own handler run, not just the first one found.
+    /// <summary>Every shape on the entity gets its own handler run, not just the first one found.</summary>
     [Fact]
     public void Every_included_shape_runs_its_own()
     {
@@ -31,12 +31,12 @@ public class CreateHandlerTests : ClientSdkTest
         Assert.Equal(4, convoy.Sealed);
     }
 
-    /// A handler asks for what it needs by naming it, and the game's services answer.
+    /// <summary>A handler asks for what it needs by naming it, and the game's services answer.</summary>
     [Fact]
     public void A_handler_is_given_what_it_asked_the_game_for()
         => Assert.Equal(1, Entities.Create<Herald>().Heard);
 
-    /// Nothing runs for a shape that asked for nothing, which is almost every shape.
+    /// <summary>Nothing runs for a shape that asked for nothing, which is almost every shape.</summary>
     [Fact]
     public void A_shape_that_asked_for_nothing_is_left_alone()
         => Assert.Equal(0, Entities.Create<Chest>().Gold);

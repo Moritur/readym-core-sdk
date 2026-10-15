@@ -3,21 +3,21 @@ using ReadyM.SDK.Archetypes.Core;
 
 namespace ReadyM.SDK.Entities;
 
-/// Creating and finding entities, the same on the client and the server.
+/// <summary>Creating and finding entities, the same on the client and the server.</summary>
 public interface IEntitiesBase
 {
-    /// Create a new entity of a given Archetype.
+    /// <summary>Create a new entity of a given Archetype.</summary>
     T Create<T>() where T : struct, IArchetype;
 
-    /// The entity that stands for the whole session; throws until it exists.
+    /// <summary>The entity that stands for the whole session; throws until it exists.</summary>
     World World { get; }
 
-    /// The entity whose indexed value is the key, as the shape carrying the index.
+    /// <summary>The entity whose indexed value is the key, as the shape carrying the index.</summary>
     /// <returns><c>false</c> when nothing holds that value.</returns>
     bool TryLookup<T, TKey>(TKey key, out T shape)
         where T : struct, IArchetypeQueryable, IIndexed<TKey>;
 
-    /// Creates an entity held by a scope, which removes it when the scope goes.
+    /// <summary>Creates an entity held by a scope, which removes it when the scope goes.</summary>
     T Create<T>(Scope scope) where T : struct, IArchetype;
 
     /// <summary>The scope of a given shape holding this entity, if one does.</summary>

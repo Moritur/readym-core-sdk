@@ -6,7 +6,9 @@ using ReadyM.Api.Generators.Archetypes;
 
 namespace ReadyM.Api.Generators.Mods;
 
+/// <summary>
 /// What a class has to look like to be a mod's entry point, for the generator and the analyzer alike.
+/// </summary>
 internal static class ModEntryShape
 {
     public const string InitName = "Init";
@@ -66,7 +68,7 @@ internal static class ModEntryShape
         => symbol.GetAttributes().Any(attribute
             => attribute.AttributeClass?.ToDisplayString() == ArchetypeNames.ModEntryAttribute);
 
-    /// The init the loader calls, or null when the entry point declared none it can call.
+    /// <summary>The init the loader calls, or null when the entry point declared none it can call.</summary>
     private static IMethodSymbol? ReadInit(INamedTypeSymbol entry, Location at, List<Diagnostic> problems)
     {
         var named = entry.GetMembers(InitName).OfType<IMethodSymbol>().ToList();

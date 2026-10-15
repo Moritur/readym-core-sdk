@@ -4,8 +4,10 @@ using ReadyM.SDK.Client.Entities;
 
 namespace ReadyM.SDK.Client.Systems;
 
+/// <summary>
 /// Answers <see cref="ModSystems.Running"/> once a tick. A game adds it to its update loop before
 /// the groups holding mod systems.
+/// </summary>
 internal sealed class ModSystemGate(IEntities entities, ILogger logger) : BaseSystem
 {
     private bool? _said;

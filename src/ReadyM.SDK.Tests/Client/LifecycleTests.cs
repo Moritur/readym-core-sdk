@@ -3,7 +3,7 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
-/// Creating and deleting entities through the SDK rather than through the store.
+/// <summary>Creating and deleting entities through the SDK rather than through the store.</summary>
 public class LifecycleTests : ClientSdkTest
 {
     [Fact]
@@ -47,7 +47,7 @@ public class LifecycleTests : ClientSdkTest
         Assert.Equal(1, Count(Entities.Query<Monster>()));
     }
 
-    /// The buffered loop is what makes this safe: the visited set was taken before the body ran.
+    /// <summary>The buffered loop is what makes this safe: the visited set was taken before the body ran.</summary>
     [Fact]
     public void Deleting_inside_a_query_loop_is_allowed()
     {

@@ -18,8 +18,10 @@ namespace ReadyM.SDK.Client;
 
 internal static class DependencyInjectionExtensions
 {
+    /// <summary>
     /// Register data mappings declared in all loaded mods.
     /// A game calls this once its mods are loaded and before anything reaches a sync point.
+    /// </summary>
     /// <returns>How many sets of mappings were collected, which a game can log.</returns>
     /// <remarks>
     /// Collected once, so every mod has to have registered its own by the time this runs. A mod

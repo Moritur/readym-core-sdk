@@ -4,9 +4,11 @@ using LiteNetLib.Utils;
 
 namespace ReadyM.Api.Serialization;
 
+/// <summary>
 /// Variable-length unsigned integer.
 /// Most significant bit of each byte is used as a continuation flag.
 /// The remaining 7 bits are used to store the value.
+/// </summary>
 [DeriveJsonSerializable]
 [StructLayout(LayoutKind.Sequential, Pack = 1)]
 public partial struct VarUInt(uint value) : INetSerializable, IEquatable<VarUInt>
@@ -15,7 +17,7 @@ public partial struct VarUInt(uint value) : INetSerializable, IEquatable<VarUInt
 
     public uint Value { get; private set; } = value;
 
-    /// How many bytes the value takes on the wire.
+    /// <summary>How many bytes the value takes on the wire.</summary>
     public static int SizeOf(uint value)
         => value switch
         {

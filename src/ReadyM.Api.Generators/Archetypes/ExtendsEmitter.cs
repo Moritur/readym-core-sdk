@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
-/// Registers a shape against the archetypes it extends, so creating one carries it.
+/// <summary>Registers a shape against the archetypes it extends, so creating one carries it.</summary>
 internal static class ExtendsEmitter
 {
     public static void Emit(SourceWriter writer, DeclarationModel model, Compilation compilation)

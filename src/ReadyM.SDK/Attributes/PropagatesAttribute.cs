@@ -1,6 +1,6 @@
 ﻿namespace ReadyM.SDK.Attributes;
 
-/// How this shape's values travel between the game and the ECS, and who may write them.
+/// <summary>How this shape's values travel between the game and the ECS, and who may write them.</summary>
 [AttributeUsage(AttributeTargets.Struct)]
 public sealed class PropagatesAttribute(Propagation propagation) : Attribute
 {

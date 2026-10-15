@@ -3,8 +3,10 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// A disabled service hears nothing: its create and delete handlers are switched off with its
 /// update, so it does not act on a world it is not watching.
+/// </summary>
 public class ServiceSwitchHandlerTests : ClientSdkTest
 {
     [Fact]
@@ -41,7 +43,7 @@ public class ServiceSwitchHandlerTests : ClientSdkTest
         Assert.Equal(1, Container.Resolve<Turnstile>().Inside);
     }
 
-    /// Switching one off says nothing about the rest, including a shape's own handlers.
+    /// <summary>Switching one off says nothing about the rest, including a shape's own handlers.</summary>
     [Fact]
     public void Everything_else_still_hears_about_it()
     {

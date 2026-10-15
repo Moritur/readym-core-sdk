@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ReadyM.Api.Generators.Tests.Archetypes;
 
-/// A shape a mod keeps to itself compiles, and what is generated for it stays as private as it is.
+/// <summary>A shape a mod keeps to itself compiles, and what is generated for it stays as private as it is.</summary>
 public class InternalShapeTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk =
@@ -82,7 +82,7 @@ public class InternalShapeTests(ITestOutputHelper output)
         Assert.Empty(leaked);
     }
 
-    /// A public archetype may build on mixins the mod keeps to itself.
+    /// <summary>A public archetype may build on mixins the mod keeps to itself.</summary>
     [Fact]
     public void A_public_archetype_can_include_an_internal_mixin()
     {

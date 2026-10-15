@@ -6,7 +6,7 @@ using FrifloEntity = Friflo.Engine.ECS.Entity;
 
 namespace ReadyM.SDK.Tests.Client;
 
-/// Queries narrowed to one scope, answered from the links pointing at it.
+/// <summary>Queries narrowed to one scope, answered from the links pointing at it.</summary>
 public class ScopedQueryTests : ClientSdkTest
 {
     private FrifloEntity Raw<T>(T shape) where T : struct, IArchetypeQueryable
@@ -57,7 +57,7 @@ public class ScopedQueryTests : ClientSdkTest
         Assert.Equal(5, routes);
     }
 
-    /// The scope holds it, but it is not the shape that was asked for.
+    /// <summary>The scope holds it, but it is not the shape that was asked for.</summary>
     [Fact]
     public void A_shape_the_query_did_not_ask_for_is_not_visited()
     {
@@ -74,7 +74,7 @@ public class ScopedQueryTests : ClientSdkTest
         Assert.Equal(1, count);
     }
 
-    /// A mixin narrows the same way, across every archetype carrying it.
+    /// <summary>A mixin narrows the same way, across every archetype carrying it.</summary>
     [Fact]
     public void A_mixin_query_can_be_scoped_too()
     {
@@ -158,7 +158,7 @@ public class ScopedQueryTests : ClientSdkTest
         Assert.Equal(2, visited);
     }
 
-    /// A scope is still a shape, so it answers to everything else a shape does.
+    /// <summary>A scope is still a shape, so it answers to everything else a shape does.</summary>
     [Fact]
     public void A_scope_is_an_ordinary_archetype_as_well()
     {
@@ -191,7 +191,7 @@ public class ScopedQueryTests : ClientSdkTest
         Assert.Equal(1, CountIn(north));
     }
 
-    /// Creating without a scope leaves the entity global, so no scope holds it.
+    /// <summary>Creating without a scope leaves the entity global, so no scope holds it.</summary>
     [Fact]
     public void An_entity_created_without_a_scope_is_held_by_none()
     {
@@ -216,7 +216,7 @@ public class ScopedQueryTests : ClientSdkTest
         Assert.Equal(2, CountIn(south));
     }
 
-    /// The shape arrives whole, the same as an unscoped create.
+    /// <summary>The shape arrives whole, the same as an unscoped create.</summary>
     [Fact]
     public void An_entity_created_in_a_scope_still_carries_its_whole_shape()
     {
@@ -287,8 +287,10 @@ public class ScopedQueryTests : ClientSdkTest
         Assert.Equal(0, count);
     }
 
+    /// <summary>
     /// Deleting inside a scoped loop over several shapes is held until it ends, the same as any
     /// other query, which is what says the loop opened a query scope and closed it again.
+    /// </summary>
     [Fact]
     public void A_delete_inside_a_scoped_multi_shape_query_is_held()
     {

@@ -23,7 +23,7 @@ internal abstract class FakeHeap
 
     internal abstract object GetValue(int row);
 
-    /// Deleting swaps the last row into the hole, which is what keeps a chunk contiguous.
+    /// <summary>Deleting swaps the last row into the hole, which is what keeps a chunk contiguous.</summary>
     internal void Move(int from, int to) => SetValue(to, GetValue(from));
 }
 
@@ -91,7 +91,7 @@ internal sealed class ManagedHeap<T> : FakeHeap where T : struct
         Stride = Unsafe.SizeOf<T>();
     }
 
-    /// Grows through the heap's own resize delegate, which is how the relay grows a mod-owned heap.
+    /// <summary>Grows through the heap's own resize delegate, which is how the relay grows a mod-owned heap.</summary>
     internal override int Add()
     {
         if (_count == _capacity)

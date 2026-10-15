@@ -30,7 +30,7 @@ public sealed class ComponentSet
 
     internal Type[] Types { get; }
 
-    /// The component that is most likely to be unique in an archetype, to make lookup faster.
+    /// <summary>The component that is most likely to be unique in an archetype, to make lookup faster.</summary>
     internal ComponentSet Head { get; }
 
     /// <summary>Everything after it, so confirming a match does not ask about the head twice.</summary>

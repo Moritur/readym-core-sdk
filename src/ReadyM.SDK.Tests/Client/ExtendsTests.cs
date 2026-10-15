@@ -36,7 +36,7 @@ public class ExtendsTests : ClientSdkTest
         Assert.Equal(3, weather.Storm);
     }
 
-    /// Two mods extending the same archetype both land, neither knowing about the other.
+    /// <summary>Two mods extending the same archetype both land, neither knowing about the other.</summary>
     [Fact]
     public void Extensions_from_two_mods_both_land()
     {
@@ -73,7 +73,7 @@ public class ExtendsTests : ClientSdkTest
         Assert.Equal(1, found);
     }
 
-    /// An archetype plus one mod's mixin, which is what a mod actually writes.
+    /// <summary>An archetype plus one mod's mixin, which is what a mod actually writes.</summary>
     [Fact]
     public void An_archetype_and_an_extension_can_be_queried_together()
     {
@@ -110,7 +110,7 @@ public class ExtendsTests : ClientSdkTest
 
     // -- writing an extended member ----------------------------------------------------------------
 
-    /// Outside a query the shape is an ordinary local, so the property setter is usable.
+    /// <summary>Outside a query the shape is an ordinary local, so the property setter is usable.</summary>
     [Fact]
     public void An_extended_member_can_be_assigned_through_its_property()
     {
@@ -121,8 +121,10 @@ public class ExtendsTests : ClientSdkTest
         Assert.Equal(21, area.Temperature);
     }
 
+    /// <summary>
     /// Inside a query the shape comes from the loop, which C# will not assign through, so the same
     /// write goes through the method. Both reach the same value.
+    /// </summary>
     [Fact]
     public void An_extended_member_can_be_assigned_through_its_method()
     {
@@ -138,7 +140,7 @@ public class ExtendsTests : ClientSdkTest
         Assert.Equal(8, area.Temperature);
     }
 
-    /// The prefix an extension was declared with names both of them.
+    /// <summary>The prefix an extension was declared with names both of them.</summary>
     [Fact]
     public void A_prefixed_extension_carries_both_ways_of_writing_it()
     {
@@ -185,7 +187,7 @@ public class ExtendsTests : ClientSdkTest
         Assert.Equal(0, area.GuestNamesCount);
     }
 
-    /// A member declared without a setter gains neither, so nothing can write it by accident.
+    /// <summary>A member declared without a setter gains neither, so nothing can write it by accident.</summary>
     [Fact]
     public void A_get_only_extension_has_no_way_to_write_it()
     {
@@ -207,8 +209,10 @@ public class ExtendsTests : ClientSdkTest
 
     // -- collections carried onto the extended archetype -------------------------------------------
 
+    /// <summary>
     /// A mixin whose explicit component holds a native collection puts that collection's methods on
     /// the archetype it extends, the same as it puts its fields there.
+    /// </summary>
     [Fact]
     public void A_collection_on_an_extension_reads_and_writes_through_the_archetype()
     {
@@ -228,8 +232,10 @@ public class ExtendsTests : ClientSdkTest
         Assert.Equal(0, area.StartedCount);
     }
 
+    /// <summary>
     /// The shape a mod actually writes. These are methods, not property setters, so unlike an
     /// assignment they are usable on the loop variable.
+    /// </summary>
     [Fact]
     public void A_collection_on_an_extension_can_be_used_inside_a_query()
     {
@@ -252,9 +258,11 @@ public class ExtendsTests : ClientSdkTest
         Assert.Equal(2, seen);
     }
 
+    /// <summary>
     /// Extending an archetype adds the component either way, so creating one carries it. Telling a
     /// host about it is different: only a component the SDK generated is the SDK's to hand over,
     /// and one borrowed from elsewhere already belongs to whoever declared it.
+    /// </summary>
     [Fact]
     public void Only_generated_extensions_are_the_sdks_to_hand_to_a_host()
     {

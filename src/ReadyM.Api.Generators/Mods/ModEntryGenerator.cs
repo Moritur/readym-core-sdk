@@ -6,8 +6,10 @@ using ReadyM.Api.Generators.Archetypes;
 
 namespace ReadyM.Api.Generators.Mods;
 
+/// <summary>
 /// Completes a <c>[ModEntry]</c> class: the folder the mod was loaded from, the init the loader
 /// calls, and the registration that tells the loader this assembly is a mod at all.
+/// </summary>
 [Generator]
 internal class ModEntryGenerator : IIncrementalGenerator
 {
@@ -58,7 +60,7 @@ internal class ModEntryGenerator : IIncrementalGenerator
 
         using (writer.Braces($"partial class {symbol.Name} : {ArchetypeNames.ModEntry}"))
         {
-            writer.Line("/// This mod's own folder, which holds its assemblies, manifest and any files it ships.");
+            writer.Line("/// <summary>This mod's own folder, which holds its assemblies, manifest and any files it ships.</summary>");
             writer.Line("/// <remarks>Pushed in after the constructor runs, so it reads as empty in one.</remarks>");
             writer.Line("public string ModDirectory { get; private set; } = string.Empty;");
             writer.Line();

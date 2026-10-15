@@ -169,7 +169,7 @@ internal sealed class ModArchetypeRegistry : IArchetypeRegistry, IHostedService
         }
     }
 
-    /// Every component id currently on the builder.
+    /// <summary>Every component id currently on the builder.</summary>
     private List<int> GetComponentIds(ArchetypeBuilder builder)
     {
         var componentIds = new List<int>();
@@ -274,8 +274,10 @@ internal sealed class ModArchetypeRegistry : IArchetypeRegistry, IHostedService
         _modifyArchetypeDelegate(archetypeId, nativeNewComponentList);
     }
     
+    /// <summary>
     /// Runs for an entity of an archetype no mod registered, which is where a mod's components
     /// sit when it extended one of the game's own archetypes.
+    /// </summary>
     internal Action<RawEntity, bool>? ExtensionInit { get; set; }
 
     public void RunPostCreateInit(ArchetypeId archetypeId, RawEntity entity, byte local)

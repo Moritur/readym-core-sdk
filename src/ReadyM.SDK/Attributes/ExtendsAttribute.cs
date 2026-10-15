@@ -1,6 +1,6 @@
 ﻿namespace ReadyM.SDK.Attributes;
 
-/// Adds this mixin to every entity created as the named archetype.
+/// <summary>Adds this mixin to every entity created as the named archetype.</summary>
 /// <param name="archetype">The archetype to add this mixin to.</param>
 /// <param name="prefix">
 /// Put in front of each member this mixin adds to the archetype, for a name that would otherwise

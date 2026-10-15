@@ -3,7 +3,7 @@ using ReadyM.SDK.Entities;
 
 namespace ReadyM.SDK.Archetypes;
 
-/// Common interface for archetypes and mixins.
+/// <summary>Common interface for archetypes and mixins.</summary>
 public interface IArchetypeQueryable : IEntityShape
 {
     /// <summary>Settable, unlike a view's: a shape is built around an entity rather than moved to one.</summary>

@@ -23,7 +23,7 @@ internal static class ComponentEmitter
     public static void EmitMarker(SourceWriter writer, string name)
         => writer.Line($"internal struct {name} : {ArchetypeNames.Component};");
 
-    /// The values alone, for a component whose other half is emitted by the replicated emitter.
+    /// <summary>The values alone, for a component whose other half is emitted by the replicated emitter.</summary>
     /// <remarks>
     /// A hand-written networked component declares its own fields and the emitter adds everything
     /// around them. A generated one has nobody to declare them, so they come from here, in a partial
@@ -65,9 +65,11 @@ internal static class ComponentEmitter
         return carried.Count == 0 ? string.Empty : " : " + string.Join(", ", carried);
     }
 
+    /// <summary>
     /// Creates the collections the component holds. A native collection is a handle to memory
     /// nobody has taken yet, so reading or adding before this has run faults. The store calls it
     /// once, as the entity is created.
+    /// </summary>
     private static void EmitInit(SourceWriter writer, IReadOnlyList<AccessorModel> accessors)
     {
         var collections = accessors.Where(accessor => accessor.IsNativeContainer).ToList();
@@ -99,7 +101,7 @@ internal static class ComponentEmitter
         }
     }
 
-    /// Friflo asks the component itself for the value it is indexed by.
+    /// <summary>Friflo asks the component itself for the value it is indexed by.</summary>
     private static void EmitIndexedValue(SourceWriter writer, AccessorModel? index)
     {
         if (index is null)

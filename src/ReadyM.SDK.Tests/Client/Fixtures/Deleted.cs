@@ -2,7 +2,7 @@ using ReadyM.SDK.Attributes;
 
 namespace ReadyM.SDK.Tests.Client.Fixtures;
 
-/// Keeps what a delete handler saw, because the entity is gone by the time a test can look.
+/// <summary>Keeps what a delete handler saw, because the entity is gone by the time a test can look.</summary>
 [Service]
 public sealed partial class Ledger
 {
@@ -11,8 +11,10 @@ public sealed partial class Ledger
     public List<int> Chalk { get; } = [];
 }
 
+/// <summary>
 /// What a shape lets go of as one of its entities goes. A handler asks the game for what it needs,
 /// the same way a create handler does.
+/// </summary>
 [ArchetypeMixin]
 public readonly partial struct Chalked
 {
@@ -33,7 +35,7 @@ public readonly partial struct Chalked
 [Include(typeof(Chalked))]
 public readonly partial struct Crateload;
 
-/// A service watching a shape it did not declare, on the way out this time.
+/// <summary>A service watching a shape it did not declare, on the way out this time.</summary>
 [Service]
 public sealed partial class Undertaking(Ledger ledger)
 {
@@ -62,8 +64,10 @@ public sealed partial class Turnstile
     private void Left(Ticketed ticketed) => Inside--;
 }
 
+/// <summary>
 /// Carries the one component Ticketed is recognised by first, and nothing else it is made of. What
 /// rules a shape out cheaply must not let this through.
+/// </summary>
 [Archetype(replicated: false)]
 [Include(typeof(Registered))]
 public readonly partial struct HalfTicketed;

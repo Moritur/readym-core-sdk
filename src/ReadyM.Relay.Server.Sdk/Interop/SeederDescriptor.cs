@@ -10,6 +10,6 @@ public struct SeederDescriptor
 {
     public SeederKind Kind;
 
-    /// The seeder's owner: its mod's <c>Manifest.UniqueId</c>.
+    /// <summary>The seeder's owner: its mod's <c>Manifest.UniqueId</c>.</summary>
     public NativeString256 Owner;
 }

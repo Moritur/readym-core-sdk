@@ -4,7 +4,9 @@ using ReadyM.SDK.Entities;
 
 namespace ReadyM.SDK.Client.Mapping;
 
+/// <summary>
 /// Extensions for moving one value between the ECS and the game at a sync point, usually a patch or system.
+/// </summary>
 public static class SyncExtensions
 {
     private static ShapeMappingRegistry? _mappings;
@@ -17,7 +19,7 @@ public static class SyncExtensions
 
     extension<TShape>(TShape shape) where TShape : struct, IArchetypeQueryable
     {
-        /// Whether this value should be applied from the ECS to the game.
+        /// <summary>Whether this value should be applied from the ECS to the game.</summary>
         public bool CanPush<TOwner, TValue>(Value<TOwner, TValue> value) where TOwner : struct, IArchetypeQueryable
         {
             var handle = EntityHandle.Of(shape);
@@ -25,7 +27,7 @@ public static class SyncExtensions
             return handle.ShouldApplyToGame(value.Access.Component) || value.Access.WasSetFromApi(handle);
         }
 
-        /// Whether this collection should be applied from the ECS to the game.
+        /// <summary>Whether this collection should be applied from the ECS to the game.</summary>
         public bool CanPush<TAccess>(Collection<TShape, TAccess> collection)
 #if NET
             where TAccess : allows ref struct
@@ -36,7 +38,7 @@ public static class SyncExtensions
             return handle.ShouldApplyToGame(collection.Value.Component) || collection.Value.WasSetFromApi(handle);
         }
 
-        /// Whether this collection should be loaded from the game into the ECS.
+        /// <summary>Whether this collection should be loaded from the game into the ECS.</summary>
         public bool CanPull<TAccess>(Collection<TShape, TAccess> collection)
 #if NET
             where TAccess : allows ref struct
@@ -48,8 +50,10 @@ public static class SyncExtensions
                    && handle.Allows(collection.Value.Component, WriteKind.Mirror);
         }
 
+        /// <summary>
         /// Shows the game what the collection holds. The handler is handed it to read, and the
         /// members that would change it answer no while it is being shown.
+        /// </summary>
         public bool Push<TAccess, TContext>(Collection<TShape, TAccess> collection, TContext context)
 #if NET
             where TAccess : allows ref struct
@@ -66,7 +70,7 @@ public static class SyncExtensions
             return true;
         }
 
-        /// Reads the collection back out of the game, through the members the component exposes.
+        /// <summary>Reads the collection back out of the game, through the members the component exposes.</summary>
         public bool Pull<TAccess, TContext>(Collection<TShape, TAccess> collection, TContext context)
 #if NET
             where TAccess : allows ref struct
@@ -82,7 +86,7 @@ public static class SyncExtensions
             return true;
         }
 
-        /// Whether this shape should be applied from the ECS to the game.
+        /// <summary>Whether this shape should be applied from the ECS to the game.</summary>
         public bool CanPush(Shape<TShape> whole)
         {
             var handle = EntityHandle.Of(shape);
@@ -90,7 +94,7 @@ public static class SyncExtensions
             return handle.ShouldApplyToGame(whole.Access.Component) || whole.Access.WasOverridden(handle);
         }
 
-        /// Whether this value should be loaded from the game into the ECS.
+        /// <summary>Whether this value should be loaded from the game into the ECS.</summary>
         public bool CanPull<TOwner, TValue>(Value<TOwner, TValue> value) where TOwner : struct, IArchetypeQueryable
         {
             var handle = EntityHandle.Of(shape);
@@ -99,7 +103,7 @@ public static class SyncExtensions
                    && handle.Allows(value.Access.Component, WriteKind.Mirror);
         }
 
-        /// Whether this shape should be loaded from the game into the ECS.
+        /// <summary>Whether this shape should be loaded from the game into the ECS.</summary>
         public bool CanPull(Shape<TShape> whole)
         {
             var handle = EntityHandle.Of(shape);
@@ -107,7 +111,7 @@ public static class SyncExtensions
             return !whole.Access.WasOverridden(handle) && handle.Allows(whole.Access.Component, WriteKind.Mirror);
         }
 
-        /// Applies value the ECS holds to the game.
+        /// <summary>Applies value the ECS holds to the game.</summary>
         /// <returns><c>false</c> when the application is not allowed, or nothing maps the field in this context.</returns>
         public bool Push<TOwner, TValue, TContext>(Value<TOwner, TValue> value,
             TContext context) where TOwner : struct, IArchetypeQueryable
@@ -124,7 +128,7 @@ public static class SyncExtensions
             return true;
         }
 
-        /// Reads the value back out of the game into the ECS.
+        /// <summary>Reads the value back out of the game into the ECS.</summary>
         public bool Pull<TOwner, TValue, TContext>(Value<TOwner, TValue> value,
             TContext context) where TOwner : struct, IArchetypeQueryable
         {
@@ -140,7 +144,7 @@ public static class SyncExtensions
             return true;
         }
 
-        /// Applies the entire shape the ECS holds to the game.
+        /// <summary>Applies the entire shape the ECS holds to the game.</summary>
         public bool Push<TContext>(Shape<TShape> whole, TContext context)
         {
             if (!shape.CanPush(whole) || _mappings?.FindShape<TShape, TContext>(whole.Access)?.Push is not { } push)
@@ -152,7 +156,7 @@ public static class SyncExtensions
             return true;
         }
 
-        /// Reads the entire shape back out of the game, into the ECS.
+        /// <summary>Reads the entire shape back out of the game, into the ECS.</summary>
         public bool Pull<TContext>(Shape<TShape> whole, TContext context)
         {
             if (!shape.CanPull(whole) || _mappings?.FindShape<TShape, TContext>(whole.Access) is not { } mapping)

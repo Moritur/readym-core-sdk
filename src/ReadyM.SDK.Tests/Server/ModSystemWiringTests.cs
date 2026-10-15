@@ -4,14 +4,18 @@ using ReadyM.SDK.Server.Systems;
 
 namespace ReadyM.SDK.Tests.Server;
 
+/// <summary>
 /// Every server mod runs Init against the one container they share, so what Init registers has to
 /// hold whether one mod asks or five do.
+/// </summary>
 public class ModSystemWiringTests
 {
     private sealed class Container : DependencyContainerBase;
 
+    /// <summary>
     /// The one already running stays. The container would otherwise keep the last registration and
     /// quietly drop the first, taking its tick count and its resolved systems with it.
+    /// </summary>
     [Fact]
     public void A_later_mod_does_not_replace_the_updater_already_running()
     {
@@ -29,7 +33,7 @@ public class ModSystemWiringTests
         Assert.Same(running, Assert.Single(((IDependencyContainer)container).ResolveAll<ModSystemBase>()));
     }
 
-    /// Two games in one process are two containers, and each needs its own.
+    /// <summary>Two games in one process are two containers, and each needs its own.</summary>
     [Fact]
     public void One_for_each_container()
     {

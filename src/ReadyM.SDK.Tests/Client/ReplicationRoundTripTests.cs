@@ -5,8 +5,10 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// A replicated shape written on one side and read on another. The generated component is what
 /// crosses, so this is the whole of what [Replicated] buys once the wire is out of the picture.
+/// </summary>
 public class ReplicationRoundTripTests : ClientSdkTest
 {
     private static byte[] Snapshot<T>(in T component) where T : struct, global::ReadyM.Api.Multiplayer.ECS.Components.INetworkedComponent
@@ -44,7 +46,7 @@ public class ReplicationRoundTripTests : ClientSdkTest
         Assert.Equal(2.5f, received.Load);
     }
 
-    /// A delta carries only what changed, which is what the dirty mask is for.
+    /// <summary>A delta carries only what changed, which is what the dirty mask is for.</summary>
     [Fact]
     public void A_delta_carries_only_what_changed()
     {
@@ -70,7 +72,7 @@ public class ReplicationRoundTripTests : ClientSdkTest
         Assert.Equal(99f, received.Load);
     }
 
-    /// Sending is what clears the mark, so the next delta carries the next change and nothing else.
+    /// <summary>Sending is what clears the mark, so the next delta carries the next change and nothing else.</summary>
     [Fact]
     public void Clearing_after_a_send_leaves_nothing_to_send()
     {
@@ -85,8 +87,10 @@ public class ReplicationRoundTripTests : ClientSdkTest
         Assert.False(EntityHandle.Of(rig).GetComponent<TelemetryComponent>().IsDirty);
     }
 
+    /// <summary>
     /// The collection travels by value, so the far side holds its own copy rather than a view of
     /// memory it does not own.
+    /// </summary>
     [Fact]
     public void A_native_collection_crosses_intact()
     {

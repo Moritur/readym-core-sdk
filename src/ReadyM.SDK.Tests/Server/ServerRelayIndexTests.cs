@@ -26,7 +26,7 @@ public class ServerRelayIndexTests : ServerSdkTest
         Assert.Equal(7, Relay.Get<RelayNetIdComponent>(IdentityOf(replicated)).NetId);
     }
 
-    /// A value the relay does not index is written the cheap way, straight through the slot.
+    /// <summary>A value the relay does not index is written the cheap way, straight through the slot.</summary>
     [Fact]
     public void A_write_to_anything_else_does_not()
     {
@@ -71,7 +71,7 @@ public class ServerRelayIndexTests : ServerSdkTest
 
     // -- a component the relay keeps no index for ------------------------------------------------
 
-    /// A miss would say nothing holds the key while a query over the component finds the entity.
+    /// <summary>A miss would say nothing holds the key while a query over the component finds the entity.</summary>
     [Fact]
     public void A_lookup_the_relay_keeps_no_index_for_throws_rather_than_missing()
     {
@@ -82,7 +82,7 @@ public class ServerRelayIndexTests : ServerSdkTest
         Assert.Contains("RegisterIndexedComponent<UnkeyedComponent, Int32>", refused.Message);
     }
 
-    /// The same for a write, which would otherwise leave the index behind the value it holds.
+    /// <summary>The same for a write, which would otherwise leave the index behind the value it holds.</summary>
     [Fact]
     public void A_write_the_relay_keeps_no_index_for_throws_rather_than_reporting_the_component_missing()
     {
@@ -105,7 +105,7 @@ public class ServerRelayIndexTests : ServerSdkTest
         Assert.True(Entities.TryLookup<Networked2, int>(9, out _));
     }
 
-    /// Writing the unindexed half of the same component keeps the entry where it was.
+    /// <summary>Writing the unindexed half of the same component keeps the entry where it was.</summary>
     [Fact]
     public void Writing_another_field_of_the_same_component_keeps_the_entry()
     {
@@ -133,7 +133,7 @@ public class ServerRelayIndexTests : ServerSdkTest
         Assert.Equal(IdentityOf(second).Id, EntityHandle.Of(b).Id);
     }
 
-    /// A relay-indexed value still reads from a chunk, so a query over it costs nothing extra.
+    /// <summary>A relay-indexed value still reads from a chunk, so a query over it costs nothing extra.</summary>
     [Fact]
     public void An_indexed_value_reads_from_a_chunk()
     {

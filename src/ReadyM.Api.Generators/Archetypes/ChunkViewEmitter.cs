@@ -27,7 +27,7 @@ internal static class ChunkViewEmitter
         var slots = Slots(model);
         var fields = Held(slots).Select(slot => slot.Field).ToList();
 
-        writer.Line("/// Walks this shape by chunk. Valid only inside the loop that produced it.");
+        writer.Line("/// <summary>Walks this shape by chunk. Valid only inside the loop that produced it.</summary>");
 
         using (writer.Braces($"{model.Access} readonly ref struct {view} : {chunks.ChunkView}<{qualified}>"))
         {
@@ -116,11 +116,15 @@ internal static class ChunkViewEmitter
         writer.Line("[global::System.Runtime.CompilerServices.MethodImpl(global::System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]");
         writer.Line($"public {qualified} At(int index) => new({string.Join(", ", moved)});");
         writer.Line();
+        writer.Line("/// <summary>");
         writer.Line("/// The way out to anything a chunk view cannot do, such as a structural change after the loop.");
+        writer.Line("/// </summary>");
         writer.Line($"public {ArchetypeNames.EntityHandle} Handle");
         writer.Line($"    => _prototype.For(global::System.Runtime.CompilerServices.Unsafe.Add(ref global::System.Runtime.CompilerServices.Unsafe.AsRef(in _entities), _index));");
         writer.Line();
+        writer.Line("/// <summary>");
         writer.Line("/// This entity as the shape, which is what a view cannot be: one outlives the loop, the other does not.");
+        writer.Line("/// </summary>");
         writer.Line("/// <remarks>");
         writer.Line("/// For collecting entities to act on afterwards. The shape reads through a handle rather than the");
         writer.Line("/// chunk, so it costs a lookup per value; inside the loop the view is the cheaper way to read.");
@@ -195,7 +199,7 @@ internal static class ChunkViewEmitter
         }
     }
 
-    /// The component set's order, which is what the query asks the owning side for.
+    /// <summary>The component set's order, which is what the query asks the owning side for.</summary>
     private static IReadOnlyList<Slot> Slots(DeclarationModel model)
         => model.ComponentOwners().Select((owner, index) => new Slot(index, owner)).ToList();
 

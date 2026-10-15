@@ -44,7 +44,7 @@ public class ClientArchetypeTagTests : ClientSdkTest
         Assert.True(Entity(second).Tags.Has<WatchedTag>());
     }
 
-    /// Tags do not widen the shape: a query for it still finds what it always did.
+    /// <summary>Tags do not widen the shape: a query for it still finds what it always did.</summary>
     [Fact]
     public void The_shape_is_still_found_by_its_components()
     {

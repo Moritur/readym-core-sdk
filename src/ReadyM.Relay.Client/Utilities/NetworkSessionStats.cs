@@ -394,7 +394,7 @@ internal sealed class NetworkSessionStats
         }
     }
 
-    /// Writes a structured log with all stats.
+    /// <summary>Writes a structured log with all stats.</summary>
     public void DumpToLog(ILogger logger)
     {
         logger.LogInformation(

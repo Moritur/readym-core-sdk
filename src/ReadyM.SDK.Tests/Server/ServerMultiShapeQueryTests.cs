@@ -118,7 +118,7 @@ public class ServerMultiShapeQueryTests : ServerSdkTest
         Assert.Equal(0, Relay.SlotCalls);
     }
 
-    /// Order is the caller's, so the same shapes asked for backwards still land in the right names.
+    /// <summary>Order is the caller's, so the same shapes asked for backwards still land in the right names.</summary>
     [Fact]
     public void The_order_asked_for_is_the_order_handed_back()
     {
@@ -162,7 +162,7 @@ public class ServerMultiShapeQueryTests : ServerSdkTest
         Assert.Equal(60f, Relay.Get<MoodComponent>(entity).spirit);
     }
 
-    /// An entity missing any one of the shapes is not visited.
+    /// <summary>An entity missing any one of the shapes is not visited.</summary>
     [Fact]
     public void Every_shape_asked_for_has_to_be_present()
     {

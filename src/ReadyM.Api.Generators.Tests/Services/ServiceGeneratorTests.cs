@@ -5,9 +5,11 @@ using Xunit;
 
 namespace ReadyM.Api.Generators.Tests.Services;
 
+/// <summary>
 /// What [Service] makes of a class, and what it refuses. The update and the two ends of the lifetime
 /// are found by their name rather than by an attribute, so what counts as one is worth pinning from
 /// both sides. The analyzer is what says so, since a generator's diagnostics never reach the editor.
+/// </summary>
 public class ServiceGeneratorTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk = [typeof(SDK.Attributes.ServiceAttribute).Assembly];
@@ -74,8 +76,10 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
         Assert.Contains("ServiceRegistry.Register<global::Mod.Regeneration>()", generated);
     }
 
+    /// <summary>
     /// An update takes nothing. The clock arrives as a property the service reads when it wants it,
     /// which is where a Unity author already looks for it.
+    /// </summary>
     [Fact]
     public void A_service_reads_the_clock_off_itself()
     {
@@ -91,7 +95,7 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
         Assert.Contains("Time = time;", generated);
     }
 
-    /// Nothing is given a clock it never runs on.
+    /// <summary>Nothing is given a clock it never runs on.</summary>
     [Fact]
     public void A_service_that_does_not_update_has_no_clock()
         => Assert.DoesNotContain("Time", Generated("""
@@ -102,7 +106,7 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
             }
             """));
 
-    /// Nothing runs on it, but it is still one instance anything can ask for.
+    /// <summary>Nothing runs on it, but it is still one instance anything can ask for.</summary>
     [Fact]
     public void A_service_with_nothing_to_run_is_still_registered()
     {
@@ -129,8 +133,10 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
             }
             """);
 
+    /// <summary>
     /// The SDK builds one of it under its own name, so a second one down a derived type would never
     /// be reached.
+    /// </summary>
     [Fact]
     public void A_service_that_is_not_sealed_is_refused()
         => AssertReports("READYM023", """
@@ -141,8 +147,10 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
             }
             """);
 
+    /// <summary>
     /// A service asks for what it needs in its constructor and reads the clock off itself, so an
     /// update takes nothing at all.
+    /// </summary>
     [Fact]
     public void An_update_asking_for_anything_is_refused()
         => AssertReports("READYM024", """
@@ -173,8 +181,10 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
             }
             """);
 
+    /// <summary>
     /// Only the SDK calls it, and the generated half sits inside the class, so nothing is gained by
     /// letting anyone else in.
+    /// </summary>
     [Fact]
     public void Nor_a_public_one()
         => AssertReports("READYM024", """
@@ -208,7 +218,7 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
         Assert.Contains("=> Stop();", generated);
     }
 
-    /// The two ends are separate: one is the SDK starting it, the other the container letting it go.
+    /// <summary>The two ends are separate: one is the SDK starting it, the other the container letting it go.</summary>
     [Fact]
     public void A_service_with_only_a_start_is_not_disposable()
     {
@@ -228,7 +238,7 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
         Assert.DoesNotContain("global::System.IDisposable", generated);
     }
 
-    /// An update and a lifetime are separate things, and a service may hold both.
+    /// <summary>An update and a lifetime are separate things, and a service may hold both.</summary>
     [Fact]
     public void A_service_may_update_and_be_started()
     {
@@ -269,7 +279,7 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
             }
             """);
 
-    /// A service that only watches a shape needs no update and no lifetime.
+    /// <summary>A service that only watches a shape needs no update and no lifetime.</summary>
     [Fact]
     public void A_service_with_only_a_create_handler_is_accepted()
         => Assert.Empty(Reported("""
@@ -281,7 +291,7 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
             }
             """));
 
-    /// It has nothing to tick, so it is held rather than added to the update list.
+    /// <summary>It has nothing to tick, so it is held rather than added to the update list.</summary>
     [Fact]
     public void A_service_with_only_a_create_handler_does_not_update()
     {
@@ -299,7 +309,7 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
         Assert.DoesNotContain("IUpdatingService", generated);
     }
 
-    /// One service may watch a shape more than once, and update as well.
+    /// <summary>One service may watch a shape more than once, and update as well.</summary>
     [Fact]
     public void A_service_may_update_and_watch()
     {
@@ -322,7 +332,7 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
         Assert.Contains(".Second(new global::Mod.Subject(handle))", generated);
     }
 
-    /// The other end of the same thing, and a service may watch both.
+    /// <summary>The other end of the same thing, and a service may watch both.</summary>
     [Fact]
     public void A_service_may_watch_a_shape_arriving_and_going()
     {
@@ -343,7 +353,7 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
         Assert.Contains("ServiceRegistry.Hold<global::Mod.Bookkeeping>()", generated);
     }
 
-    /// The rules are the same whichever end it watches.
+    /// <summary>The rules are the same whichever end it watches.</summary>
     [Fact]
     public void A_delete_handler_taking_the_wrong_thing_is_refused()
         => AssertReports("READYM025", """
@@ -355,7 +365,7 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
             }
             """);
 
-    /// A handler takes the shape it watches and nothing else.
+    /// <summary>A handler takes the shape it watches and nothing else.</summary>
     [Fact]
     public void A_create_handler_taking_the_wrong_thing_is_refused()
         => AssertReports("READYM025", """
@@ -367,8 +377,10 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
             }
             """);
 
+    /// <summary>
     /// A shape's own handler watches itself. One sitting in a service has to say what it watches,
     /// and would otherwise be built and never called.
+    /// </summary>
     [Fact]
     public void A_create_handler_naming_no_shape_is_refused()
         => AssertReports("READYM026", """
@@ -380,7 +392,7 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
             }
             """);
 
-    /// A type that is not a shape carries no watch point, and nothing would ever call the handler.
+    /// <summary>A type that is not a shape carries no watch point, and nothing would ever call the handler.</summary>
     [Fact]
     public void A_create_handler_watching_something_that_is_not_a_shape_is_refused()
         => AssertReports("READYM026", """
@@ -408,7 +420,7 @@ public class ServiceGeneratorTests(ITestOutputHelper output)
             }
             """));
 
-    /// A class nobody declared a service is nobody's business, whatever it is called.
+    /// <summary>A class nobody declared a service is nobody's business, whatever it is called.</summary>
     [Fact]
     public void A_class_that_is_not_a_service_is_left_alone()
         => Assert.Empty(Reported("""

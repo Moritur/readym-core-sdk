@@ -9,11 +9,13 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// Moving a value between the ECS and a game object at a sync point. The direction is the
 /// component's policy to decide, and pushing is what marks an overridden value as shown.
+/// </summary>
 public class ShapeMappingTests : ClientSdkTest
 {
-    /// Stands in for whatever the game holds the value in.
+    /// <summary>Stands in for whatever the game holds the value in.</summary>
     private sealed class Dial
     {
         public int Reading { get; set; }
@@ -41,7 +43,7 @@ public class ShapeMappingTests : ClientSdkTest
     private static Roster AsRoster(Rig rig, IEntityApi api)
         => new EntityHandle(EntityHandle.Of(rig).RawEntity, api).As<Roster>();
 
-    /// Stands in for whatever the game holds a list of values in.
+    /// <summary>Stands in for whatever the game holds a list of values in.</summary>
     private sealed class Squad
     {
         public List<int> Ids { get; } = [];
@@ -73,7 +75,7 @@ public class ShapeMappingTests : ClientSdkTest
         return registry;
     }
 
-    /// A collection is never handed over, so what the handler works is the wrapper over the entity.
+    /// <summary>A collection is never handed over, so what the handler works is the wrapper over the entity.</summary>
     [Fact]
     public void A_collection_is_read_out_of_the_game_through_its_members()
     {
@@ -103,7 +105,7 @@ public class ShapeMappingTests : ClientSdkTest
         Assert.Equal([9], squad.Ids);
     }
 
-    /// The game does not drive it, so there is nothing to read back out of it.
+    /// <summary>The game does not drive it, so there is nothing to read back out of it.</summary>
     [Fact]
     public void A_collection_the_ecs_drives_is_not_pulled()
     {
@@ -117,7 +119,7 @@ public class ShapeMappingTests : ClientSdkTest
         Assert.Equal(0, rig.MembersCount);
     }
 
-    /// Pulling the value a shape is indexed by moves it in that index, like any other write to it.
+    /// <summary>Pulling the value a shape is indexed by moves it in that index, like any other write to it.</summary>
     [Fact]
     public void A_pulled_index_value_moves_the_entity_in_the_index()
     {
@@ -163,7 +165,7 @@ public class ShapeMappingTests : ClientSdkTest
         Assert.Equal(3, rig.Ticks);
     }
 
-    /// The other direction is refused rather than silently doing the wrong thing.
+    /// <summary>The other direction is refused rather than silently doing the wrong thing.</summary>
     [Fact]
     public void Neither_direction_runs_against_the_policy()
     {
@@ -178,8 +180,10 @@ public class ShapeMappingTests : ClientSdkTest
         Assert.Equal(3, dial.Reading);
     }
 
+    /// <summary>
     /// An override is the one thing that pushes on an entity the game otherwise drives, and the
     /// push is what clears the flag. Nothing asks the mod to.
+    /// </summary>
     [Fact]
     public void An_override_pushes_once_and_then_stops()
     {
@@ -199,7 +203,7 @@ public class ShapeMappingTests : ClientSdkTest
         Assert.False(As(rig, driving).Push(Telemetry.Field.Ticks, dial));
     }
 
-    /// Until it is pushed, the game must not report over the value the mod just claimed.
+    /// <summary>Until it is pushed, the game must not report over the value the mod just claimed.</summary>
     [Fact]
     public void An_override_holds_off_the_game()
     {
@@ -214,8 +218,10 @@ public class ShapeMappingTests : ClientSdkTest
         Assert.Equal(42, rig.Ticks);
     }
 
+    /// <summary>
     /// The plain setter is the game reporting what it did, and it must not report over a value the
     /// mod has claimed but the game has not been shown yet.
+    /// </summary>
     [Fact]
     public void An_override_holds_off_a_plain_write()
     {
@@ -239,7 +245,7 @@ public class ShapeMappingTests : ClientSdkTest
 
     // -- a value the game owns outright -------------------------------------------------------------
 
-    /// A value the game owns: no push, which the shape's own Propagation would also say.
+    /// <summary>A value the game owns: no push, which the shape's own Propagation would also say.</summary>
     private static void MappedFromGameOnly()
     {
         var registry = new ShapeMappingRegistry();
@@ -261,7 +267,7 @@ public class ShapeMappingTests : ClientSdkTest
         Assert.Equal(4, rig.Ticks);
     }
 
-    /// There is nothing to show the game, so the push says so rather than pretending it happened.
+    /// <summary>There is nothing to show the game, so the push says so rather than pretending it happened.</summary>
     [Fact]
     public void A_value_the_game_owns_cannot_be_pushed()
     {
@@ -284,7 +290,7 @@ public class ShapeMappingTests : ClientSdkTest
 
     // -- a correspondence that spans the shape's values ---------------------------------------------
 
-    /// Stands in for a game object read or written in one go.
+    /// <summary>Stands in for a game object read or written in one go.</summary>
     private sealed class Panel
     {
         public int Ticks { get; set; }
@@ -344,7 +350,7 @@ public class ShapeMappingTests : ClientSdkTest
         Assert.Equal(1.5f, rig.Load);
     }
 
-    /// One value claimed is enough to push the shape, and the push releases the whole of it.
+    /// <summary>One value claimed is enough to push the shape, and the push releases the whole of it.</summary>
     [Fact]
     public void A_shape_wide_push_releases_the_claim()
     {
@@ -363,15 +369,17 @@ public class ShapeMappingTests : ClientSdkTest
         Assert.False(AsTelemetry(rig, driving).Push(Telemetry.Field.All, new Panel()));
     }
 
-    /// Answers the direction questions itself, standing in for the policies a client would hold.
+    /// <summary>Answers the direction questions itself, standing in for the policies a client would hold.</summary>
     private sealed class Deciding(IEntityApi inner, bool ecsDrives) : IEntityApi
     {
         // The ownership policy in miniature: the side that does not drive the value from the game
         // is the side whose ECS is authoritative, and only the other may report or claim it.
         public bool Allows(RawEntity rawEntity, Type component, WriteKind kind) => !ecsDrives;
 
+        /// <summary>
         /// Only the direction questions are answered here. The write rule itself is the client's,
         /// so a test cannot quietly diverge from it.
+        /// </summary>
         public bool Write<TComponent, TValue>(
             RawEntity rawEntity,
             ref TComponent component,

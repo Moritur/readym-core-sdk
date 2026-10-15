@@ -3,8 +3,10 @@ using System.Linq;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
+/// <summary>
 /// Names each of a shape's values without exposing the component holding it, so an assembly that
 /// cannot see the component can still say which value it means.
+/// </summary>
 internal static class ValuesEmitter
 {
     public const string ClassName = "Field";
@@ -27,19 +29,19 @@ internal static class ValuesEmitter
         var component = model.QualifiedComponent;
 
         writer.Line();
-        writer.Line($"/// Tokens naming each of {model.Name}'s values, for mappings and overrides.");
+        writer.Line($"/// <summary>Tokens naming each of {model.Name}'s values, for mappings and overrides.</summary>");
 
         using (writer.Braces($"public static class {ClassName}"))
         {
             writer.Line();
-            writer.Line("/// Every value at once, for a correspondence that cannot be split.");
+            writer.Line("/// <summary>Every value at once, for a correspondence that cannot be split.</summary>");
             writer.Line($"public static {ArchetypeNames.ShapeToken}<{model.QualifiedName}> All {{ get; }}");
             writer.Line($"    = {ArchetypeNames.ShapeToken}.Of<{model.QualifiedName}, {component}>();");
 
             foreach (var accessor in exposed)
             {
                 writer.Line();
-                writer.Line($"/// Names {model.Name}.{accessor.Name}.");
+                writer.Line($"/// <summary>Names {model.Name}.{accessor.Name}.</summary>");
                 // The value the component is indexed by writes back through the index.
                 var of = accessor.IsIndex ? "OfIndexed" : "Of";
 
@@ -56,7 +58,7 @@ internal static class ValuesEmitter
                 var access = CollectionAccessEmitter.QualifiedNameOf(model, collection);
 
                 writer.Line();
-                writer.Line($"/// Names {model.Name}'s {collection} collection.");
+                writer.Line($"/// <summary>Names {model.Name}'s {collection} collection.</summary>");
                 writer.Line($"public static {ArchetypeNames.Collection}<{model.QualifiedName}, {access}> {collection} {{ get; }}");
                 writer.Line($"    = {ArchetypeNames.Collection}.Of<{model.QualifiedName}, {component}, {held}, {access}>(");
                 writer.Line($"        {component}.Fields.{collection},");

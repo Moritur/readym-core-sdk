@@ -5,7 +5,7 @@ using FrifloEntity = Friflo.Engine.ECS.Entity;
 
 namespace ReadyM.SDK.Tests.Client;
 
-/// Shapes whose storage is a component that already existed, rather than one generated for them.
+/// <summary>Shapes whose storage is a component that already existed, rather than one generated for them.</summary>
 public class ExplicitComponentTests : ClientSdkTest
 {
     private FrifloEntity Raw(NetworkedThing thing) => Store.GetEntityByRawEntity(EntityHandle.Of(thing).RawEntity);
@@ -30,7 +30,7 @@ public class ExplicitComponentTests : ClientSdkTest
         Assert.Equal("guard", Raw(thing).GetComponent<CoreMetadataComponent>().Tag);
     }
 
-    /// The core writes its own component; the shape reads exactly that.
+    /// <summary>The core writes its own component; the shape reads exactly that.</summary>
     [Fact]
     public void A_value_written_as_the_component_is_read_through_the_shape()
     {
@@ -70,7 +70,7 @@ public class ExplicitComponentTests : ClientSdkTest
         Assert.True(archetype.ComponentTypes.Has<CoreScopeComponent>());
     }
 
-    /// An entity assembled by hand, the way a core would, still answers to the archetype.
+    /// <summary>An entity assembled by hand, the way a core would, still answers to the archetype.</summary>
     [Fact]
     public void An_entity_the_sdk_did_not_create_is_still_recognised()
     {
@@ -120,7 +120,7 @@ public class ExplicitComponentTests : ClientSdkTest
         Assert.Equal(2, Store.GetEntityByRawEntity(EntityHandle.Of(tracked).RawEntity).Archetype.ComponentTypes.Count);
     }
 
-    /// A mixin over borrowed storage is queryable on its own, across every archetype carrying it.
+    /// <summary>A mixin over borrowed storage is queryable on its own, across every archetype carrying it.</summary>
     [Fact]
     public void A_borrowed_mixin_is_queryable_across_archetypes()
     {

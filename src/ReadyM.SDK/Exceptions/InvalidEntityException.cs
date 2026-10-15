@@ -1,11 +1,11 @@
 namespace ReadyM.SDK.Exceptions;
 
-/// The entity is gone, does not exist yet, or is not of the shape asked for.
+/// <summary>The entity is gone, does not exist yet, or is not of the shape asked for.</summary>
 public class InvalidEntityException : Exception
 {
-    /// Creates the exception without a message.
+    /// <summary>Creates the exception without a message.</summary>
     public InvalidEntityException() { }
 
-    /// Creates the exception with a message.
+    /// <summary>Creates the exception with a message.</summary>
     public InvalidEntityException(string message) : base(message) { }
 }

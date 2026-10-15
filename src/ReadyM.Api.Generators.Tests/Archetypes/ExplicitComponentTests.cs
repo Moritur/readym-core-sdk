@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ReadyM.Api.Generators.Tests.Archetypes;
 
-/// What [ExplicitComponent] refuses, run against the real SDK.
+/// <summary>What [ExplicitComponent] refuses, run against the real SDK.</summary>
 public class ExplicitComponentTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk =
@@ -54,8 +54,10 @@ public class ExplicitComponentTests(ITestOutputHelper output)
             public void Started_SetFromApi(System.Collections.Generic.List<int> value, int id) => _started = value;
         }
 
+        /// <summary>
         /// The same surface, on a component that crosses the wire, which is what makes a change to
         /// its collection a write the policy decides on.
+        /// </summary>
         public struct TrackedComponent : global::ReadyM.Api.Multiplayer.ECS.Components.INetworkedComponent
         {
             public int StartedCount => 0;
@@ -116,7 +118,7 @@ public class ExplicitComponentTests(ITestOutputHelper output)
         return [.. result.DriverRunResult.Diagnostics.Where(d => d.Id.StartsWith("READYM"))];
     }
 
-    /// Everything the run emitted, as one string to read assertions off.
+    /// <summary>Everything the run emitted, as one string to read assertions off.</summary>
     private static int Occurrences(string text, string looked)
     {
         var found = 0;
@@ -168,7 +170,7 @@ public class ExplicitComponentTests(ITestOutputHelper output)
             }
             """);
 
-    /// Link components carry a relationship an accessor cannot maintain, so they are out for now.
+    /// <summary>Link components carry a relationship an accessor cannot maintain, so they are out for now.</summary>
     [Fact]
     public void A_link_component_is_refused()
         => AssertReports("READYM004", """
@@ -216,7 +218,9 @@ public class ExplicitComponentTests(ITestOutputHelper output)
             }
             """));
 
+    /// <summary>
     /// Names are matched ignoring case, which is what makes a camelCase author fit a PascalCase core.
+    /// </summary>
     [Fact]
     public void A_name_differing_only_in_case_is_accepted()
         => Assert.Empty(Report("""
@@ -242,8 +246,10 @@ public class ExplicitComponentTests(ITestOutputHelper output)
 
     // -- READYM012: a member the shape cannot read -------------------------------------------------
 
+    /// <summary>
     /// One component holds what several kinds of entity map to, so a shape says which kind it is
     /// about and reads the value as that.
+    /// </summary>
     [Fact]
     public void A_derived_type_is_accepted()
         => Assert.Empty(Report("""
@@ -266,8 +272,10 @@ public class ExplicitComponentTests(ITestOutputHelper output)
             }
             """);
 
+    /// <summary>
     /// A value of the wrong kind reads as null rather than throwing, which is what a shape over
     /// storage shared by several kinds of entity needs.
+    /// </summary>
     [Fact]
     public void A_derived_type_is_read_with_a_cast()
     {
@@ -283,7 +291,7 @@ public class ExplicitComponentTests(ITestOutputHelper output)
         Assert.Contains("global::Core.MappedComponent>().Held as global::Core.Character", generated);
     }
 
-    /// The same value declared as what the component holds is read straight through.
+    /// <summary>The same value declared as what the component holds is read straight through.</summary>
     [Fact]
     public void A_matching_type_is_read_without_a_cast()
     {
@@ -323,8 +331,10 @@ public class ExplicitComponentTests(ITestOutputHelper output)
             }
             """));
 
+    /// <summary>
     /// The generic type can name its own instantiations, which is what a component declared
     /// alongside the ECS does.
+    /// </summary>
     [Fact]
     public void An_instantiation_the_component_registered_is_accepted()
         => Assert.Empty(Report("""
@@ -336,7 +346,7 @@ public class ExplicitComponentTests(ITestOutputHelper output)
             }
             """));
 
-    /// The report says what to add, because the fix is one attribute and nothing points to it.
+    /// <summary>The report says what to add, because the fix is one attribute and nothing points to it.</summary>
     [Fact]
     public void The_report_names_the_attribute_to_add()
     {
@@ -366,7 +376,7 @@ public class ExplicitComponentTests(ITestOutputHelper output)
             public readonly partial struct Sequences;
             """);
 
-    /// A name that only matches replication plumbing forwards nothing, so it counts as unmatched.
+    /// <summary>A name that only matches replication plumbing forwards nothing, so it counts as unmatched.</summary>
     [Fact]
     public void A_collection_name_matching_only_plumbing_is_refused()
         => AssertReports("READYM008", """
@@ -384,8 +394,10 @@ public class ExplicitComponentTests(ITestOutputHelper output)
             public readonly partial struct Sequences;
             """);
 
+    /// <summary>
     /// A collection on a component that replicates is changed under the same rule a value is, and
     /// says so where the analyzer can read it. The component being borrowed changes nothing here.
+    /// </summary>
     [Fact]
     public void A_borrowed_collection_that_replicates_is_changed_under_the_policy()
     {
@@ -400,8 +412,10 @@ public class ExplicitComponentTests(ITestOutputHelper output)
         Assert.Contains("ChangesAttribute(\"Sequences.Field.Started\")", generated);
     }
 
+    /// <summary>
     /// Reading it is not a write, so only the members that change it ask anything: Add and Clear,
     /// and not Count or Get.
+    /// </summary>
     [Fact]
     public void A_borrowed_collection_is_read_without_asking()
     {
@@ -415,7 +429,7 @@ public class ExplicitComponentTests(ITestOutputHelper output)
         Assert.Equal(2, Occurrences(generated, "handle.Mirrors("));
     }
 
-    /// A component nothing sends has no Fields table to ask, and nothing to keep a caller from.
+    /// <summary>A component nothing sends has no Fields table to ask, and nothing to keep a caller from.</summary>
     [Fact]
     public void A_borrowed_collection_that_does_not_replicate_is_left_alone()
     {
@@ -439,7 +453,7 @@ public class ExplicitComponentTests(ITestOutputHelper output)
             public readonly partial struct Sequences;
             """));
 
-    /// The report belongs on the attribute that named it, not on the struct.
+    /// <summary>The report belongs on the attribute that named it, not on the struct.</summary>
     [Fact]
     public void The_report_lands_on_the_attribute()
     {

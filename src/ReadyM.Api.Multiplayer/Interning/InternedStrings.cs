@@ -2,7 +2,7 @@ using System;
 
 namespace ReadyM.Api.Multiplayer.Interning;
 
-/// The index generated code writes and reads interned strings through on this thread.
+/// <summary>The index generated code writes and reads interned strings through on this thread.</summary>
 internal static class InternedStrings
 {
     [field: ThreadStatic]

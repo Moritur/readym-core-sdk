@@ -57,7 +57,7 @@ public class ServerChunkLifetimeTests : ServerSdkTest
         Assert.Equal(6, seen.Distinct().Count());
     }
 
-    /// A handle taken in one chunk still names its own entity after later chunks are bound.
+    /// <summary>A handle taken in one chunk still names its own entity after later chunks are bound.</summary>
     [Fact]
     public void A_handle_kept_past_its_chunk_still_names_its_own_entity()
     {
@@ -81,7 +81,7 @@ public class ServerChunkLifetimeTests : ServerSdkTest
         Assert.Equal(first.Id, kept.Id);
     }
 
-    /// The two paths walk the same query, so the entities they name have to agree.
+    /// <summary>The two paths walk the same query, so the entities they name have to agree.</summary>
     [Fact]
     public void The_chunk_path_and_the_identity_path_name_the_same_entities()
     {

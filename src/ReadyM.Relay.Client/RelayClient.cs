@@ -272,10 +272,10 @@ internal class RelayClient : IRelayClient
 
     private readonly int _configuredDisconnectTimeoutMs;
 
-    /// Set from the user thread, read by the network loop.
+    /// <summary>Set from the user thread, read by the network loop.</summary>
     private volatile bool _restoreDisconnectTimeoutPending;
 
-    /// Monotonic clock for the grace period above.
+    /// <summary>Monotonic clock for the grace period above.</summary>
     private readonly Stopwatch _clock = Stopwatch.StartNew();
 
     private long _stallEndedAtMs;

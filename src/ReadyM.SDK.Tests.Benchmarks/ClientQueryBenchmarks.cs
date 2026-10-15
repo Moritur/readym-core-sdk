@@ -62,7 +62,7 @@ public class ClientQueryBenchmarks
         return total;
     }
 
-    /// The v0 shape: one wrapper per entity, every field read resolving the entity again.
+    /// <summary>The v0 shape: one wrapper per entity, every field read resolving the entity again.</summary>
     [Benchmark(Description = "v0 wrapper")]
     public float V0()
     {

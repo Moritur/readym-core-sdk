@@ -2,7 +2,7 @@
 
 namespace ReadyM.SDK.Server.Entities;
 
-/// The indexes this runtime keeps for components the relay stores but cannot index itself.
+/// <summary>The indexes this runtime keeps for components the relay stores but cannot index itself.</summary>
 internal sealed class ComponentIndexes
 {
     private readonly Dictionary<Type, object> _tables = [];
@@ -11,7 +11,7 @@ internal sealed class ComponentIndexes
         where TComponent : struct, IIndexedComponent<TKey> where TKey : notnull
         => Table<TComponent, TKey>()[key] = entity;
 
-    /// Only drops the entry when it still names this entity, so a stale key cannot evict a live one.
+    /// <summary>Only drops the entry when it still names this entity, so a stale key cannot evict a live one.</summary>
     internal void Forget<TComponent, TKey>(TKey key, RawEntity entity)
         where TComponent : struct, IIndexedComponent<TKey> where TKey : notnull
     {

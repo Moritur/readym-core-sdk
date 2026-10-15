@@ -3,7 +3,7 @@ using ReadyM.SDK.Attributes;
 
 namespace ReadyM.SDK.Tests.Client.Fixtures;
 
-/// Stands in for a component a game core already owns: PascalCase members, one of them readonly.
+/// <summary>Stands in for a component a game core already owns: PascalCase members, one of them readonly.</summary>
 internal struct CoreMetadataComponent : IComponent
 {
     public readonly int NetId;
@@ -18,7 +18,7 @@ internal struct CoreMetadataComponent : IComponent
     }
 }
 
-/// The member a shape names does not have to match the field's name.
+/// <summary>The member a shape names does not have to match the field's name.</summary>
 internal struct CoreScopeComponent : IComponent
 {
     public int AreaIdentifier;
@@ -41,13 +41,13 @@ public readonly partial struct Scope
     public partial int Area { get; set; }
 }
 
-/// An archetype over storage it does not own, so it carries no marker.
+/// <summary>An archetype over storage it does not own, so it carries no marker.</summary>
 [Archetype(replicated: false)]
 [Include(typeof(Metadata))]
 [Include(typeof(Scope))]
 public readonly partial struct NetworkedThing;
 
-/// Mixes core-owned storage with a component of its own.
+/// <summary>Mixes core-owned storage with a component of its own.</summary>
 [Archetype(replicated: false)]
 [Include(typeof(Metadata))]
 public readonly partial struct Tracked

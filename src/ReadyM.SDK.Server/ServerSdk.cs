@@ -9,14 +9,14 @@ using ReadyM.SDK.Services;
 
 namespace ReadyM.SDK.Server;
 
-/// What the SDK needs in place before any server-side mod runs.
+/// <summary>What the SDK needs in place before any server-side mod runs.</summary>
 internal static class ServerSdk
 {
     private static readonly ConditionalWeakTable<IDependencyContainer, object> Bootstrapped = new();
 
     private static readonly ConditionalWeakTable<IComponentRegistry, object> Registered = new();
 
-    /// Hands the relay every component the loaded shapes replicate or add to an archetype.
+    /// <summary>Hands the relay every component the loaded shapes replicate or add to an archetype.</summary>
     public static void RegisterComponents(IComponentRegistry registry)
     {
         if (Registered.TryGetValue(registry, out _))
@@ -28,7 +28,7 @@ internal static class ServerSdk
         ServerArchetypes.ApplyExtensions(registry);
     }
 
-    /// The services and registries a mod resolves out of, done once for the container they share.
+    /// <summary>The services and registries a mod resolves out of, done once for the container they share.</summary>
     public static void Use(IDependencyContainer services)
     {
         if (Bootstrapped.TryGetValue(services, out _))

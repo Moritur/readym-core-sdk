@@ -12,7 +12,7 @@ internal enum IncludeKind
     Archetype
 }
 
-/// One partial property an author declared on a mixin or archetype.
+/// <summary>One partial property an author declared on a mixin or archetype.</summary>
 internal sealed class AccessorModel(string name, string type, bool hasSetter, string? field = null)
 {
     public AccessorModel(IPropertySymbol property, INamedTypeSymbol? component)
@@ -46,16 +46,20 @@ internal sealed class AccessorModel(string name, string type, bool hasSetter, st
     /// <summary>Whether [Index] marks this as the value the shape is found by.</summary>
     public bool IsIndex { get; }
 
+    /// <summary>
     /// Whether the value is a native collection. A replicated component gives one of those a family
     /// of methods rather than a property, because handing back the collection itself would let a
     /// caller change it without the component noticing.
+    /// </summary>
     public bool IsNativeContainer { get; }
 
+    /// <summary>
     /// How the shape declared the value. A native collection stays private, so a mod reaches it
     /// only through its own members and cannot take the collection itself and change it unnoticed.
+    /// </summary>
     public Accessibility Accessibility { get; } = Accessibility.Public;
 
-    /// Whether the value is reachable from outside the shape under its own name.
+    /// <summary>Whether the value is reachable from outside the shape under its own name.</summary>
     public bool IsExposed => Accessibility is not Accessibility.Private;
 
     /// <summary>The member holding the value: a generated field, or one of an explicit component.</summary>
@@ -66,20 +70,26 @@ internal sealed class AccessorModel(string name, string type, bool hasSetter, st
 
     public INamedTypeSymbol? Component { get; }
 
+    /// <summary>
     /// What the component's Fields class calls this value. A generated component turns the shape's
     /// own name into the property, and one named by [ExplicitComponent] already had its own.
+    /// </summary>
     public string FieldEntry => Component is null ? Name : Field;
 
+    /// <summary>
     /// Whether the value sits in the component as a base type of the one the shape declared, which
     /// is how a shape gives a game's own storage the type a mod actually works with.
+    /// </summary>
     public bool Narrows { get; }
 
-    /// The declared type as an `as` operand, which cannot carry a nullable annotation.
+    /// <summary>The declared type as an `as` operand, which cannot carry a nullable annotation.</summary>
     public string Cast { get; } = string.Empty;
 
+    /// <summary>
     /// The read expression for this value, narrowed where the shape declared a derived type. A
     /// value that does not fit reads as null rather than throwing, which is what a shape sitting on
     /// storage shared by several kinds of entity needs.
+    /// </summary>
     public string Read(string access) => Narrows ? $"{access} as {Cast}" : access;
 
     /// <summary>The field or property an explicit component holds this value in, matched by name.</summary>
@@ -88,7 +98,7 @@ internal sealed class AccessorModel(string name, string type, bool hasSetter, st
             .FirstOrDefault(member => member is IFieldSymbol { IsStatic: false, IsConst: false } or IPropertySymbol { IsStatic: false }
                                       && string.Equals(member.Name, MemberNameOf(property), System.StringComparison.OrdinalIgnoreCase));
 
-    /// Whether the shape declared a type the component's own member can be narrowed to.
+    /// <summary>Whether the shape declared a type the component's own member can be narrowed to.</summary>
     public static bool NarrowsFrom(IPropertySymbol property, ISymbol? target)
     {
         if (TypeOf(target) is not { } held)
@@ -162,8 +172,10 @@ internal sealed class ForwardModel
             .ToList();
     }
 
+    /// <summary>
     /// How the parameter is passed, which the forwarded member has to repeat both where it is
     /// declared and where it hands the argument on. TryGet takes its value out.
+    /// </summary>
     private static string Passed(RefKind kind) => kind switch
     {
         RefKind.In => "in ",
@@ -181,7 +193,7 @@ internal sealed class ForwardModel
         IsProperty = true;
     }
 
-    /// For a member of a component that is being generated, and so has no symbol to read.
+    /// <summary>For a member of a component that is being generated, and so has no symbol to read.</summary>
     public ForwardModel(
         string name,
         string returnType,
@@ -208,11 +220,13 @@ internal sealed class ForwardModel
 
     public bool IsProperty { get; }
 
+    /// <summary>
     /// The Fields entry this member changes, for one that changes anything. A member reached off a
     /// component the shape borrows says nothing here: the entry is that component's to name.
+    /// </summary>
     public string? Changes { get; }
 
-    /// The token a caller reaches the collection through instead, for the message that says so.
+    /// <summary>The token a caller reaches the collection through instead, for the message that says so.</summary>
     public string? Collection { get; }
 
     /// <summary>The collection this member belongs to, by the name the shape gave it.</summary>
@@ -244,13 +258,15 @@ internal sealed class ForwardModel
     /// <summary>The declaration, without the leading accessibility or the body.</summary>
     public string Signature => Declaration(Name);
 
+    /// <summary>
     /// The same declaration under another name, which is what an extension needs when a prefix
     /// keeps two mods' members apart.
+    /// </summary>
     public string Declaration(string name) => IsProperty
         ? $"{ReturnType} {name}"
         : $"{ReturnType} {name}({string.Join(", ", Parameters.Select(p => $"{p.Modifier}{p.Type} {p.Name}"))})";
 
-    /// Whether anything has to go between the receiver and the forwarded arguments.
+    /// <summary>Whether anything has to go between the receiver and the forwarded arguments.</summary>
     public string Separator => Parameters.Count == 0 ? "" : ", ";
 
     public string Arguments => string.Join(", ", Parameters.Select(p => $"{p.Modifier}{p.Name}"));
@@ -273,7 +289,9 @@ internal sealed class IncludeModel(
 {
     public INamedTypeSymbol Type { get; } = type;
 
+    /// <summary>
     /// Whether [IncludeArchetype] named it rather than [Include], which a rule holds against what it actually is.
+    /// </summary>
     public bool ByIncludeArchetype { get; } = byIncludeArchetype;
 
     /// <summary>Where the attribute naming it is written, for a diagnostic about what it brings.</summary>
@@ -281,9 +299,11 @@ internal sealed class IncludeModel(
 
     public IncludeKind Kind { get; } = kind;
 
+    /// <summary>
     /// Put in front of every member this include brings, for a name that would otherwise read
     /// oddly or clash with another include's. <c>ParentCell</c> turns <c>X</c> into
     /// <c>ParentCellX</c>.
+    /// </summary>
     public string Prefix { get; } = prefix;
 
     /// <summary>What a member this include brings is called on the shape that took it.</summary>
@@ -299,24 +319,28 @@ internal sealed class IncludeModel(
     /// <summary>The class a consumer goes through, wherever the declaration was compiled.</summary>
     public string Accessors { get; } = ArchetypeNames.QualifiedAccessorsOf(type);
 
-    /// Whether what it brings goes over the wire, which decides what a write through it means.
+    /// <summary>Whether what it brings goes over the wire, which decides what a write through it means.</summary>
     public bool IsReplicated { get; } = DeclarationModel.For(type).IsReplicated;
 
+    /// <summary>
     /// Whether the included shape is hidden, which hides what it brings onto the shape that takes it.
+    /// </summary>
     public bool IsHidden { get; } = DeclarationModel.IsHiddenType(type);
 }
 
 /// <summary>One entry in a shape's component set: a declaration's component, or its marker.</summary>
 internal sealed class ComponentOwner(IncludeModel? include, bool marker)
 {
-    /// Null when it belongs to the declaration itself rather than to something it includes.
+    /// <summary>Null when it belongs to the declaration itself rather than to something it includes.</summary>
     public IncludeModel? Include { get; } = include;
 
     public bool IsMarker { get; } = marker;
 }
 
+/// <summary>
 /// Mirrors <c>ReadyM.SDK.Attributes.Propagation</c>: a generator cannot reference the SDK, and the
 /// attribute argument arrives as that enum's index, so the order of these has to stay the same.
+/// </summary>
 internal enum Propagation
 {
     ToEcsOnly,
@@ -326,8 +350,10 @@ internal enum Propagation
     OwnershipBased
 }
 
+/// <summary>
 /// Mirrors <c>ReadyM.SDK.Attributes.Delivery</c>: a generator cannot reference the SDK, and the attribute
 /// argument arrives as that enum's index, so the order of these two has to stay the same.
+/// </summary>
 internal enum Delivery
 {
     Reliable,
@@ -357,9 +383,11 @@ internal sealed class DeclarationModel
         Forwards = ReadForwards(symbol, ExplicitComponent, Collections).Concat(CollectionMembers()).ToList();
     }
 
+    /// <summary>
     /// The collection members of a component this shape is having generated. A component that
     /// already exists contributes through [ExplicitCollection] instead, and one that does not
     /// replicate holds a plain field with no members to carry.
+    /// </summary>
     private IReadOnlyList<ForwardModel> CollectionMembers()
     {
         if (!EmitsComponent || !IsReplicated)
@@ -375,8 +403,10 @@ internal sealed class DeclarationModel
 
     public INamedTypeSymbol Symbol { get; }
 
+    /// <summary>
     /// The access of the types generated beside the shape: public only when the shape and every type around it are,
     /// so a shape a mod keeps to itself does not have its plumbing exposed, or fail to compile for exposing it.
+    /// </summary>
     public string Access
     {
         get
@@ -389,7 +419,7 @@ internal sealed class DeclarationModel
         }
     }
 
-    /// Whether the shape is [EditorBrowsable(Never)], so what is generated for it is hidden as well.
+    /// <summary>Whether the shape is [EditorBrowsable(Never)], so what is generated for it is hidden as well.</summary>
     public bool IsHidden => IsHiddenType(Symbol);
 
     internal static bool IsHiddenType(INamedTypeSymbol symbol)
@@ -430,33 +460,43 @@ internal sealed class DeclarationModel
 
     public string Name => Symbol.Name;
 
-    /// The struct header a generated part has to agree with.
+    /// <summary>The struct header a generated part has to agree with.</summary>
     public string Header => Symbol.IsReadOnly ? $"readonly partial struct {Name}" : $"partial struct {Name}";
 
     /// <summary>The component named by [ExplicitComponent], or null when one is generated.</summary>
     public INamedTypeSymbol? ExplicitComponent { get; }
 
+    /// <summary>
     /// Whether [Replicated] is on the declaration. Kept apart from <see cref="IsReplicated"/> so a
     /// rule can tell asking to replicate from replicating because the component already does.
+    /// </summary>
     public bool HasReplicatedAttribute { get; }
 
+    /// <summary>
     /// What [Archetype(replicated: ...)] says, which is whether the archetype's entities get a network
     /// identity. Null for a mixin, and for an archetype whose attribute does not compile.
+    /// </summary>
     public bool? DeclaredReplicated { get; }
 
+    /// <summary>
     /// Whether the declaration asks for its values to cross the wire: an archetype by its flag, a
     /// mixin by [Replicated].
+    /// </summary>
     public bool AsksToReplicate => DeclaredReplicated ?? (!IsArchetype && HasReplicatedAttribute);
 
+    /// <summary>
     /// How its values travel between the game and the ECS, and who may write them. Only a
     /// replicated shape has any say: a local one is the mod's own business either way.
+    /// </summary>
     public Propagation? Propagation { get; }
 
-    /// How this shape's changes travel, when it replicates at all.
+    /// <summary>How this shape's changes travel, when it replicates at all.</summary>
     public Delivery Delivery { get; }
 
+    /// <summary>
     /// Whether this shape's values reach the other side. A shape over a component it borrows takes
     /// that component's word for it; one with a component generated for it asks.
+    /// </summary>
     /// <remarks>
     /// A shape holding no values replicates nothing whatever it asks for: there is no component to
     /// carry, and its presence travels with the entity instead.
@@ -466,7 +506,7 @@ internal sealed class DeclarationModel
             ? IsNetworkedComponent(borrowed)
             : AsksToReplicate && Accessors.Count > 0;
 
-    /// Whether this shape is the one that tells the host about its component.
+    /// <summary>Whether this shape is the one that tells the host about its component.</summary>
     /// <remarks>
     /// Only for a component the shape had generated. A component named by [ExplicitComponent]
     /// belongs to whoever declared it: it may already be one the host registered itself, and
@@ -553,7 +593,7 @@ internal sealed class DeclarationModel
         return null;
     }
 
-    /// Only a declaration with accessors of its own needs a component to keep them in.
+    /// <summary>Only a declaration with accessors of its own needs a component to keep them in.</summary>
     public bool HasOwnComponent => Accessors.Count > 0 || ExplicitComponent is not null;
 
     /// <summary>False when the storage already exists, in which case nothing is emitted for it.</summary>
@@ -951,8 +991,10 @@ internal sealed class DeclarationModel
         return forwards;
     }
 
+    /// <summary>
     /// Whether a member of a component changes the named collection rather than reading it. The
     /// verbs are the ones the field support puts there, so this reads the same surface it wrote.
+    /// </summary>
     private static bool Changes(string member, string collection)
     {
         foreach (var verb in new[] { "Set", "Add", "Insert", "RemoveAt", "Remove", "Clear" })
@@ -1000,8 +1042,10 @@ internal sealed class DeclarationModel
         return -1;
     }
 
+    /// <summary>
     /// A word starts at the front of the name, or where something other than a capital gives way to
     /// one. Anything else is the middle of a longer word, which is not this collection.
+    /// </summary>
     private static bool StartsWord(string member, int at) => at == 0 || !char.IsUpper(member[at - 1]);
 
     /// <summary>Where [ExplicitCollection] names this collection, so a report lands on it.</summary>
@@ -1016,7 +1060,7 @@ internal sealed class DeclarationModel
         return fallback;
     }
 
-    /// Names a networked component uses to talk to the replication layer.
+    /// <summary>Names a networked component uses to talk to the replication layer.</summary>
     internal static bool IsPlumbing(string name)
         => name.IndexOf('_') >= 0
            || name.EndsWith("NotifyChanged", System.StringComparison.Ordinal)

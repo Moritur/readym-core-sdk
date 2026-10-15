@@ -4,9 +4,11 @@ using static ReadyM.Api.Generators.DeriveCppUtils;
 
 namespace ReadyM.Api.Generators.Derive.Cpp.FieldSupport;
 
+/// <summary>
 /// A float or vector field marked [Quantize], [QuantizeAngle] or [HalfPrecision]. The native setter marks it dirty
 /// only when it moves past the plain fields' cutoff and its encoding changes too, matching the managed side, so the
 /// game does not resend values the wire cannot tell apart.
+/// </summary>
 internal sealed class QuantizedFieldTypeSupportImpl : CppNonOverrideFieldTypeSupportImplBase
 {
     private const string Include = "Interop/Quantization.h";

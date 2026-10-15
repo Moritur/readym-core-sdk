@@ -62,7 +62,7 @@ internal sealed class ServerEntityApi : IEntityApi, IChunkSource
             : Marshal.GetDelegateForFunctionPointer<AddArchetypeTagDelegate>(archetypes.AddArchetypeTag);
     }
 
-    /// Whether the entity is networked is what its archetype declared, whatever components it holds.
+    /// <summary>Whether the entity is networked is what its archetype declared, whatever components it holds.</summary>
     /// <param name="owner">Null leaves it the server's.</param>
     public RawEntity Create(ComponentSet components, RawEntity? scope = null, PlayerId? owner = null)
     {
@@ -139,7 +139,7 @@ internal sealed class ServerEntityApi : IEntityApi, IChunkSource
         return archetype;
     }
 
-    /// The archetype this game registered for the shape, or null when it registers none.
+    /// <summary>The archetype this game registered for the shape, or null when it registers none.</summary>
     private ArchetypeId? Bound(ComponentSet components)
     {
         if (ArchetypeRegistry.ShapeOf(components)?.FullName is not { } shape)
@@ -327,7 +327,7 @@ internal sealed class ServerEntityApi : IEntityApi, IChunkSource
         return slot.Data != IntPtr.Zero ? new ComponentRef(slot.Data) : default;
     }
 
-    /// Writes the whole component and moves it in the index kept beside it.
+    /// <summary>Writes the whole component and moves it in the index kept beside it.</summary>
     public unsafe void ReplaceIndexed<TComponent, TKey>(RawEntity rawEntity, TComponent component)
         where TComponent : struct, IIndexedComponent<TKey> where TKey : notnull
     {

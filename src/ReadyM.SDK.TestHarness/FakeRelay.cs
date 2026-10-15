@@ -141,7 +141,7 @@ internal sealed class FakeRelay
         AddArchetypeTag = Marshal.GetFunctionPointerForDelegate(_addArchetypeTag)
     };
 
-    /// The tags each archetype was given, which a test reads instead of a schema.
+    /// <summary>The tags each archetype was given, which a test reads instead of a schema.</summary>
     private readonly Dictionary<ArchetypeId, List<string>> _archetypeTags = [];
 
     /// <summary>What a shape's [Tag]s put on its archetype, in the order they arrived.</summary>
@@ -167,7 +167,7 @@ internal sealed class FakeRelay
         return 1;
     }
 
-    /// Says this game registers an archetype for the shape, the way a game's own bindings do.
+    /// <summary>Says this game registers an archetype for the shape, the way a game's own bindings do.</summary>
     internal void Bind(Type shape, ArchetypeId archetype) => _boundShapes[shape.FullName!] = archetype;
 
     internal AotPointers Aot => new()
@@ -179,7 +179,7 @@ internal sealed class FakeRelay
 
     // -- world building, done by a test rather than across the boundary ------------------------
 
-    /// A component the AOT side owns: blittable, pinned, reachable by address.
+    /// <summary>A component the AOT side owns: blittable, pinned, reachable by address.</summary>
     internal void RegisterBlittable<T>() where T : struct => Register<T>(static () => new PinnedHeap<T>());
 
     /// <summary>
@@ -218,7 +218,7 @@ internal sealed class FakeRelay
         return entity;
     }
 
-    /// Which scope each entity sits in, which is the link the relay reads from InScopeComponent.
+    /// <summary>Which scope each entity sits in, which is the link the relay reads from InScopeComponent.</summary>
     private readonly Dictionary<int, RawEntity> _scopes = new();
 
     /// <summary>Puts an entity in a scope, as creating one inside a scope would.</summary>
@@ -307,7 +307,9 @@ internal sealed class FakeRelay
         return IndexResult.Done;
     }
 
+    /// <summary>
     /// A component a mod owns: reachable only through its heap handle, so managed fields are allowed.
+    /// </summary>
     internal void RegisterManaged<T>() where T : struct
     {
         Register<T>(static () => new ManagedHeap<T>());
@@ -355,7 +357,9 @@ internal sealed class FakeRelay
 
     internal void Kill(RawEntity entity) => _entities[entity.Id] = _entities[entity.Id] with { Alive = false };
 
+    /// <summary>
     /// Hands a dead entity's id straight back out under a new revision, which is what the check is for.
+    /// </summary>
     internal RawEntity Recycle(RawEntity entity)
     {
         var slot = _entities[entity.Id];
@@ -380,7 +384,7 @@ internal sealed class FakeRelay
         return (T)slot.Archetype.HeapOf(IdOf(typeof(T))).GetValue(slot.Row);
     }
 
-    /// Which of the two heap kinds a component landed in, so a test can pin that it covers both.
+    /// <summary>Which of the two heap kinds a component landed in, so a test can pin that it covers both.</summary>
     internal bool IsManaged<T>(RawEntity entity) where T : struct
         => _entities[entity.Id].Archetype.HeapOf(IdOf(typeof(T))) is ManagedHeap<T>;
 
@@ -388,11 +392,11 @@ internal sealed class FakeRelay
     internal EcsApi CreateEcsApi()
         => new(Pointers, new ModComponentIds(Aot.GetComponentIdByName));
 
-    /// The v1 server api bound to this relay, wired the way the mod host wires it.
+    /// <summary>The v1 server api bound to this relay, wired the way the mod host wires it.</summary>
     internal ServerEntityApi CreateEntityApi()
         => new(Pointers, Archetypes, new ModComponentIds(Aot.GetComponentIdByName));
 
-    /// The id the relay assigned, for a caller that drives Query itself rather than through the SDK.
+    /// <summary>The id the relay assigned, for a caller that drives Query itself rather than through the SDK.</summary>
     internal int ComponentId<T>() where T : struct => IdOf(typeof(T));
 
     private int IdOf(Type type) => _idsByName.TryGetValue(type.FullName!, out var id)
@@ -429,7 +433,7 @@ internal sealed class FakeRelay
         return RegisterArchetype(ids);
     }
 
-    /// The id this game gives a shape, the way its own archetype registration would.
+    /// <summary>The id this game gives a shape, the way its own archetype registration would.</summary>
     internal ArchetypeId RegisterArchetype(params Type[] componentTypes)
         => RegisterArchetype(componentTypes.Select(IdOf).ToArray());
 
@@ -453,12 +457,12 @@ internal sealed class FakeRelay
         return Create(_archetypeShapes[archetype]);
     }
 
-    /// What the relay knows about an entity it made over the network, which a local one has none of.
+    /// <summary>What the relay knows about an entity it made over the network, which a local one has none of.</summary>
     internal readonly record struct Networked(ArchetypeId Archetype, PlayerId? Owner, RawEntity? Scope);
 
     private readonly Dictionary<int, Networked> _networked = new();
 
-    /// Null for an entity the relay made locally, which is what nothing else can ask.
+    /// <summary>Null for an entity the relay made locally, which is what nothing else can ask.</summary>
     internal Networked? NetworkedOf(RawEntity entity)
         => _networked.TryGetValue(entity.Id, out var made) ? made : null;
 

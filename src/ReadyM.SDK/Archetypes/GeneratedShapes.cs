@@ -4,13 +4,15 @@ using System.Reflection;
 
 namespace ReadyM.SDK.Archetypes;
 
+/// <summary>
 /// Applies the registrations generated for the shapes an assembly declares: what each mixin adds to
 /// an archetype, and which component holds an index. Called it for every assembly a host loads, before
 /// anything creates an entity.
+/// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class GeneratedShapes
 {
-    /// The type a compilation gets when it declares shapes that need registering.
+    /// <summary>The type a compilation gets when it declares shapes that need registering.</summary>
     private const string EntryPoint = "ReadyM.SDK.Generated.ShapeRegistrations";
 
     private const string Method = "RegisterAll";

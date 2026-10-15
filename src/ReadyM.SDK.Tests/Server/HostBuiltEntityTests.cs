@@ -9,14 +9,18 @@ using IComponent = Friflo.Engine.ECS.IComponent;
 
 namespace ReadyM.SDK.Tests.Server;
 
+/// <summary>
 /// An entity the host built from one of the game's own archetypes, which never goes through the
 /// entity API. The world entity is the one that matters: a mod extends it and expects its defaults.
+/// </summary>
 public class HostBuiltEntityTests
 {
     private readonly EntityStore _store = new();
 
+    /// <summary>
     /// Stands in for the host telling the SDK about an entity it built, which is all it can do: it
     /// knows nothing of the shapes a mod added to that archetype.
+    /// </summary>
     private sealed class Components(EntityStore store) : IComponentsById
     {
         public bool Has<T>(int entityId) where T : struct, IComponent
@@ -41,7 +45,9 @@ public class HostBuiltEntityTests
         Assert.Equal(7, Shaped<Stamped>(entity, api).Mark);
     }
 
+    /// <summary>
     /// An entity that arrived from elsewhere was authored there, so its defaults are not ours to set.
+    /// </summary>
     [Fact]
     public void One_that_arrived_from_elsewhere_is_left_alone()
     {
@@ -54,7 +60,7 @@ public class HostBuiltEntityTests
         Assert.Equal(0, Shaped<Stamped>(entity, api).Mark);
     }
 
-    /// It carries none of the shapes that asked for anything, so nothing runs and nothing throws.
+    /// <summary>It carries none of the shapes that asked for anything, so nothing runs and nothing throws.</summary>
     [Fact]
     public void One_carrying_nothing_a_mod_declared_is_left_alone()
     {

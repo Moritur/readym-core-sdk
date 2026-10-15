@@ -3,8 +3,10 @@ using ReadyM.SDK.Entities;
 
 namespace ReadyM.SDK.Client.Entities;
 
+/// <summary>
 /// Every entity a scope holds that carries all 2 shapes. Walked by identity: a scope's entities
 /// are scattered through the archetypes they belong to, so there are no chunks to hand back.
+/// </summary>
 public readonly struct ScopedQuery<T1, T2>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -76,8 +78,10 @@ public readonly struct ScopedQuery<T1, T2>
     }
 }
 
+/// <summary>
 /// Every entity a scope holds that carries all 3 shapes. Walked by identity: a scope's entities
 /// are scattered through the archetypes they belong to, so there are no chunks to hand back.
+/// </summary>
 public readonly struct ScopedQuery<T1, T2, T3>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -151,8 +155,10 @@ public readonly struct ScopedQuery<T1, T2, T3>
     }
 }
 
+/// <summary>
 /// Every entity a scope holds that carries all 4 shapes. Walked by identity: a scope's entities
 /// are scattered through the archetypes they belong to, so there are no chunks to hand back.
+/// </summary>
 public readonly struct ScopedQuery<T1, T2, T3, T4>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -228,8 +234,10 @@ public readonly struct ScopedQuery<T1, T2, T3, T4>
     }
 }
 
+/// <summary>
 /// Every entity a scope holds that carries all 5 shapes. Walked by identity: a scope's entities
 /// are scattered through the archetypes they belong to, so there are no chunks to hand back.
+/// </summary>
 public readonly struct ScopedQuery<T1, T2, T3, T4, T5>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -307,8 +315,10 @@ public readonly struct ScopedQuery<T1, T2, T3, T4, T5>
     }
 }
 
+/// <summary>
 /// Every entity a scope holds that carries all 6 shapes. Walked by identity: a scope's entities
 /// are scattered through the archetypes they belong to, so there are no chunks to hand back.
+/// </summary>
 public readonly struct ScopedQuery<T1, T2, T3, T4, T5, T6>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin

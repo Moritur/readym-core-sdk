@@ -69,7 +69,7 @@ public class RegistrationAggregatorTests(ITestOutputHelper output)
     public void It_names_every_service()
         => Assert.Contains("global::Mod.Bookkeeping.Registration.Register();", Generated(Source));
 
-    /// A shape's own handler registers from inside the shape, which is just as easy to miss.
+    /// <summary>A shape's own handler registers from inside the shape, which is just as easy to miss.</summary>
     [Fact]
     public void It_names_what_a_shape_handles_for_itself()
         => Assert.Contains("global::Mod.Stamped.OnCreatedRegistration.Register();", Generated(Source));
@@ -85,12 +85,14 @@ public class RegistrationAggregatorTests(ITestOutputHelper output)
     public void It_names_the_mods_entry_point()
         => Assert.Contains("global::Mod.Entry.Registration.Register();", Generated(Source));
 
+    /// <summary>
     /// A config is read before anything in the assembly is touched, so its own initializer is too late.
+    /// </summary>
     [Fact]
     public void It_names_a_mods_config()
         => Assert.Contains("global::Mod.Settings.Registration.Register();", Generated(Source));
 
-    /// Nothing is written for a config the analyzer refuses, so naming it would not compile.
+    /// <summary>Nothing is written for a config the analyzer refuses, so naming it would not compile.</summary>
     [Fact]
     public void It_leaves_out_a_config_that_was_refused()
         => Assert.DoesNotContain("Unbuildable", Generated("""
@@ -108,7 +110,7 @@ public class RegistrationAggregatorTests(ITestOutputHelper output)
             public abstract partial class Unbuildable { }
             """));
 
-    /// Nothing is written for an entry point the analyzer refuses, so naming it would not compile.
+    /// <summary>Nothing is written for an entry point the analyzer refuses, so naming it would not compile.</summary>
     [Fact]
     public void It_leaves_out_an_entry_point_that_was_refused()
         => Assert.DoesNotContain("Unsealed", Generated("""
@@ -129,7 +131,7 @@ public class RegistrationAggregatorTests(ITestOutputHelper output)
             }
             """));
 
-    /// Nothing is written for a service the analyzer refuses, so naming it would not compile.
+    /// <summary>Nothing is written for a service the analyzer refuses, so naming it would not compile.</summary>
     [Fact]
     public void It_leaves_out_a_service_that_was_refused()
         => Assert.DoesNotContain("Broken", Generated("""

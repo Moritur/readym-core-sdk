@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
-/// Declares that a shape's component has to be given its memory before anything reads it.
+/// <summary>Declares that a shape's component has to be given its memory before anything reads it.</summary>
 internal static class NativeInitEmitter
 {
     public static bool Applies(DeclarationModel model)

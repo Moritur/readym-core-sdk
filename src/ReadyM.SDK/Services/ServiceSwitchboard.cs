@@ -3,7 +3,7 @@ using ReadyM.Api.DI;
 
 namespace ReadyM.SDK.Services;
 
-/// The IServices a container hands out. It reaches a service the same way anything else does.
+/// <summary>The IServices a container hands out. It reaches a service the same way anything else does.</summary>
 internal sealed class ServiceSwitchboard(IDependencyContainer container) : IServices
 {
     public void Enable<TService>() where TService : class, IService => Switch<TService>(true);

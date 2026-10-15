@@ -48,7 +48,7 @@ public class ModConfigTests : IDisposable
         Assert.Equal(5, _container.Resolve<Settings>().Rounds);
     }
 
-    /// A mod that ships no file still gets its config, so nothing has to guard against a null one.
+    /// <summary>A mod that ships no file still gets its config, so nothing has to guard against a null one.</summary>
     [Fact]
     public void A_missing_file_leaves_the_defaults()
     {
@@ -57,7 +57,7 @@ public class ModConfigTests : IDisposable
         Assert.Equal(3, _container.Resolve<Settings>().Rounds);
     }
 
-    /// The name on the attribute is what is read, so two configs can live in one folder.
+    /// <summary>The name on the attribute is what is read, so two configs can live in one folder.</summary>
     [Fact]
     public void A_config_can_name_its_own_file()
     {
@@ -71,12 +71,12 @@ public class ModConfigTests : IDisposable
     public void Every_config_the_assembly_declares_is_read()
         => Assert.Equal(2, Register());
 
-    /// An assembly declaring none is not an error: most mods have no config at all.
+    /// <summary>An assembly declaring none is not an error: most mods have no config at all.</summary>
     [Fact]
     public void An_assembly_that_declares_none_reads_nothing()
         => Assert.Equal(0, ModConfigRegistry.RegisterAll(typeof(IModEntry).Assembly, _container, _directory));
 
-    /// One instance, so a service and the entry point see the same values.
+    /// <summary>One instance, so a service and the entry point see the same values.</summary>
     [Fact]
     public void It_is_the_one_the_container_hands_out()
     {

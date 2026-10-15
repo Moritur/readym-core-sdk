@@ -17,7 +17,7 @@ namespace ReadyM.Api.Generators.Tests.Archetypes;
 /// </remarks>
 public class GeneratorAgainstTheSdkTests(ITestOutputHelper output)
 {
-    /// The assemblies a mod is compiled against, both halves, as a test host sees them.
+    /// <summary>The assemblies a mod is compiled against, both halves, as a test host sees them.</summary>
     private static readonly Assembly[] Sdk =
     [
         typeof(SDK.Attributes.ArchetypeAttribute).Assembly,

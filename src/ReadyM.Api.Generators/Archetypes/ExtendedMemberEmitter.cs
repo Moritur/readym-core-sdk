@@ -2,8 +2,10 @@
 
 namespace ReadyM.Api.Generators.Archetypes;
 
+/// <summary>
 /// Puts a mixin's values on the archetypes it extends, so a shape from another mod reads as if it
 /// had always carried them.
+/// </summary>
 internal static class ExtendedMemberEmitter
 {
     public static void Emit(SourceWriter writer, DeclarationModel model, ChunkNames? chunks, bool client = false)
@@ -28,7 +30,7 @@ internal static class ExtendedMemberEmitter
         }
     }
 
-    /// On the shape itself, which reaches the value the same way its own members do.
+    /// <summary>On the shape itself, which reaches the value the same way its own members do.</summary>
     private static void Shape(SourceWriter writer, DeclarationModel model, string target, string prefix, bool client)
     {
         using (writer.Braces($"extension(in {target} shape)"))
@@ -43,8 +45,10 @@ internal static class ExtendedMemberEmitter
         }
     }
 
+    /// <summary>
     /// The same on the archetype's chunk view. The value is not in that chunk, so it is reached
     /// through the entity, which is why the remarks say what to write instead in a hot loop.
+    /// </summary>
     private static void View(SourceWriter writer, DeclarationModel model, INamedTypeSymbol archetype, string prefix, bool client)
     {
         var view = ArchetypeNames.QualifiedViewOf(archetype);
@@ -68,6 +72,7 @@ internal static class ExtendedMemberEmitter
         }
     }
 
+    /// <summary>
     /// A getter as a property, and a setter as a method, which C# forces rather than us choosing it.
     /// A shape's own setters can be properties: the shape is a readonly struct, so the compiler knows
     /// an instance setter takes this by readonly ref and cannot modify the receiver, and it allows the
@@ -79,6 +84,7 @@ internal static class ExtendedMemberEmitter
     /// in extension receiver the way it already treats a readonly struct's own this, which is tracked
     /// as https://github.com/dotnet/roslyn/issues/82249. When that lands, the setter can become a
     /// property here, added alongside SetX so nothing written against the current surface breaks.
+    /// </summary>
     private static void Members(
         SourceWriter writer,
         DeclarationModel model,
@@ -126,10 +132,12 @@ internal static class ExtendedMemberEmitter
         writer.Line($"    => {set};");
     }
 
+    /// <summary>
     /// A member the mixin forwards from its explicit component, most often a native collection's
     /// methods. Emitted as-is, so a collection reads and writes on the extended shape exactly as it
     /// does on the mixin. These are methods rather than properties, so unlike a setter they work
     /// inside a query body too.
+    /// </summary>
     private static void Forwarded(
         SourceWriter writer,
         DeclarationModel model,
@@ -156,7 +164,7 @@ internal static class ExtendedMemberEmitter
         writer.Line($"    => {call}({handle}{forward.Separator}{forward.Arguments});");
     }
 
-    /// One remarks block per member, however many notes went into it.
+    /// <summary>One remarks block per member, however many notes went into it.</summary>
     private static void Remarks(SourceWriter writer, params string[]?[] parts)
     {
         var any = false;

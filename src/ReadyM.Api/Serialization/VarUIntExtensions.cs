@@ -3,10 +3,10 @@ using LiteNetLib.Utils;
 
 namespace ReadyM.Api.Serialization;
 
-/// Writes and reads a <c>uint</c> in the compact <see cref="VarUInt"/> encoding.
+/// <summary>Writes and reads a <c>uint</c> in the compact <see cref="VarUInt"/> encoding.</summary>
 public static class VarUIntExtensions
 {
-    /// Writes <paramref name="value"/> in as few bytes as it needs.
+    /// <summary>Writes <paramref name="value"/> in as few bytes as it needs.</summary>
     public static void PutVarUInt(this NetDataWriter writer, uint value)
     {
         while (value >= 0x80)
@@ -18,7 +18,9 @@ public static class VarUIntExtensions
         writer.Put((byte)value);
     }
 
+    /// <summary>
     /// Throws <see cref="InvalidDataException"/> for more than five bytes, more than 32 bits, or a stream that ends first.
+    /// </summary>
     public static uint GetVarUInt(this NetDataReader reader)
     {
         var value = 0u;

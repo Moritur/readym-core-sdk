@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace ReadyM.Api.Generators.Services;
 
-/// Explains what a <c>[Service]</c> class got wrong before the generator silently writes nothing.
+/// <summary>Explains what a <c>[Service]</c> class got wrong before the generator silently writes nothing.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ServiceAnalyzer : DiagnosticAnalyzer
 {

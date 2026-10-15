@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ReadyM.Api.Generators.Tests.Archetypes;
 
-/// What a shape says about replicating, and what the generator refuses, run against the real SDK.
+/// <summary>What a shape says about replicating, and what the generator refuses, run against the real SDK.</summary>
 public class ReplicationTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk =
@@ -17,7 +17,7 @@ public class ReplicationTests(ITestOutputHelper output)
         typeof(Api.Multiplayer.ECS.Components.INetworkedComponent).Assembly
     ];
 
-    /// A component that carries values but knows nothing about a wire.
+    /// <summary>A component that carries values but knows nothing about a wire.</summary>
     private const string Core =
         """
         using Friflo.Engine.ECS;
@@ -66,7 +66,7 @@ public class ReplicationTests(ITestOutputHelper output)
         return [.. result.DriverRunResult.Diagnostics.Where(d => d.Id.StartsWith("READYM"))];
     }
 
-    /// Everything the run emitted, as one string to read assertions off.
+    /// <summary>Everything the run emitted, as one string to read assertions off.</summary>
     private string Generated(string shape)
     {
         var result = SourceGeneratorTestHelper.RunGenerators(
@@ -91,15 +91,17 @@ public class ReplicationTests(ITestOutputHelper output)
 
     // -- what a write through a replicated shape means ----------------------------------------------
 
-    /// The plain setter reports what the game did, so the game keeps authority over the value.
+    /// <summary>The plain setter reports what the game did, so the game keeps authority over the value.</summary>
     [Fact]
     public void A_replicated_setter_writes_as_a_mirror()
         => Assert.Contains(
             "Fields.Health, value, global::ReadyM.SDK.Entities.WriteKind.Mirror",
             Generated(ReplicatedShape));
 
+    /// <summary>
     /// Overriding goes through the value's token and an extension only a client references, so
     /// nothing here emits it and a server mod never sees a verb it cannot use.
+    /// </summary>
     [Fact]
     public void No_override_verb_is_generated()
     {
@@ -109,7 +111,7 @@ public class ReplicationTests(ITestOutputHelper output)
         Assert.DoesNotContain("WriteKind.Override", generated);
     }
 
-    /// Nothing carries the value over a wire, so there is no mask to set and nothing to override.
+    /// <summary>Nothing carries the value over a wire, so there is no mask to set and nothing to override.</summary>
     [Fact]
     public void An_unreplicated_setter_is_written_outright()
     {
@@ -127,7 +129,7 @@ public class ReplicationTests(ITestOutputHelper output)
 
     // -- naming a value without naming the component ------------------------------------------------
 
-    /// An assembly that cannot see the component still has to say which value it means.
+    /// <summary>An assembly that cannot see the component still has to say which value it means.</summary>
     [Fact]
     public void A_replicated_shape_names_its_values()
     {
@@ -137,14 +139,14 @@ public class ReplicationTests(ITestOutputHelper output)
         Assert.Contains("Health { get; }", generated);
     }
 
-    /// The token carries the shape, so a value of one cannot be passed where another is wanted.
+    /// <summary>The token carries the shape, so a value of one cannot be passed where another is wanted.</summary>
     [Fact]
     public void A_token_is_typed_to_its_shape()
         => Assert.Contains(
             "global::ReadyM.SDK.Archetypes.Access.Value<global::Mod.Vitals, int> Health",
             Generated(ReplicatedShape));
 
-    /// Nothing carries it over a wire, so there is no field table to build a token from.
+    /// <summary>Nothing carries it over a wire, so there is no field table to build a token from.</summary>
     [Fact]
     public void An_unreplicated_shape_names_none()
         => Assert.DoesNotContain("public static class Field", Generated(
@@ -156,9 +158,11 @@ public class ReplicationTests(ITestOutputHelper output)
             }
             """));
 
+    /// <summary>
     /// A shape that declares itself a scope converts to one, which is what lets a query read
     /// InScope(area) rather than naming the handle. Nothing else in the generator checks that the
     /// marker is still matched the way a symbol spells it.
+    /// </summary>
     [Fact]
     public void A_scope_archetype_converts_to_one()
         => Assert.Contains(
@@ -174,8 +178,10 @@ public class ReplicationTests(ITestOutputHelper output)
 
     // -- what the generated component compiles to ------------------------------------------------
 
+    /// <summary>
     /// The values and the masks sit in two declarations of one struct. Left at the default layout, the
     /// compiler warns that their order is undefined (CS0282), and every mod with a replicated shape saw it.
+    /// </summary>
     [Theory]
     [InlineData(ReplicatedShape)]
     [InlineData("""
@@ -213,11 +219,13 @@ public class ReplicationTests(ITestOutputHelper output)
         return string.Concat(result.GeneratedSyntaxTrees.Select(tree => tree.ToString()));
     }
 
-    /// A chunk setter takes the row's handle, which is what its write stamps the server's time with.
+    /// <summary>A chunk setter takes the row's handle, which is what its write stamps the server's time with.</summary>
     private const string ChunkSetter = "chunk, int index, in global::ReadyM.SDK.Entities.EntityHandle handle, int value";
 
+    /// <summary>
     /// A chunk write goes straight into the component array, past the policy and the masks that a
     /// client write has to obey, so a client build does not get one.
+    /// </summary>
     [Fact]
     public void A_client_build_has_no_chunk_setter()
     {
@@ -231,13 +239,15 @@ public class ReplicationTests(ITestOutputHelper output)
     public void A_server_build_keeps_its_chunk_setters()
         => Assert.Contains(ChunkSetter, GeneratedFor(ReplicatedShape, "Server"));
 
-    /// A build that says nothing is a server, so nothing an existing project has is taken away.
+    /// <summary>A build that says nothing is a server, so nothing an existing project has is taken away.</summary>
     [Fact]
     public void An_unstated_side_keeps_them()
         => Assert.Contains(ChunkSetter, Generated(ReplicatedShape));
 
+    /// <summary>
     /// A replicated value is written through the row's handle, the same write a handle's setter makes, so a
     /// write in a query loop stamps the field just as one through a handle does.
+    /// </summary>
     [Fact]
     public void A_chunk_setter_writes_a_replicated_value_through_the_handle()
         => Assert.Contains("=> handle.Write(ref chunk.As<", GeneratedFor(ReplicatedShape, "Server"));
@@ -256,12 +266,16 @@ public class ReplicationTests(ITestOutputHelper output)
         public readonly partial struct Fighter;
         """;
 
+    /// <summary>
     /// A value reaching an archetype through [Include] is generated outright, so a client build can
     /// leave the write off it and send a mod to the token instead.
+    /// </summary>
     private const string Writes = "set => global::Mod.VitalsAccessors.SetHealth(_handle, value);";
 
+    /// <summary>
     /// Both shapes are in one compilation, so the count says which of them kept a write: the mixin
     /// always does, and the archetype including it does only on a server.
+    /// </summary>
     private static int WritesIn(string generated)
         => generated.Split([Writes], StringSplitOptions.None).Length - 1;
 
@@ -278,8 +292,10 @@ public class ReplicationTests(ITestOutputHelper output)
     public void A_server_build_can()
         => Assert.Equal(2, WritesIn(GeneratedFor(CarryingShape, "Server")));
 
+    /// <summary>
     /// The mixin's own declaration says { get; set; }, and C# requires the implementing part to
     /// implement every accessor it declares, so this one setter cannot be dropped.
+    /// </summary>
     [Fact]
     public void The_shape_that_declared_it_keeps_its_own_setter()
         => Assert.Contains("set => global::Mod.VitalsAccessors.SetHealth(_handle, value);",
@@ -287,7 +303,7 @@ public class ReplicationTests(ITestOutputHelper output)
 
     // -- how a shape says its values travel ---------------------------------------------------------
 
-    /// The declaration lives on the shape; the component carries the contract the runtime looks for.
+    /// <summary>The declaration lives on the shape; the component carries the contract the runtime looks for.</summary>
     [Fact]
     public void A_stated_propagation_reaches_the_component()
         => Assert.Contains(
@@ -303,12 +319,12 @@ public class ReplicationTests(ITestOutputHelper output)
                 }
                 """));
 
-    /// Saying nothing leaves the component as it was, so no existing shape changes behaviour.
+    /// <summary>Saying nothing leaves the component as it was, so no existing shape changes behaviour.</summary>
     [Fact]
     public void An_unstated_propagation_says_nothing()
         => Assert.DoesNotContain("ReadyM.Api.Mapping.Tags.I", Generated(ReplicatedShape));
 
-    /// Nothing sends a local shape's values, so it gets plain accessors, no mask and no tokens.
+    /// <summary>Nothing sends a local shape's values, so it gets plain accessors, no mask and no tokens.</summary>
     [Fact]
     public void A_local_shape_is_left_alone()
     {
@@ -326,13 +342,15 @@ public class ReplicationTests(ITestOutputHelper output)
         Assert.DoesNotContain("WriteDelta", generated);
     }
 
+    /// <summary>
     /// A replicated shape that says nothing about who may write it is the state everything else
     /// was silently built on, so it is the one the compiler now refuses.
+    /// </summary>
     [Fact]
     public void A_replicated_shape_must_say_how_it_propagates()
         => AssertReports("READYM014", ReplicatedShape);
 
-    /// Nothing sends it, so nobody is kept from writing it and there is nothing to state.
+    /// <summary>Nothing sends it, so nobody is kept from writing it and there is nothing to state.</summary>
     [Fact]
     public void A_local_shape_must_not_say_how_it_propagates()
         => AssertReports("READYM016", """
@@ -344,7 +362,7 @@ public class ReplicationTests(ITestOutputHelper output)
             }
             """);
 
-    /// It holds nothing of its own, so it can never replicate, so it has nothing to state either.
+    /// <summary>It holds nothing of its own, so it can never replicate, so it has nothing to state either.</summary>
     [Fact]
     public void An_archetype_that_only_includes_must_not_say_how_it_propagates()
         => AssertReports("READYM016", """
@@ -360,7 +378,7 @@ public class ReplicationTests(ITestOutputHelper output)
             public readonly partial struct Region;
             """);
 
-    /// The component a shape does not own carries the contract, and the runtime reads it there.
+    /// <summary>The component a shape does not own carries the contract, and the runtime reads it there.</summary>
     [Fact]
     public void A_shape_over_a_borrowed_component_must_not_state_propagation()
         => AssertReports("READYM015", """
@@ -373,7 +391,7 @@ public class ReplicationTests(ITestOutputHelper output)
             }
             """);
 
-    /// Even agreeing with it, because two places to say it are two places to change it.
+    /// <summary>Even agreeing with it, because two places to say it are two places to change it.</summary>
     [Fact]
     public void Nor_state_the_propagation_the_component_already_carries()
         => AssertReports("READYM015", """
@@ -387,8 +405,10 @@ public class ReplicationTests(ITestOutputHelper output)
             """);
 
 
+    /// <summary>
     /// The field a value is held in is its name with a lower first letter, which can land on a
     /// keyword. Sealed, Class and Event are ordinary things for a mod to call a value.
+    /// </summary>
     [Fact]
     public void A_value_whose_field_would_be_a_keyword_is_escaped()
     {
@@ -407,7 +427,7 @@ public class ReplicationTests(ITestOutputHelper output)
         Assert.Contains("public int ordinary;", generated);
     }
 
-    /// The same for one that replicates, where the field is reached from more places.
+    /// <summary>The same for one that replicates, where the field is reached from more places.</summary>
     [Fact]
     public void And_escaped_on_a_shape_that_replicates()
         => Assert.Contains("@sealed", Generated("""
@@ -422,8 +442,10 @@ public class ReplicationTests(ITestOutputHelper output)
 
     // -- what a shape asks to run as its entities appear -------------------------------------------
 
+    /// <summary>
     /// A handler hangs on everything the shape is made of, the way a query matches it. Keying it on
     /// one component would leave an archetype that only includes other shapes with nothing to hang on.
+    /// </summary>
     [Fact]
     public void A_handler_hangs_on_everything_the_shape_is_made_of()
         => Assert.Contains(
@@ -437,7 +459,7 @@ public class ReplicationTests(ITestOutputHelper output)
                 }
                 """));
 
-    /// What it asks for comes from the game's services, resolved as it runs rather than before.
+    /// <summary>What it asks for comes from the game's services, resolved as it runs rather than before.</summary>
     [Fact]
     public void A_create_handler_is_handed_what_it_asked_for()
         => Assert.Contains(
@@ -453,7 +475,7 @@ public class ReplicationTests(ITestOutputHelper output)
                 }
                 """));
 
-    /// There is nobody to hand a result to, and nothing for a static one to run on.
+    /// <summary>There is nobody to hand a result to, and nothing for a static one to run on.</summary>
     [Fact]
     public void A_create_handler_returning_something_is_refused()
         => AssertReports("READYM020", """
@@ -467,7 +489,7 @@ public class ReplicationTests(ITestOutputHelper output)
             }
             """);
 
-    /// The order between two would be nobody's to say, so the shape keeps one.
+    /// <summary>The order between two would be nobody's to say, so the shape keeps one.</summary>
     [Fact]
     public void A_shape_declaring_two_create_handlers_is_refused()
         => AssertReports("READYM021", """
@@ -484,7 +506,7 @@ public class ReplicationTests(ITestOutputHelper output)
             }
             """);
 
-    /// The mirror of a create handler, and its registration sits inside the shape the same way.
+    /// <summary>The mirror of a create handler, and its registration sits inside the shape the same way.</summary>
     [Fact]
     public void A_shape_registers_what_it_asked_to_run_as_one_of_its_entities_goes()
         => Assert.Contains(
@@ -498,7 +520,7 @@ public class ReplicationTests(ITestOutputHelper output)
                 }
                 """));
 
-    /// A shape may declare both, and they register separately.
+    /// <summary>A shape may declare both, and they register separately.</summary>
     [Fact]
     public void A_shape_may_be_told_about_both_ends()
     {
@@ -562,7 +584,7 @@ public class ReplicationTests(ITestOutputHelper output)
 
     // -- what the generator refuses ----------------------------------------------------------------
 
-    /// A shape with no values of its own has nothing to send. Its presence travels with the entity.
+    /// <summary>A shape with no values of its own has nothing to send. Its presence travels with the entity.</summary>
     [Fact]
     public void A_marker_shape_cannot_replicate()
     {
@@ -576,9 +598,11 @@ public class ReplicationTests(ITestOutputHelper output)
         Assert.All(reported.Where(d => d.Id == "READYM009"), d => Assert.Equal(DiagnosticSeverity.Error, d.Severity));
     }
 
+    /// <summary>
     /// Storage that already exists cannot be taught to replicate, so asking is an error rather than
     /// something quietly ignored.
     /// The component decides whether it crosses the wire, and this one does not.
+    /// </summary>
     [Fact]
     public void A_shape_over_a_local_component_must_not_ask_to_replicate()
     {
@@ -610,7 +634,7 @@ public class ReplicationTests(ITestOutputHelper output)
         Assert.DoesNotContain(reported, d => d.Id is "READYM009" or "READYM010");
     }
 
-    /// Nor when it does, because then the shape is asking for something already true of it.
+    /// <summary>Nor when it does, because then the shape is asking for something already true of it.</summary>
     [Fact]
     public void Nor_when_the_component_is_already_networked()
     {
@@ -624,7 +648,7 @@ public class ReplicationTests(ITestOutputHelper output)
         Assert.Contains(reported, d => d.Id == "READYM010");
     }
 
-    /// Saying nothing is how a shape over a networked component replicates, and it still does.
+    /// <summary>Saying nothing is how a shape over a networked component replicates, and it still does.</summary>
     [Fact]
     public void A_shape_over_a_networked_component_replicates_without_asking()
     {
@@ -654,7 +678,7 @@ public class ReplicationTests(ITestOutputHelper output)
         Assert.False(model.IsReplicated);
     }
 
-    /// Storage that is already networked says so itself, so the shape over it inherits that.
+    /// <summary>Storage that is already networked says so itself, so the shape over it inherits that.</summary>
     [Fact]
     public void A_networked_component_replicates_without_the_attribute()
     {
@@ -668,8 +692,10 @@ public class ReplicationTests(ITestOutputHelper output)
         Assert.True(model.IsReplicated);
     }
 
+    /// <summary>
     /// A marker replicates no values whatever it asks for. The entity still does, which is a
     /// separate question the runtime reads off the archetype.
+    /// </summary>
     [Fact]
     public void A_marker_shape_does_not_replicate_values_even_when_it_asks()
     {
@@ -715,7 +741,7 @@ public class ReplicationTests(ITestOutputHelper output)
 
     // -- what an archetype declares ------------------------------------------------------------------
 
-    /// An archetype says it on [Archetype], so [Replicated] there is a second place to say it.
+    /// <summary>An archetype says it on [Archetype], so [Replicated] there is a second place to say it.</summary>
     [Fact]
     public void An_archetype_must_not_carry_replicated()
         => AssertReports("READYM036", """
@@ -727,7 +753,7 @@ public class ReplicationTests(ITestOutputHelper output)
             }
             """);
 
-    /// Furniture's shape: nothing of its own, and still an entity the other side hears about.
+    /// <summary>Furniture's shape: nothing of its own, and still an entity the other side hears about.</summary>
     [Fact]
     public void A_replicated_archetype_holding_no_values_is_fine()
         => Assert.Empty(Report("""
@@ -766,7 +792,7 @@ public class ReplicationTests(ITestOutputHelper output)
         Assert.False(model.RegistersReplication);
     }
 
-    /// The same rule a replicated mixin is held to: values that are sent need a stated writer.
+    /// <summary>The same rule a replicated mixin is held to: values that are sent need a stated writer.</summary>
     [Fact]
     public void A_replicated_archetype_with_values_must_say_how_they_propagate()
         => AssertReports("READYM014", """
@@ -792,8 +818,10 @@ public class ReplicationTests(ITestOutputHelper output)
         Assert.Equal(Delivery.Unreliable, model.Delivery);
     }
 
+    /// <summary>
     /// Whether the entity gets a network identity is read at create time off the set, so the set has
     /// to say it, and say it apart from any include whose set holds the same components.
+    /// </summary>
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
@@ -814,7 +842,7 @@ public class ReplicationTests(ITestOutputHelper output)
                 public readonly partial struct Subject;
                 """));
 
-    /// A mixin's set is shared by every shape that includes it, so it says nothing either way.
+    /// <summary>A mixin's set is shared by every shape that includes it, so it says nothing either way.</summary>
     [Fact]
     public void A_mixin_set_is_not_an_archetype_set()
     {
@@ -831,8 +859,10 @@ public class ReplicationTests(ITestOutputHelper output)
 
     // -- collections -------------------------------------------------------------------------------
 
+    /// <summary>
     /// Handing a caller the collection itself lets them change it without the change being sent,
     /// so a replicated shape has to keep it private and let the generated members carry it.
+    /// </summary>
     [Fact]
     public void A_replicated_collection_that_is_reachable_as_a_whole_is_refused()
     {
@@ -863,8 +893,10 @@ public class ReplicationTests(ITestOutputHelper output)
         Assert.DoesNotContain(reported, d => d.Id == "READYM011");
     }
 
+    /// <summary>
     /// A shape that does not replicate has no generated members to reach a collection through, so
     /// what it would hold is a handle to memory and no way to work it.
+    /// </summary>
     [Fact]
     public void A_local_shape_cannot_hold_a_collection()
         => AssertReports("READYM018", """
@@ -875,7 +907,7 @@ public class ReplicationTests(ITestOutputHelper output)
             }
             """);
 
-    /// Including keeping it to itself, which was the shape that used to slip through.
+    /// <summary>Including keeping it to itself, which was the shape that used to slip through.</summary>
     [Fact]
     public void Nor_a_private_one()
         => AssertReports("READYM018", """

@@ -5,7 +5,7 @@ using ReadyM.Api.DI;
 
 namespace ReadyM.Api.Multiplayer.RPC;
 
-/// Which half of an RPC a class implements, which decides the container it belongs in.
+/// <summary>Which half of an RPC a class implements, which decides the container it belongs in.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public enum RpcSide
 {
@@ -13,7 +13,7 @@ public enum RpcSide
     Server
 }
 
-/// Holds the [RpcHandlersFor] classes a loaded assembly declared.
+/// <summary>Holds the [RpcHandlersFor] classes a loaded assembly declared.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class RpcHandlerRegistry
 {

@@ -7,7 +7,7 @@ using ReadyM.SDK.Attributes;
 
 namespace ReadyM.SDK.Services;
 
-/// Holds service registrations.
+/// <summary>Holds service registrations.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class ServiceRegistry
 {
@@ -15,7 +15,7 @@ public static class ServiceRegistry
 
     private static readonly ConditionalWeakTable<IDependencyContainer, object> RegisteredIn = new();
 
-    /// Called by generated code for a [Service] that declared an update.
+    /// <summary>Called by generated code for a [Service] that declared an update.</summary>
     public static void Register<TService>(
         int priority = UpdateOrderAttribute.DefaultPriority,
         Type[]? before = null,
@@ -23,7 +23,7 @@ public static class ServiceRegistry
         where TService : class, IUpdatingService
         => Declared[typeof(TService)] = new Updating<TService>(new ServiceOrder(priority, before, after));
 
-    /// Called by generated code for a [Service] that declared no update.
+    /// <summary>Called by generated code for a [Service] that declared no update.</summary>
     public static void Hold<TService>() where TService : class
         => Declared[typeof(TService)] = new Held<TService>();
 
@@ -68,7 +68,7 @@ public static class ServiceRegistry
         return started;
     }
 
-    /// The services a game has to update, in the order they run. The rest are resolved lazily.
+    /// <summary>The services a game has to update, in the order they run. The rest are resolved lazily.</summary>
     public static List<IUpdatingService> Resolve(IDependencyContainer container)
         => InUpdateOrder(null)
             .Select(declaration => declaration.Resolve(container))
@@ -102,12 +102,12 @@ public static class ServiceRegistry
     {
         public abstract Type Service { get; }
 
-        /// Null for a service that declares no update, which nothing can be ordered against.
+        /// <summary>Null for a service that declares no update, which nothing can be ordered against.</summary>
         public virtual ServiceOrder? Order => null;
 
         public abstract void Register(IDependencyContainer container);
 
-        /// The one instance, whether or not it updates.
+        /// <summary>The one instance, whether or not it updates.</summary>
         public abstract object Get(IDependencyContainer container);
 
         // ReSharper disable once MemberHidesStaticFromOuterClass

@@ -13,8 +13,10 @@ namespace ReadyM.Api.Generators.Tests;
 
 internal static class SourceGeneratorTestHelper
 {
+    /// <summary>
     /// The name a compilation has to carry to reach the SDK's internal attributes. Only for tests
     /// that read diagnostics: anything emitting and loading an assembly needs a unique name instead.
+    /// </summary>
     internal const string SdkInternalsAssembly = "ReadyM.Api.Generators.Tests.Dynamic";
 
     internal sealed class GeneratorRunResult(

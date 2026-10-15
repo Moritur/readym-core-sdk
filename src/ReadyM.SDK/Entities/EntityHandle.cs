@@ -28,7 +28,7 @@ public readonly struct EntityHandle : IEquatable<EntityHandle>
 
     internal RawEntity RawEntity => _rawEntity;
 
-    /// Names the entity in a message without putting its raw id on the public surface.
+    /// <summary>Names the entity in a message without putting its raw id on the public surface.</summary>
     public override string ToString()
         => $"entity {_rawEntity.Id}";
 
@@ -38,7 +38,7 @@ public readonly struct EntityHandle : IEquatable<EntityHandle>
     public bool Is<T>() where T : struct, IArchetypeQueryable
         => _api is not null && _api.HasComponents(_rawEntity, default(T).Components);
 
-    /// The same question asked with a set rather than a type, for the SDK's own bookkeeping.
+    /// <summary>The same question asked with a set rather than a type, for the SDK's own bookkeeping.</summary>
     internal bool Has(ComponentSet components) => _api is not null && _api.HasComponents(_rawEntity, components);
 
     public T As<T>() where T : struct, IArchetypeQueryable
@@ -85,7 +85,7 @@ public readonly struct EntityHandle : IEquatable<EntityHandle>
         return true;
     }
 
-    /// Writes a value of a field, as the game reporting it or as an override of it.
+    /// <summary>Writes a value of a field, as the game reporting it or as an override of it.</summary>
     /// <returns><c>false</c> when the write does not belong on this side.</returns>
     public bool Write<TComponent, TValue>(Field<TComponent, TValue> field, TValue value, WriteKind kind)
         where TComponent : struct, IComponent
@@ -101,7 +101,7 @@ public readonly struct EntityHandle : IEquatable<EntityHandle>
         where TComponent : struct, IComponent
         => _api!.Write(_rawEntity, ref component, field, value, kind);
 
-    /// Whether the game may report this value, which is what a collection asks before changing.
+    /// <summary>Whether the game may report this value, which is what a collection asks before changing.</summary>
     /// <returns><c>false</c> when the write does not belong on this side.</returns>
     public bool Mirrors<TComponent, TValue>(Field<TComponent, TValue> field)
         where TComponent : struct, IComponent
@@ -113,12 +113,12 @@ public readonly struct EntityHandle : IEquatable<EntityHandle>
     internal bool ShouldApplyToGame(Type component)
         => _api!.ShouldApplyToGame(_rawEntity, component);
 
-    /// Writes the whole component, which is what moves it in the index kept on it.
+    /// <summary>Writes the whole component, which is what moves it in the index kept on it.</summary>
     public void ReplaceIndexed<TComponent, TKey>(in TComponent component)
         where TComponent : struct, IIndexedComponent<TKey>
         => _api!.ReplaceIndexed<TComponent, TKey>(_rawEntity, component);
 
-    /// The handle behind an archetype or mixin struct.
+    /// <summary>The handle behind an archetype or mixin struct.</summary>
     public static EntityHandle Of<T>(in T archetype)
         where T : struct, IArchetypeQueryable
         => archetype.Handle;

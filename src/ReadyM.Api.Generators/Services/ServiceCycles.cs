@@ -4,10 +4,10 @@ using Microsoft.CodeAnalysis;
 
 namespace ReadyM.Api.Generators.Services;
 
-/// Finds update constraints that come back on themselves, the same way the SDK does at load.
+/// <summary>Finds update constraints that come back on themselves, the same way the SDK does at load.</summary>
 internal static class ServiceCycles
 {
-    /// One diagnostic per service in a loop, so the editor marks every one of them.
+    /// <summary>One diagnostic per service in a loop, so the editor marks every one of them.</summary>
     public static IEnumerable<Diagnostic> Find(IReadOnlyList<INamedTypeSymbol> services)
     {
         var known = new HashSet<INamedTypeSymbol>(services, SymbolEqualityComparer.Default);

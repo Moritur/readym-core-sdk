@@ -4,7 +4,7 @@ using ReadyM.SDK.Attributes;
 
 namespace ReadyM.SDK.Tests.Client.Fixtures;
 
-/// Stands in for a scope component the relay owns, indexed the way AreaScopeComponent is.
+/// <summary>Stands in for a scope component the relay owns, indexed the way AreaScopeComponent is.</summary>
 internal struct TestAreaScopeComponent : IIndexedComponent<int>
 {
     public int AreaId;
@@ -12,7 +12,7 @@ internal struct TestAreaScopeComponent : IIndexedComponent<int>
     public int GetIndexedValue() => AreaId;
 }
 
-/// An archetype declaring itself a scope, which is all IScope asks for.
+/// <summary>An archetype declaring itself a scope, which is all IScope asks for.</summary>
 [Archetype(replicated: false)]
 [ExplicitComponent(typeof(TestAreaScopeComponent))]
 public readonly partial struct TestArea : IScope

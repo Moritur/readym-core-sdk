@@ -2,7 +2,7 @@
 
 namespace ReadyM.SDK.Archetypes;
 
-/// One component that replicates, and how its changes travel.
+/// <summary>One component that replicates, and how its changes travel.</summary>
 internal readonly struct ReplicatedComponent(Type component, Delivery delivery)
 {
     public Type Component { get; } = component;

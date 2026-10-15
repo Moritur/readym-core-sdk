@@ -4,14 +4,14 @@ using ReadyM.SDK.Attributes;
 
 namespace ReadyM.SDK.Archetypes.Core;
 
-/// A scope for one area of the world, holding what is in it while players are there.
+/// <summary>A scope for one area of the world, holding what is in it while players are there.</summary>
 [Archetype(replicated: true)]
 [ExplicitComponent(typeof(AreaScopeComponent))]
 public readonly partial struct Area : IScope
 {
-    /// Which area this is.
+    /// <summary>Which area this is.</summary>
     [Index]
     public partial AreaId AreaId { get; set; }
-    /// The player whose game simulates what the area holds.
+    /// <summary>The player whose game simulates what the area holds.</summary>
     public partial PlayerId MasterClient { get; set; }
 }

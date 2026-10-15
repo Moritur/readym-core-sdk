@@ -19,7 +19,7 @@ public class RpcAttributeNamesTests(ITestOutputHelper output)
         typeof(ReadyM.Api.Multiplayer.ServerRpcForAttribute).Assembly,
     ];
 
-    /// A client mod cannot reach the server SDK, which is how a baseless class is placed.
+    /// <summary>A client mod cannot reach the server SDK, which is how a baseless class is placed.</summary>
     private static readonly string[] AsAClientMod =
     [
         typeof(ReadyM.Relay.Server.Sdk.Rpc.ServerRpcHandlersBase).Assembly.GetName().Name!,
@@ -43,8 +43,10 @@ public class RpcAttributeNamesTests(ITestOutputHelper output)
         Assert.Contains("PongCode", manifest);
     }
 
+    /// <summary>
     /// Four combinations, because the contracts class and the class implementing it are usually in
     /// different projects and move over at different times.
+    /// </summary>
     [Theory]
     [InlineData(New, NewFor)]
     [InlineData(Old, OldFor)]
@@ -73,8 +75,10 @@ public class RpcAttributeNamesTests(ITestOutputHelper output)
         Assert.Contains("public void SendPong(global::ReadyM.Api.Idents.PlayerId recipient, int value)", generated);
     }
 
+    /// <summary>
     /// The two spellings are one attribute as far as the generator is concerned, so what they write
     /// has to be the same text, not merely similar.
+    /// </summary>
     [Fact]
     public void The_two_spellings_generate_the_same_thing()
     {
@@ -83,7 +87,7 @@ public class RpcAttributeNamesTests(ITestOutputHelper output)
         Assert.Equal(Server(New, NewFor), Server(Old, OldFor));
     }
 
-    /// Naming no contract set at all is still refused, and the message names the new spelling.
+    /// <summary>Naming no contract set at all is still refused, and the message names the new spelling.</summary>
     [Fact]
     public void A_class_naming_no_contract_set_is_still_refused()
     {

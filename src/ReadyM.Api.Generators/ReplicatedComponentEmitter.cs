@@ -15,8 +15,10 @@ using static ReadyM.Api.Generators.DeriveCSharpUtils;
 
 namespace ReadyM.Api.Generators;
 
+/// <summary>
 /// Emits a component that replicates: the dirty and api masks, the change component, the
 /// accessors that mark a field changed, and the serialization either side of the wire.
+/// </summary>
 /// <remarks>
 /// Lifted out of <c>DeriveINetworkedComponentGenerator</c> so the archetype and mixin generators
 /// can reach it too. Generators cannot chain, so a generated component cannot be handed to another
@@ -27,7 +29,7 @@ namespace ReadyM.Api.Generators;
 /// </remarks>
 internal static class ReplicatedComponentEmitter
 {
-    /// A policy is the contract naming who may write the component, or null to leave it unsaid.
+    /// <summary>A policy is the contract naming who may write the component, or null to leave it unsaid.</summary>
     internal static string Emit(DeriveTargetModel model, string? policy = null)
     {
         var info = model.Source;

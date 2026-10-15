@@ -14,10 +14,10 @@ public abstract class ModSystemBase
     /// <param name="time">Total time since server start, in seconds.</param>
     protected readonly struct UpdateTick(float deltaTime, float time)
     {
-        /// The time in seconds since the last tick. 
+        /// <summary>The time in seconds since the last tick.</summary>
         public readonly float DeltaTime = deltaTime;
 
-        /// The time at the beginning of the current frame since application start. 
+        /// <summary>The time at the beginning of the current frame since application start.</summary>
         public readonly float Time = time;
     }
 

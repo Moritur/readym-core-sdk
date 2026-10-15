@@ -34,7 +34,9 @@ public class ModEntryTests
     public void An_assembly_that_declares_none_says_so()
         => Assert.False(ModEntryRegistry.Declares(typeof(IModEntry).Assembly));
 
+    /// <summary>
     /// The whole point: what it asks for in its constructor is resolved, not passed in by the loader.
+    /// </summary>
     [Fact]
     public void The_entry_point_is_built_out_of_the_container()
     {
@@ -51,7 +53,9 @@ public class ModEntryTests
         Assert.True(((ExampleEntry)Init()!).Initialized);
     }
 
+    /// <summary>
     /// Pushed in after the constructor, so it is the folder by the time anything the mod does reads it.
+    /// </summary>
     [Fact]
     public void It_is_told_which_folder_it_was_loaded_from()
     {
@@ -60,7 +64,7 @@ public class ModEntryTests
         Assert.Equal("mods/example", ((ExampleEntry)Init("mods/example")!).ModDirectory);
     }
 
-    /// One instance, so a service taking the entry point and the loader see the same object.
+    /// <summary>One instance, so a service taking the entry point and the loader see the same object.</summary>
     [Fact]
     public void It_is_the_one_the_container_hands_out()
     {

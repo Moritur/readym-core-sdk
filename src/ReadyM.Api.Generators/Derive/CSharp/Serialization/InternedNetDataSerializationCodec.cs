@@ -2,7 +2,9 @@ using System;
 
 namespace ReadyM.Api.Generators.Derive.CSharp.Serialization;
 
+/// <summary>
 /// The network codec for a field marked [Interned]: strings go through InternedStringCodec, everything else is unchanged.
+/// </summary>
 internal sealed class InternedNetDataSerializationCodec(ICSharpSerializationCodec inner) : ICSharpSerializationCodec
 {
     private const string Codec = "global::ReadyM.Api.Multiplayer.Interning.InternedStringCodec";

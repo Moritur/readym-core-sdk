@@ -7,8 +7,10 @@ using ReadyM.SDK.Archetypes.Core;
 
 namespace ReadyM.SDK.Client.Archetypes;
 
+/// <summary>
 /// Runs <see cref="IArchetypeRegistry.ModifyArchetype"/> to collect components of mixins
 /// that extend the built-in archetypes (World, Area, Cell, Player).
+/// </summary>
 internal sealed class ArchetypeExtensionRegistration(
     DefaultWorldArchetypeRegistration world,
     DefaultAreaArchetypeRegistration area,
@@ -32,7 +34,7 @@ internal sealed class ArchetypeExtensionRegistration(
         logger.LogDebug("Added {Count} component(s) from mod shapes to the game's archetypes", applied);
     }
 
-    /// Maps full Archetype type names to the assigned ArchetypeId.
+    /// <summary>Maps full Archetype type names to the assigned ArchetypeId.</summary>
     private Dictionary<string, ArchetypeId> MapArchetypeIds()
     {
         var bound = new Dictionary<string, ArchetypeId>

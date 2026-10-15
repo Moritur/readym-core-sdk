@@ -2,7 +2,7 @@
 
 namespace ReadyM.Api.Generators.Archetypes;
 
-/// Declares that a shape's component replicates, and how its changes travel.
+/// <summary>Declares that a shape's component replicates, and how its changes travel.</summary>
 internal static class ReplicationEmitter
 {
     public static void Emit(SourceWriter writer, DeclarationModel model, Compilation compilation)

@@ -140,7 +140,7 @@ internal class RegistrationAggregatorGenerator : IIncrementalGenerator
         return [$"{prefix}{symbol.Name}.Registration"];
     }
 
-    /// The registration a mod's config produces, unless the analyzer refuses the class.
+    /// <summary>The registration a mod's config produces, unless the analyzer refuses the class.</summary>
     private static ImmutableArray<string> ReadModConfig(GeneratorAttributeSyntaxContext context, CancellationToken ct)
     {
         if (context.TargetSymbol is not INamedTypeSymbol { ContainingType: null } symbol)
@@ -155,7 +155,7 @@ internal class RegistrationAggregatorGenerator : IIncrementalGenerator
         return [$"{prefix}{symbol.Name}.Registration"];
     }
 
-    /// The registration a mod's entry point produces, unless the analyzer refuses the class.
+    /// <summary>The registration a mod's entry point produces, unless the analyzer refuses the class.</summary>
     private static ImmutableArray<string> ReadModEntry(GeneratorAttributeSyntaxContext context, CancellationToken ct)
     {
         if (context.TargetSymbol is not INamedTypeSymbol { ContainingType: null } symbol)

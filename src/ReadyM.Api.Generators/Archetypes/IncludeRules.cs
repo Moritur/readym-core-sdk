@@ -17,8 +17,10 @@ internal sealed class NameClash(string name, string first, string second, Locati
     public Location Location { get; } = location;
 }
 
+/// <summary>
 /// What a shape may include. [Include] composes mixins, as many as it likes. [IncludeArchetype] builds on an archetype,
 /// which is inheritance, and the attribute itself allows one. Either way the shape exposes each name once.
+/// </summary>
 internal static class IncludeRules
 {
     public static readonly DiagnosticDescriptor Clash = new(

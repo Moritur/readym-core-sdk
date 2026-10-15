@@ -6,8 +6,10 @@ using Xunit;
 
 namespace ReadyM.Api.Generators.Tests.Archetypes;
 
+/// <summary>
 /// What a hidden mixin brings onto a shape is hidden there too, so the plumbing it carries does not show up
 /// on every shape that includes it.
+/// </summary>
 public class HiddenIncludeTests(ITestOutputHelper output)
 {
     private const string Hidden =
@@ -77,7 +79,7 @@ public class HiddenIncludeTests(ITestOutputHelper output)
     public void It_all_compiles()
         => Assert.DoesNotContain(Run().OutputDiagnostics, d => d.Severity == DiagnosticSeverity.Error);
 
-    /// The line before each declaration that starts with the text, at least one of them.
+    /// <summary>The line before each declaration that starts with the text, at least one of them.</summary>
     private static List<string> Declarations(string generated, string start)
     {
         var lines = Normalized(generated).Split('\n').Select(line => line.Trim()).ToList();

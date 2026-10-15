@@ -41,20 +41,26 @@ internal abstract class SendComponentDeltaSystemBase<T> : QuerySystem<MetadataCo
 
     protected abstract QueryFilter SetupFilter(QueryFilter filter, SendContext context);
 
+    /// <summary>
     /// Returns a bitmask of player IDs to send to. Bit 0 = PlayerId 0, Bit 1 = PlayerId 1, etc.
     /// This is an optimization to avoid allocating HashSets every tick.
+    /// </summary>
     protected abstract uint SentOwners();
 
-    /// Sends a packet of an owner's deltas to everyone in scope EXCEPT that owner.
+    /// <summary>Sends a packet of an owner's deltas to everyone in scope EXCEPT that owner.</summary>
     protected abstract void SendExceptOwner(PlayerId owner, NetDataWriter data, SendContext context);
 
+    /// <summary>
     /// When true, components touched by the API (ChangedFromApi) additionally have their delta
     /// sent to the entity's own owner, so the server can authoritatively override the owner's state.
     /// An entity the server owns itself has no remote owner to override, so it never gets that copy.
     /// Defaults to false; the server overrides it.
+    /// </summary>
     protected virtual bool SendApiDeltasToOwner => false;
 
+    /// <summary>
     /// Owner-directed send used for API-authored deltas. Only invoked when SendApiDeltasToOwner is true.
+    /// </summary>
     protected virtual void SendToOwner(PlayerId owner, NetDataWriter data, SendContext context) { }
 
     private void CreatePacketHeader(NetDataWriter writer)
@@ -151,10 +157,12 @@ internal abstract class SendComponentDeltaSystemBase<T> : QuerySystem<MetadataCo
             SendToOwner(owner, owned, context);
     }
 
+    /// <summary>
     /// Writes one entity's delta into <paramref name="writer"/>. On a bounded (unreliable) channel,
     /// if the delta would overflow the packet the buffer is rewound, the partial packet is flushed,
     /// a fresh header is written, and the delta is retried once. On an unbounded (reliable) channel
     /// no size cap applies and the delta is written directly (the one-chunk behaviour).
+    /// </summary>
     private void AppendDelta(
         NetDataWriter writer,
         NetworkId netId,

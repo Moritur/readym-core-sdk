@@ -6,8 +6,10 @@ using ReadyM.Api.Mapping.Tags;
 
 namespace ReadyM.Api.Tests;
 
+/// <summary>
 /// The three policies a component carries when it says which way its values travel and nothing
 /// about who owns it. Pull is game to ECS, push is ECS to game, override is a write from the API.
+/// </summary>
 public class PropagationDataPolicyTests
 {
     private struct BothWays : IAlwaysPropagates;
@@ -60,7 +62,7 @@ public class PropagationDataPolicyTests
         Assert.False(policy.CanGameSetLocally(default));
     }
 
-    /// The server's word is applied to the game and nothing on this side writes it back.
+    /// <summary>The server's word is applied to the game and nothing on this side writes it back.</summary>
     [Fact]
     public void A_server_owned_value_is_pushed_and_never_written_here()
     {
@@ -72,7 +74,7 @@ public class PropagationDataPolicyTests
         Assert.False(policy.CanGameSetLocally(default));
     }
 
-    /// Applying a value to the game must not read it straight back out, and the reverse.
+    /// <summary>Applying a value to the game must not read it straight back out, and the reverse.</summary>
     [Fact]
     public void A_propagation_in_flight_does_not_bounce()
     {
@@ -85,7 +87,9 @@ public class PropagationDataPolicyTests
             Assert.False(policy.ShouldEcsCopyToGame(default));
     }
 
+    /// <summary>
     /// A component that says nothing still has no policy, which is what the caller reads as "no rule".
+    /// </summary>
     [Fact]
     public void A_component_that_says_nothing_is_refused()
     {

@@ -59,7 +59,7 @@ internal abstract class PendingActionSchedulerBase
 
     private int _held;
 
-    /// Keeps what other threads queued from running until <see cref="EndHold"/>.
+    /// <summary>Keeps what other threads queued from running until <see cref="EndHold"/>.</summary>
     public void BeginHold()
     {
         EnsureThread();

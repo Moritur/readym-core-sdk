@@ -7,13 +7,13 @@ using ReadyM.Api.Loader;
 
 namespace ReadyM.SDK.Mods;
 
-/// Holds the config classes each mod assembly declares, until there is a folder to read them from.
+/// <summary>Holds the config classes each mod assembly declares, until there is a folder to read them from.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class ModConfigRegistry
 {
     private static readonly ConcurrentDictionary<Assembly, ConcurrentDictionary<Type, Declaration>> Declared = new();
 
-    /// Called by generated code for each [ModConfig] class an assembly declares.
+    /// <summary>Called by generated code for each [ModConfig] class an assembly declares.</summary>
     public static void Declare<TConfig>(string fileName) where TConfig : class, new()
         => Declared.GetOrAdd(typeof(TConfig).Assembly, _ => new ConcurrentDictionary<Type, Declaration>())
             [typeof(TConfig)] = new Declaration<TConfig>(fileName);

@@ -2,7 +2,7 @@
 
 namespace ReadyM.SDK.Services;
 
-/// Where a service's update sits relative to the others.
+/// <summary>Where a service's update sits relative to the others.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public readonly struct ServiceOrder(int priority, Type[]? before, Type[]? after)
 {

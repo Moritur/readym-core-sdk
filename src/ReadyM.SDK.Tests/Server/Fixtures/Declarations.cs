@@ -21,7 +21,7 @@ public readonly partial struct Vitals
     public partial int MaxHp { get; set; }
 }
 
-/// Its value is a managed reference, so it can never live in a pinned heap.
+/// <summary>Its value is a managed reference, so it can never live in a pinned heap.</summary>
 [ArchetypeMixin]
 public readonly partial struct Named
 {
@@ -44,7 +44,7 @@ public readonly partial struct Boulder
     public partial float Mass { get; set; }
 }
 
-/// An archetype that is nothing but a position, so it is a strict subset of the other two.
+/// <summary>An archetype that is nothing but a position, so it is a strict subset of the other two.</summary>
 [Archetype(replicated: false)]
 [Include(typeof(Position))]
 public readonly partial struct Placed;
@@ -81,7 +81,7 @@ public readonly partial struct Mood
     public partial float Spirit { get; set; }
 }
 
-/// Carries all six, and nothing of its own, so a query over any subset of them matches it.
+/// <summary>Carries all six, and nothing of its own, so a query over any subset of them matches it.</summary>
 [Archetype(replicated: false)]
 [Include(typeof(Position))]
 [Include(typeof(Vitals))]
@@ -99,24 +99,26 @@ public readonly partial struct QuestGiver
     public partial int QuestId { get; set; }
 }
 
+/// <summary>
 /// Everything an Npc is, plus a quest. A query for Npc reaches these too; one for QuestNpc does not
 /// reach a plain Npc.
+/// </summary>
 [Archetype(replicated: false)]
 [IncludeArchetype(typeof(Npc))]
 [Include(typeof(QuestGiver))]
 public readonly partial struct QuestNpc;
 
-/// Carries nothing at all. Only its marker makes it findable, which is the point of having one.
+/// <summary>Carries nothing at all. Only its marker makes it findable, which is the point of having one.</summary>
 [Archetype(replicated: false)]
 public readonly partial struct Landmark;
 
-/// Everything a Landmark is, plus a position.
+/// <summary>Everything a Landmark is, plus a position.</summary>
 [Archetype(replicated: false)]
 [IncludeArchetype(typeof(Landmark))]
 [Include(typeof(Position))]
 public readonly partial struct PlacedLandmark;
 
-/// Stands in for a component the relay already owns: PascalCase members, one of them readonly.
+/// <summary>Stands in for a component the relay already owns: PascalCase members, one of them readonly.</summary>
 internal struct RelayMetadataComponent : IComponent
 {
     public readonly int NetId;
@@ -137,13 +139,13 @@ public readonly partial struct Metadata
     public partial int Owner { get; set; }
 }
 
-/// An archetype over storage the relay owns, so it carries no marker.
+/// <summary>An archetype over storage the relay owns, so it carries no marker.</summary>
 [Archetype(replicated: false)]
 [Include(typeof(Position))]
 [Include(typeof(Metadata))]
 public readonly partial struct Networked;
 
-/// Indexed by a property the SDK declares, so the component behind it is generated and mod-owned.
+/// <summary>Indexed by a property the SDK declares, so the component behind it is generated and mod-owned.</summary>
 [ArchetypeMixin]
 public readonly partial struct Ticketed
 {
@@ -158,7 +160,7 @@ public readonly partial struct Ticketed
 [Include(typeof(Ticketed))]
 public readonly partial struct Passenger;
 
-/// Stands in for a component the relay owns and indexes itself, the way MetadataComponent is.
+/// <summary>Stands in for a component the relay owns and indexes itself, the way MetadataComponent is.</summary>
 internal struct RelayNetIdComponent : IIndexedComponent<int>
 {
     public int NetId;
@@ -180,7 +182,7 @@ public readonly partial struct Networked2
 [Include(typeof(Networked2))]
 public readonly partial struct Replicated;
 
-/// Stands in for a scope component the relay owns, indexed the way AreaScopeComponent is.
+/// <summary>Stands in for a scope component the relay owns, indexed the way AreaScopeComponent is.</summary>
 internal struct TestAreaScopeComponent : IIndexedComponent<int>
 {
     public int AreaId;
@@ -195,12 +197,12 @@ public readonly partial struct TestArea : IScope
     public partial int AreaId { get; set; }
 }
 
-/// Stands in for a tag the relay's own systems ask about, such as whether an owner may change.
+/// <summary>Stands in for a tag the relay's own systems ask about, such as whether an owner may change.</summary>
 public readonly struct TestWatchedTag : Friflo.Engine.ECS.ITag;
 
 public readonly struct TestSecondTag : Friflo.Engine.ECS.ITag;
 
-/// A shape whose entities carry tags from the moment they exist.
+/// <summary>A shape whose entities carry tags from the moment they exist.</summary>
 [Archetype(replicated: false)]
 [Tag(typeof(TestWatchedTag))]
 [Tag(typeof(TestSecondTag))]
@@ -209,7 +211,7 @@ public readonly partial struct Watched
     public partial int Marker { get; set; }
 }
 
-/// A scope that sits inside another, which is what a cell is to an area.
+/// <summary>A scope that sits inside another, which is what a cell is to an area.</summary>
 [Archetype(replicated: false)]
 public readonly partial struct TestRoom : IScope
 {
@@ -227,7 +229,7 @@ public readonly partial struct Patrol
 [Include(typeof(Patrol))]
 public readonly partial struct Guard;
 
-/// A mixin whose values go over the wire, which is what makes an entity of it networked.
+/// <summary>A mixin whose values go over the wire, which is what makes an entity of it networked.</summary>
 [ArchetypeMixin]
 [Replicated]
 [Propagates(Propagation.OwnershipBased)]
@@ -236,29 +238,31 @@ public readonly partial struct Telemetry
     public partial int Ticks { get; set; }
 }
 
-/// A shape the server creates over the network.
+/// <summary>A shape the server creates over the network.</summary>
 [Archetype(replicated: true)]
 [Include(typeof(Position))]
 [Include(typeof(Telemetry))]
 public readonly partial struct Beacon;
 
-/// The same, for the case of one no game registered an archetype for.
+/// <summary>The same, for the case of one no game registered an archetype for.</summary>
 [Archetype(replicated: true)]
 [Include(typeof(Telemetry))]
 public readonly partial struct Unbound;
 
+/// <summary>
 /// Beacon's components on an entity that never leaves the server, which is what Oblivion's Spawner is.
+/// </summary>
 [Archetype(replicated: false)]
 [Include(typeof(Position))]
 [Include(typeof(Telemetry))]
 public readonly partial struct Probe;
 
-/// Replicated with nothing that sends, so the entity is the whole of what crosses.
+/// <summary>Replicated with nothing that sends, so the entity is the whole of what crosses.</summary>
 [Archetype(replicated: true)]
 [Include(typeof(Position))]
 public readonly partial struct Waypoint;
 
-/// Stands in for a component the relay indexes but a game registered without its key.
+/// <summary>Stands in for a component the relay indexes but a game registered without its key.</summary>
 internal struct UnkeyedComponent : IIndexedComponent<int>
 {
     public int Key;

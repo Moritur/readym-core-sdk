@@ -1,7 +1,9 @@
 namespace ReadyM.SDK.Attributes;
 
+/// <summary>
 /// Names the member this property reads, for a shape whose component is given by
 /// <see cref="ExplicitComponentAttribute"/> and whose names do not line up.
+/// </summary>
 [AttributeUsage(AttributeTargets.Property)]
 internal sealed class ExplicitMemberAttribute(string member) : Attribute
 {

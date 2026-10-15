@@ -2,7 +2,7 @@
 
 namespace ReadyM.SDK.Tests.Client;
 
-/// Every width a client query goes to, reading and writing through each shape it names.
+/// <summary>Every width a client query goes to, reading and writing through each shape it names.</summary>
 public class ClientMultiShapeQueryTests : ClientSdkTest
 {
     private Wanderer Spawned()
@@ -57,7 +57,7 @@ public class ClientMultiShapeQueryTests : ClientSdkTest
         AssertWritten(wanderer, 1);
     }
 
-    /// The path a netstandard2.0 client always takes, and the one this arity was written for.
+    /// <summary>The path a netstandard2.0 client always takes, and the one this arity was written for.</summary>
     [Fact]
     public void The_identity_path_over_one_shapes_reads_and_writes()
     {
@@ -112,7 +112,7 @@ public class ClientMultiShapeQueryTests : ClientSdkTest
         AssertWritten(wanderer, 2);
     }
 
-    /// The path a netstandard2.0 client always takes, and the one this arity was written for.
+    /// <summary>The path a netstandard2.0 client always takes, and the one this arity was written for.</summary>
     [Fact]
     public void The_identity_path_over_two_shapes_reads_and_writes()
     {
@@ -171,7 +171,7 @@ public class ClientMultiShapeQueryTests : ClientSdkTest
         AssertWritten(wanderer, 3);
     }
 
-    /// The path a netstandard2.0 client always takes, and the one this arity was written for.
+    /// <summary>The path a netstandard2.0 client always takes, and the one this arity was written for.</summary>
     [Fact]
     public void The_identity_path_over_three_shapes_reads_and_writes()
     {
@@ -234,7 +234,7 @@ public class ClientMultiShapeQueryTests : ClientSdkTest
         AssertWritten(wanderer, 4);
     }
 
-    /// The path a netstandard2.0 client always takes, and the one this arity was written for.
+    /// <summary>The path a netstandard2.0 client always takes, and the one this arity was written for.</summary>
     [Fact]
     public void The_identity_path_over_four_shapes_reads_and_writes()
     {
@@ -301,7 +301,7 @@ public class ClientMultiShapeQueryTests : ClientSdkTest
         AssertWritten(wanderer, 5);
     }
 
-    /// The path a netstandard2.0 client always takes, and the one this arity was written for.
+    /// <summary>The path a netstandard2.0 client always takes, and the one this arity was written for.</summary>
     [Fact]
     public void The_identity_path_over_five_shapes_reads_and_writes()
     {
@@ -372,7 +372,7 @@ public class ClientMultiShapeQueryTests : ClientSdkTest
         AssertWritten(wanderer, 6);
     }
 
-    /// The path a netstandard2.0 client always takes, and the one this arity was written for.
+    /// <summary>The path a netstandard2.0 client always takes, and the one this arity was written for.</summary>
     [Fact]
     public void The_identity_path_over_six_shapes_reads_and_writes()
     {
@@ -406,7 +406,7 @@ public class ClientMultiShapeQueryTests : ClientSdkTest
         AssertWritten(wanderer, 6);
     }
 
-    /// Every shape asked for has to be present, so a narrower entity is skipped.
+    /// <summary>Every shape asked for has to be present, so a narrower entity is skipped.</summary>
     [Fact]
     public void An_entity_missing_one_of_the_shapes_is_not_visited()
     {
@@ -420,7 +420,7 @@ public class ClientMultiShapeQueryTests : ClientSdkTest
         Assert.Equal(0, count);
     }
 
-    /// Order is the caller's, so the same shapes asked for backwards land in the right names.
+    /// <summary>Order is the caller's, so the same shapes asked for backwards land in the right names.</summary>
     [Fact]
     public void The_order_asked_for_is_the_order_handed_back()
     {

@@ -41,7 +41,7 @@ internal static class HandleEmitter
         writer.Line();
         writer.Line($"{ArchetypeNames.ComponentSet} {ArchetypeNames.Queryable}.Components => {model.QualifiedAccessors}.Components;");
         writer.Line();
-        writer.Line("/// This entity, which it already is: a loop over this shape hands over the shape itself.");
+        writer.Line("/// <summary>This entity, which it already is: a loop over this shape hands over the shape itself.</summary>");
         writer.Line("/// <remarks>");
         writer.Line("/// Here so taking something out of a loop reads the same whichever way the loop walks. Whether a");
         writer.Line("/// shape is walked by chunk follows from what it includes, which the call site cannot see and which");
@@ -74,7 +74,7 @@ internal static class HandleEmitter
         };
     }
 
-    /// The modifier the declaration used, which the implementing part has to repeat.
+    /// <summary>The modifier the declaration used, which the implementing part has to repeat.</summary>
     private static string Keyword(AccessorModel accessor) => accessor.Accessibility switch
     {
         Microsoft.CodeAnalysis.Accessibility.Private => "private",

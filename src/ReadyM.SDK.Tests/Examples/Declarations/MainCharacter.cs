@@ -12,7 +12,7 @@ public readonly partial struct MainCharacter
     public partial PlayerId PlayerId { get; } // accessor declared directly: goes into the default component
 }
 
-/// A main character that carries equipment. What an optional include used to say.
+/// <summary>A main character that carries equipment. What an optional include used to say.</summary>
 [Archetype(replicated: false)]
 [IncludeArchetype(typeof(MainCharacter))]
 [Include(typeof(Equipment))]

@@ -29,7 +29,7 @@ internal sealed class ChunkBuffer
     // actually asks about.
     private EntityStore? _store;
 
-    /// How many components each chunk carries, which is how many the query asked for.
+    /// <summary>How many components each chunk carries, which is how many the query asked for.</summary>
     internal int Width { get; private set; }
 
     internal int ChunkCount { get; private set; }
@@ -112,7 +112,7 @@ internal sealed class ChunkBuffer
 
     internal ReadOnlySpan<ChunkSlot> SlotsOf(int chunk) => new(_slots, chunk * Width, Width);
 
-    /// The entity at a position, however this half holds them.
+    /// <summary>The entity at a position, however this half holds them.</summary>
     internal ReadOnlySpan<RawEntity> EntitiesOf(int chunk)
     {
         var ids = _ids[chunk];

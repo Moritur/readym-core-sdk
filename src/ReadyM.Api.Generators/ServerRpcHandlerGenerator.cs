@@ -39,8 +39,10 @@ internal class ServerRpcHandlerGenerator : IIncrementalGenerator
         node is ClassDeclarationSyntax cls &&
         cls.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
 
+    /// <summary>
     /// The class, plus what its target lets the registration carry. A pair rather than a symbol,
     /// so the pipeline is never handed a whole compilation to compare.
+    /// </summary>
     private static (INamedTypeSymbol? Symbol, bool ModuleInitializer) Transform(
         GeneratorSyntaxContext context, CancellationToken _)
     {

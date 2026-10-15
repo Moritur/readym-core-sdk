@@ -5,7 +5,7 @@ using ReadyM.Api.Mapping.Tags;
 
 namespace ReadyM.SDK.Archetypes.Access;
 
-/// Strongly typed helper for a field on an archetype.
+/// <summary>Strongly typed helper for a field on an archetype.</summary>
 public readonly struct Value<TShape, TValue>
     where TShape : struct, IArchetypeQueryable
 {
@@ -14,7 +14,7 @@ public readonly struct Value<TShape, TValue>
     internal Value(ValueAccess<TValue> access) => Access = access;
 }
 
-/// Called by generated code.
+/// <summary>Called by generated code.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class Value
 {
@@ -23,7 +23,7 @@ public static class Value
         where TComponent : struct, IReadyComponent
         => new(new ValueAccess<TComponent, TValue>(field));
 
-    /// For the one value a component is indexed by, which has to be written back whole to move it.
+    /// <summary>For the one value a component is indexed by, which has to be written back whole to move it.</summary>
     public static Value<TShape, TKey> OfIndexed<TShape, TComponent, TKey>(Field<TComponent, TKey> field)
         where TShape : struct, IArchetypeQueryable
         where TComponent : struct, IReadyComponent, IIndexedComponent<TKey>

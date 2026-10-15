@@ -5,9 +5,11 @@ using Xunit;
 
 namespace ReadyM.Api.Generators.Tests.Services;
 
+/// <summary>
 /// What [UpdateOrder] puts in the registration, and the constraints it refuses outright. A cycle is
 /// caught here rather than at load, since an edge is a typeof and one spanning assemblies would need
 /// those assemblies to reference each other.
+/// </summary>
 public class UpdateOrderTests(ITestOutputHelper output)
 {
     private static readonly Assembly[] Sdk = [typeof(SDK.Attributes.ServiceAttribute).Assembly];
@@ -47,7 +49,9 @@ public class UpdateOrderTests(ITestOutputHelper output)
 
     // -- what it writes ----------------------------------------------------------------------------
 
+    /// <summary>
     /// A service that says nothing registers as it always did, so nothing carries an order it never set.
+    /// </summary>
     [Fact]
     public void Saying_nothing_registers_without_an_order()
         => Assert.Contains("ServiceRegistry.Register<global::Mod.Hud>();", Generated(Plain));
@@ -90,7 +94,7 @@ public class UpdateOrderTests(ITestOutputHelper output)
         Assert.All(reported.Where(d => d.Id == id), d => Assert.Equal(DiagnosticSeverity.Error, d.Severity));
     }
 
-    /// Ordering against something that never ticks reads as though it does something.
+    /// <summary>Ordering against something that never ticks reads as though it does something.</summary>
     [Fact]
     public void Ordering_against_a_non_service_is_refused()
         => AssertReports("READYM033", """
@@ -118,7 +122,7 @@ public class UpdateOrderTests(ITestOutputHelper output)
             }
             """);
 
-    /// There is no update to order, so the attribute says nothing and looks as though it does.
+    /// <summary>There is no update to order, so the attribute says nothing and looks as though it does.</summary>
     [Fact]
     public void An_order_on_a_service_that_does_not_update_is_refused()
         => AssertReports("READYM034", """
@@ -130,7 +134,7 @@ public class UpdateOrderTests(ITestOutputHelper output)
             }
             """);
 
-    /// No order satisfies them, so it is refused where it is written rather than thrown at load.
+    /// <summary>No order satisfies them, so it is refused where it is written rather than thrown at load.</summary>
     [Fact]
     public void A_cycle_is_refused()
         => AssertReports("READYM035", """
@@ -149,7 +153,7 @@ public class UpdateOrderTests(ITestOutputHelper output)
             }
             """);
 
-    /// Both ends are marked, so the editor shows the loop wherever you are standing in it.
+    /// <summary>Both ends are marked, so the editor shows the loop wherever you are standing in it.</summary>
     [Fact]
     public void Every_service_in_a_cycle_is_marked()
     {

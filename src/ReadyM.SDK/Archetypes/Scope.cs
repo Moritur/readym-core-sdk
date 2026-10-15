@@ -3,8 +3,10 @@ using ReadyM.SDK.Entities;
 
 namespace ReadyM.SDK.Archetypes;
 
+/// <summary>
 /// One scope, named by whichever shape declared itself one. A shape converts to this on its own, so
 /// a query reads <c>InScope(area)</c> rather than naming the handle behind it.
+/// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public readonly struct Scope
 {

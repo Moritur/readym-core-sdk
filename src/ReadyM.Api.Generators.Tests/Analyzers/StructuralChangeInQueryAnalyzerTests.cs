@@ -112,7 +112,7 @@ public class StructuralChangeInQueryAnalyzerTests(ITestOutputHelper output)
                                           entities.Create<Npc>();
                           """);
 
-    /// The client half is held to the same rule, and the analyzer names neither half specially.
+    /// <summary>The client half is held to the same rule, and the analyzer names neither half specially.</summary>
     [Fact]
     public void The_rule_applies_to_the_client_half_too()
         => AssertReported("""

@@ -305,7 +305,7 @@ internal class ServerRpcContractGenerator : IIncrementalGenerator
         public List<IMethodSymbol> Methods { get; } = methods;
     }
 
-    /// The keyword for a partial method's declared accessibility, which has to repeat on every part.
+    /// <summary>The keyword for a partial method's declared accessibility, which has to repeat on every part.</summary>
     private static string Keyword(Accessibility accessibility) => accessibility switch
     {
         Accessibility.Public => "public",

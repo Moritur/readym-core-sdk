@@ -25,7 +25,7 @@ public class ComponentSetTests : ClientSdkTest
         Assert.Empty(ComponentSet.Empty.Types);
     }
 
-    /// Recognising a shape asks about the head first and confirms the rest only when it is there.
+    /// <summary>Recognising a shape asks about the head first and confirms the rest only when it is there.</summary>
     [Fact]
     public void A_set_splits_into_the_first_component_and_the_others()
     {
@@ -35,7 +35,7 @@ public class ComponentSetTests : ClientSdkTest
         Assert.Equal([typeof(PlacementComponent), typeof(HealthComponent)], set.Rest!.Types);
     }
 
-    /// Nothing is gained by asking the same question twice.
+    /// <summary>Nothing is gained by asking the same question twice.</summary>
     [Fact]
     public void A_set_of_one_is_its_own_head_and_has_no_rest()
     {
@@ -45,8 +45,10 @@ public class ComponentSetTests : ClientSdkTest
         Assert.Null(set.Rest);
     }
 
+    /// <summary>
     /// The split is fixed when the set is built, so the memo that resolves it stays keyed on one
     /// instance per shape.
+    /// </summary>
     [Fact]
     public void The_split_is_the_same_every_time_it_is_asked_for()
     {

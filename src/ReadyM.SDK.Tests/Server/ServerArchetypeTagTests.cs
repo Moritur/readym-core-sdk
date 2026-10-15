@@ -85,7 +85,7 @@ public class ServerArchetypeTagTests : ServerSdkTest
         Assert.Equal([Watched, Second], Relay.TagsOn(ArchetypeOf<Fixtures.Watched>()));
     }
 
-    /// Interned by component set, so this is the id the create already used rather than a new one.
+    /// <summary>Interned by component set, so this is the id the create already used rather than a new one.</summary>
     private ArchetypeId ArchetypeOf<T>() where T : struct, IArchetypeQueryable
         => Relay.RegisterArchetype(ComponentsOf<T>().Types);
 }

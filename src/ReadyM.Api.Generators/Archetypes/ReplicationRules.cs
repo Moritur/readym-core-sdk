@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
-/// Checks what a shape asks to replicate, before anything is emitted against it.
+/// <summary>Checks what a shape asks to replicate, before anything is emitted against it.</summary>
 internal static class ReplicationRules
 {
     public static readonly DiagnosticDescriptor NothingToReplicate = new(
@@ -83,7 +83,7 @@ internal static class ReplicationRules
         DiagnosticSeverity.Error,
         isEnabledByDefault: true);
 
-    /// What a shape says about propagating, and whether it is in a position to say it.
+    /// <summary>What a shape says about propagating, and whether it is in a position to say it.</summary>
     public static ImmutableArray<Diagnostic> CheckPropagation(DeclarationModel model)
     {
         var at = model.Symbol.Locations.FirstOrDefault() ?? Location.None;

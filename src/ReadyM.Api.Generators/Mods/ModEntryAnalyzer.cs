@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace ReadyM.Api.Generators.Mods;
 
-/// Explains what a <c>[ModEntry]</c> class got wrong before the generator silently writes nothing.
+/// <summary>Explains what a <c>[ModEntry]</c> class got wrong before the generator silently writes nothing.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ModEntryAnalyzer : DiagnosticAnalyzer
 {

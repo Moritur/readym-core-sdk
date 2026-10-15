@@ -3,8 +3,10 @@ using IComponent = Friflo.Engine.ECS.IComponent;
 
 namespace ReadyM.SDK.Archetypes;
 
+/// <summary>
 /// Reaching an entity's components by its id, for the one case that has no handle: an entity the
 /// host built and is telling the SDK about.
+/// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 internal interface IComponentsById
 {

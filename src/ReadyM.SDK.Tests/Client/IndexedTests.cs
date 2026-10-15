@@ -5,7 +5,7 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
-/// Shapes found by a value rather than by walking, and the writes that keep that possible.
+/// <summary>Shapes found by a value rather than by walking, and the writes that keep that possible.</summary>
 public class IndexedTests : ClientSdkTest
 {
     // -- indexed by a property the SDK declares ----------------------------------------------------
@@ -47,7 +47,7 @@ public class IndexedTests : ClientSdkTest
         Assert.Equal(8, found.Ticket);
     }
 
-    /// The same hazard through a value token, which is the only way a client can write at all.
+    /// <summary>The same hazard through a value token, which is the only way a client can write at all.</summary>
     [Fact]
     public void Overriding_the_value_moves_the_entity_in_the_index()
     {
@@ -61,7 +61,7 @@ public class IndexedTests : ClientSdkTest
         Assert.Equal(8, found.Slot);
     }
 
-    /// Overriding anything else on an indexed component must leave the index where it was.
+    /// <summary>Overriding anything else on an indexed component must leave the index where it was.</summary>
     [Fact]
     public void Overriding_another_value_leaves_the_index_alone()
     {
@@ -74,7 +74,7 @@ public class IndexedTests : ClientSdkTest
         Assert.Equal(2, found.Deck);
     }
 
-    /// Writing a value that is not the index must not disturb it.
+    /// <summary>Writing a value that is not the index must not disturb it.</summary>
     [Fact]
     public void Writing_another_value_leaves_the_index_alone()
     {
@@ -123,7 +123,7 @@ public class IndexedTests : ClientSdkTest
         Assert.True(Entities.TryLookup<Tagged, string>("south", out _));
     }
 
-    /// Two shapes on one entity, each indexed on its own component.
+    /// <summary>Two shapes on one entity, each indexed on its own component.</summary>
     [Fact]
     public void Two_indexes_on_one_entity_stay_independent()
     {

@@ -12,7 +12,7 @@ internal static class ExtensionNativeInit
 
     public static void Use(IEntityApi api) => _api = api;
 
-    /// Called for every entity of a built-in archetype.
+    /// <summary>Called for every entity of a built-in archetype.</summary>
     /// <param name="local">False for an entity that was created elsewhere and was replicated here.</param>
     public static void Run(RawEntity entity, IComponentsById components, bool local)
     {
@@ -28,7 +28,7 @@ internal static class ExtensionNativeInit
         CreateHandlerRegistry.RunAll(new EntityHandle(entity, _api));
     }
 
-    /// Worked out once, after every mod has registered its shapes.
+    /// <summary>Worked out once, after every mod has registered its shapes.</summary>
     private static Type[] Candidates(Func<Type, bool> wanted)
     {
         var found = new List<Type>();

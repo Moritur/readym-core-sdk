@@ -24,13 +24,13 @@ public struct EcsApiPointers
     /// <summary>Writes a whole component, keeping the index the owning side holds for it current.</summary>
     public required IntPtr SetComponent;
 
-    /// Finds the entity whose indexed component holds a value.
+    /// <summary>Finds the entity whose indexed component holds a value.</summary>
     public required IntPtr FindByIndex;
 
-    /// The entities a scope holds that carry a component set.
+    /// <summary>The entities a scope holds that carry a component set.</summary>
     public required IntPtr QueryInScope;
 
-    /// Creates an entity held by a scope.
+    /// <summary>Creates an entity held by a scope.</summary>
     public required IntPtr CreateLocalEntityInScope;
     public required IntPtr CreateNetworkedEntityInScope;
     public required IntPtr IsEntityAlive;
@@ -40,7 +40,7 @@ public struct EcsApiPointers
     public required IntPtr CreateCellScopeEntity;
     public required IntPtr TryGetEntityCell;
 
-    /// The scope an entity sits in, one step up.
+    /// <summary>The scope an entity sits in, one step up.</summary>
     public required IntPtr TryGetEntityScope;
 
     /// <summary>

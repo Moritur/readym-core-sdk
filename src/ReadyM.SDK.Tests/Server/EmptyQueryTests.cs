@@ -34,7 +34,7 @@ public class EmptyQueryTests : ServerSdkTest
         Assert.Equal(0, count);
     }
 
-    /// The chunk path is what a foreach over a shape with a view binds, so it needs the same.
+    /// <summary>The chunk path is what a foreach over a shape with a view binds, so it needs the same.</summary>
     [Fact]
     public void A_default_query_crosses_nothing()
     {
@@ -78,8 +78,10 @@ public class EmptyQueryTests : ServerSdkTest
         Assert.Equal(0, count);
     }
 
+    /// <summary>
     /// A real query narrowed to a scope that was never found matches nothing, which is the case a
     /// property hits when there is no current area.
+    /// </summary>
     [Fact]
     public void A_query_scoped_to_nothing_visits_nothing()
     {
@@ -135,8 +137,10 @@ public class EmptyQueryTests : ServerSdkTest
         Assert.Equal(1, Relay.DeleteCalls);
     }
 
+    /// <summary>
     /// The other way a scoped query ends up with nothing to look in: a real scope, but a query that
     /// was never given a world.
+    /// </summary>
     [Fact]
     public void A_default_query_narrowed_to_a_real_scope_visits_nothing()
     {

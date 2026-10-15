@@ -8,7 +8,7 @@ using ReadyM.SDK.Chunks;
 
 namespace ReadyM.SDK.Client.Entities;
 
-/// Every entity carrying all 2 shapes, without an archetype that names them.
+/// <summary>Every entity carrying all 2 shapes, without an archetype that names them.</summary>
 public readonly struct EntityQuery<T1, T2>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -26,7 +26,7 @@ public readonly struct EntityQuery<T1, T2>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public IdentityEnumerator Identities() => new(_context, Components);
 
-    /// Narrows the query to the entities one scope holds.
+    /// <summary>Narrows the query to the entities one scope holds.</summary>
     public ScopedQuery<T1, T2> InScope(Scope scope) => new(_context, scope);
 
 #if NET
@@ -88,7 +88,7 @@ public readonly struct EntityQuery<T1, T2>
     }
 }
 
-/// Every entity carrying all 3 shapes, without an archetype that names them.
+/// <summary>Every entity carrying all 3 shapes, without an archetype that names them.</summary>
 public readonly struct EntityQuery<T1, T2, T3>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -108,7 +108,7 @@ public readonly struct EntityQuery<T1, T2, T3>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public IdentityEnumerator Identities() => new(_context, Components);
 
-    /// Narrows the query to the entities one scope holds.
+    /// <summary>Narrows the query to the entities one scope holds.</summary>
     public ScopedQuery<T1, T2, T3> InScope(Scope scope) => new(_context, scope);
 
 #if NET
@@ -171,7 +171,7 @@ public readonly struct EntityQuery<T1, T2, T3>
     }
 }
 
-/// Every entity carrying all 4 shapes, without an archetype that names them.
+/// <summary>Every entity carrying all 4 shapes, without an archetype that names them.</summary>
 public readonly struct EntityQuery<T1, T2, T3, T4>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -193,7 +193,7 @@ public readonly struct EntityQuery<T1, T2, T3, T4>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public IdentityEnumerator Identities() => new(_context, Components);
 
-    /// Narrows the query to the entities one scope holds.
+    /// <summary>Narrows the query to the entities one scope holds.</summary>
     public ScopedQuery<T1, T2, T3, T4> InScope(Scope scope) => new(_context, scope);
 
 #if NET
@@ -257,7 +257,7 @@ public readonly struct EntityQuery<T1, T2, T3, T4>
     }
 }
 
-/// Every entity carrying all 5 shapes, without an archetype that names them.
+/// <summary>Every entity carrying all 5 shapes, without an archetype that names them.</summary>
 public readonly struct EntityQuery<T1, T2, T3, T4, T5>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -281,7 +281,7 @@ public readonly struct EntityQuery<T1, T2, T3, T4, T5>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public IdentityEnumerator Identities() => new(_context, Components);
 
-    /// Narrows the query to the entities one scope holds.
+    /// <summary>Narrows the query to the entities one scope holds.</summary>
     public ScopedQuery<T1, T2, T3, T4, T5> InScope(Scope scope) => new(_context, scope);
 
 #if NET
@@ -346,7 +346,7 @@ public readonly struct EntityQuery<T1, T2, T3, T4, T5>
     }
 }
 
-/// Every entity carrying all 6 shapes, without an archetype that names them.
+/// <summary>Every entity carrying all 6 shapes, without an archetype that names them.</summary>
 public readonly struct EntityQuery<T1, T2, T3, T4, T5, T6>
     where T1 : struct, IArchetypeQueryable
     where T2 : struct, IArchetypeMixin
@@ -372,7 +372,7 @@ public readonly struct EntityQuery<T1, T2, T3, T4, T5, T6>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public IdentityEnumerator Identities() => new(_context, Components);
 
-    /// Narrows the query to the entities one scope holds.
+    /// <summary>Narrows the query to the entities one scope holds.</summary>
     public ScopedQuery<T1, T2, T3, T4, T5, T6> InScope(Scope scope) => new(_context, scope);
 
 #if NET

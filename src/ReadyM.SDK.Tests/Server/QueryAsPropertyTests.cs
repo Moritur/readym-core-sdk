@@ -13,7 +13,7 @@ namespace ReadyM.SDK.Tests.Server;
 /// </remarks>
 public class QueryAsPropertyTests : ServerSdkTest
 {
-    /// What a game api would expose in place of IEnumerable.
+    /// <summary>What a game api would expose in place of IEnumerable.</summary>
     private EntityQuery<Npc> AllNpcs => Entities.Query<Npc>();
 
     [Fact]

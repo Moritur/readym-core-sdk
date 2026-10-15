@@ -3,8 +3,10 @@ using ReadyM.SDK.Attributes;
 
 namespace ReadyM.SDK.Tests.Client.Fixtures;
 
+/// <summary>
 /// Stands in for a networked component: the list is private and reached only through methods, so
 /// every write stays tracked.
+/// </summary>
 internal struct SequencesComponent : IComponent
 {
     private List<int> _started;
@@ -16,7 +18,7 @@ internal struct SequencesComponent : IComponent
 
     public int GetStarted(int index) => _started[index];
 
-    /// A ref struct over the component's own storage, which is what a native collection hands back.
+    /// <summary>A ref struct over the component's own storage, which is what a native collection hands back.</summary>
     public ReadOnlySpan<int> GetStartedSpan() => _started is null ? default : _started.ToArray();
 
     public void AddStarted(in int value)
@@ -34,7 +36,7 @@ internal struct SequencesComponent : IComponent
         _changes++;
     }
 
-    /// Replication plumbing, which a shape must never gain.
+    /// <summary>Replication plumbing, which a shape must never gain.</summary>
     public void Started_SetFromApi(List<int> value, int id) => _started = value;
 
     public void StartedNotifyChanged(int id) => _changes++;
@@ -46,7 +48,7 @@ internal struct SequencesComponent : IComponent
 [ExplicitCollection("Started")]
 public readonly partial struct Sequences;
 
-/// The archetype a core exposes, which mods extend without redeclaring.
+/// <summary>The archetype a core exposes, which mods extend without redeclaring.</summary>
 [Archetype(replicated: true)]
 [ExplicitComponent(typeof(CoreMetadataComponent))]
 public readonly partial struct CoreArea
@@ -54,7 +56,7 @@ public readonly partial struct CoreArea
     public partial int Owner { get; set; }
 }
 
-/// A mod adding its own mixin to every area it creates.
+/// <summary>A mod adding its own mixin to every area it creates.</summary>
 [ArchetypeMixin]
 [Extends(typeof(CoreArea))]
 public readonly partial struct Weather
@@ -62,7 +64,7 @@ public readonly partial struct Weather
     public partial int Storm { get; set; }
 }
 
-/// A second mod doing the same, which must not collide with the first.
+/// <summary>A second mod doing the same, which must not collide with the first.</summary>
 [ArchetypeMixin]
 [Extends(typeof(CoreArea))]
 public readonly partial struct Music
@@ -70,7 +72,7 @@ public readonly partial struct Music
     public partial int Track { get; set; }
 }
 
-/// An archetype that includes a shape carrying a collection, to check flattening.
+/// <summary>An archetype that includes a shape carrying a collection, to check flattening.</summary>
 [Archetype(replicated: false)]
 [Include(typeof(Sequences))]
 public readonly partial struct Cutscene
@@ -78,7 +80,7 @@ public readonly partial struct Cutscene
     public partial int Chapter { get; set; }
 }
 
-/// A mod adding values that read as if CoreArea had always carried them.
+/// <summary>A mod adding values that read as if CoreArea had always carried them.</summary>
 [ArchetypeMixin]
 [Extends(typeof(CoreArea))]
 public readonly partial struct Climate
@@ -88,7 +90,7 @@ public readonly partial struct Climate
     public partial int Rainfall { get; }
 }
 
-/// The same, under a prefix, so two mods can both add a Temperature.
+/// <summary>The same, under a prefix, so two mods can both add a Temperature.</summary>
 [ArchetypeMixin]
 [Extends(typeof(CoreArea), "Ambient")]
 public readonly partial struct Soundscape
@@ -96,7 +98,7 @@ public readonly partial struct Soundscape
     public partial int Temperature { get; set; }
 }
 
-/// A mixin whose values go over the wire, which is the whole of what [Replicated] asks for.
+/// <summary>A mixin whose values go over the wire, which is the whole of what [Replicated] asks for.</summary>
 [ArchetypeMixin]
 [Replicated]
 [Propagates(Propagation.OwnershipBased)]
@@ -107,8 +109,10 @@ public readonly partial struct Telemetry
     public partial float Load { get; set; }
 }
 
+/// <summary>
 /// An archetype carrying the replicated mixin, so an entity can exist to write through. Its own value
 /// replicates with it, because a replicated archetype sends what it declares itself.
+/// </summary>
 [Archetype(replicated: true)]
 [Propagates(Propagation.OwnershipBased)]
 [Include(typeof(Telemetry))]
@@ -118,7 +122,7 @@ public readonly partial struct Rig
     public partial int Serial { get; set; }
 }
 
-/// Replaced often enough that a lost change is corrected by the next one.
+/// <summary>Replaced often enough that a lost change is corrected by the next one.</summary>
 [ArchetypeMixin]
 [Replicated(Delivery.Unreliable)]
 [Propagates(Propagation.OwnershipBased)]
@@ -127,15 +131,19 @@ public readonly partial struct Motion
     public partial float Speed { get; set; }
 }
 
+/// <summary>
 /// A shape over storage that already replicates. It says nothing about replicating; the component
 /// does, and the shape inherits it.
+/// </summary>
 [ArchetypeMixin]
 [Extends(typeof(CoreArea))]
 [ExplicitComponent(typeof(global::ReadyM.Api.Multiplayer.ECS.Components.EmptyScopeDeletionComponent))]
 public readonly partial struct Perishable;
 
+/// <summary>
 /// A replicated shape holding a native collection. Its component gets setter methods rather than a
 /// property for that value, so the accessors have to write it the other way round.
+/// </summary>
 [ArchetypeMixin]
 [Replicated]
 [Propagates(Propagation.OwnershipBased)]
@@ -146,8 +154,10 @@ public readonly partial struct Roster
     private partial global::Yooni.Native.Container.NativeList<int> Members { get; set; }
 }
 
+/// <summary>
 /// An archetype taking the same mixin twice over is not possible, so the prefix earns its place on
 /// a single include: the collection's members have to land under it too.
+/// </summary>
 [Archetype(replicated: true)]
 [Propagates(Propagation.OwnershipBased)]
 [Include(typeof(Roster), "Crew")]
@@ -156,8 +166,10 @@ public readonly partial struct Barge
     public partial int Berth { get; set; }
 }
 
+/// <summary>
 /// A mixin carrying a collection and extending an archetype under a prefix, which is the pair the
 /// prefix has to reach: the values it declares and the members its collection forwards.
+/// </summary>
 [ArchetypeMixin]
 [Replicated]
 [Propagates(Propagation.OwnershipBased)]
@@ -178,17 +190,17 @@ public readonly partial struct Ledgered
 [Include(typeof(Perishable))]
 public readonly partial struct Borrowed;
 
-/// A replicating shape no game registers an archetype for, which is the case a create has to refuse.
+/// <summary>A replicating shape no game registers an archetype for, which is the case a create has to refuse.</summary>
 [Archetype(replicated: true)]
 [Include(typeof(Telemetry))]
 public readonly partial struct Unbound;
 
-/// Rig's replicated mixin on an entity that stays on this side, and needs no binding for it.
+/// <summary>Rig's replicated mixin on an entity that stays on this side, and needs no binding for it.</summary>
 [Archetype(replicated: false)]
 [Include(typeof(Telemetry))]
 public readonly partial struct Gauge;
 
-/// Replicated with nothing that sends, so the entity is the whole of what crosses.
+/// <summary>Replicated with nothing that sends, so the entity is the whole of what crosses.</summary>
 [Archetype(replicated: true)]
 [Include(typeof(Placement))]
 public readonly partial struct Signpost;

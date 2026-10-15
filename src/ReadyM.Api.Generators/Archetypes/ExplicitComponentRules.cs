@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
-/// Checks a shape whose storage already exists, before anything is emitted against it.
+/// <summary>Checks a shape whose storage already exists, before anything is emitted against it.</summary>
 internal static class ExplicitComponentRules
 {
     public static readonly DiagnosticDescriptor NotAComponent = new(
@@ -72,7 +72,7 @@ internal static class ExplicitComponentRules
     private const string GenericInstance = "global::Friflo.Engine.ECS.GenericInstanceTypeAttribute";
     private const string GlobalGenericInstance = "global::Friflo.Engine.ECS.GlobalGenericInstanceTypeAttribute";
 
-    /// The generic type as an author writes it in typeof, with its parameters left off.
+    /// <summary>The generic type as an author writes it in typeof, with its parameters left off.</summary>
     private static readonly SymbolDisplayFormat Unbound = SymbolDisplayFormat.FullyQualifiedFormat
         .WithGenericsOptions(SymbolDisplayGenericsOptions.None);
 
@@ -156,8 +156,10 @@ internal static class ExplicitComponentRules
         }
     }
 
+    /// <summary>
     /// Whether the ECS knows this instantiation of a generic component. Each closed generic is a
     /// component of its own, and the schema only holds the ones an attribute names.
+    /// </summary>
     private static bool Registered(Compilation compilation, INamedTypeSymbol component)
     {
         if (!component.IsGenericType || component.IsUnboundGenericType)
@@ -190,7 +192,7 @@ internal static class ExplicitComponentRules
     private static bool Named(AttributeData attribute, string qualified)
         => attribute.AttributeClass?.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat) == qualified;
 
-    /// Whether the types an attribute names, after its leading arguments, are the ones asked for.
+    /// <summary>Whether the types an attribute names, after its leading arguments, are the ones asked for.</summary>
     private static bool Arguments(AttributeData attribute, int skip, ImmutableArray<ITypeSymbol> wanted)
     {
         var named = attribute.ConstructorArguments.Skip(skip).ToList();
@@ -205,8 +207,10 @@ internal static class ExplicitComponentRules
                left.OriginalDefinition.WithNullableAnnotation(NullableAnnotation.None),
                right.OriginalDefinition.WithNullableAnnotation(NullableAnnotation.None));
 
+    /// <summary>
     /// Whether the component's own value can reach the shape: as it stands, or narrowed to the
     /// type the shape declared.
+    /// </summary>
     private static bool Readable(Compilation compilation, ITypeSymbol held, IPropertySymbol declared, ISymbol target)
         => compilation is not CSharpCompilation csharp
            || csharp.ClassifyConversion(held, declared.Type).IsImplicit

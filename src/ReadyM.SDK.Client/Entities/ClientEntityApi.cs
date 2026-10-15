@@ -24,16 +24,16 @@ internal sealed class ClientEntityApi : IEntityApi
     // Lazy because this is built early and the mapping policy directory is not.
     private readonly Lazy<IMappingPolicyDirectory>? _policies;
 
-    /// The world an archetype is registered with.
+    /// <summary>The world an archetype is registered with.</summary>
     private readonly Store? _world;
 
-    /// Null in a game with no networking, which is every local-only session and most tests.
+    /// <summary>Null in a game with no networking, which is every local-only session and most tests.</summary>
     private readonly INetworkedEntityManager? _networked;
 
-    /// One archetype per set, worked out on first use the way the server's half does it.
+    /// <summary>One archetype per set, worked out on first use the way the server's half does it.</summary>
     private readonly ConcurrentDictionary<ComponentSet, ArchetypeId> _archetypes = new();
 
-    /// The tags a shape declared, resolved against this world's schema once per set.
+    /// <summary>The tags a shape declared, resolved against this world's schema once per set.</summary>
     private readonly ConcurrentDictionary<ComponentSet, Tags> _tags = new();
 
     private readonly ConcurrentDictionary<Type, IMappingDataPolicy<Entity>?> _policyOf = new();
@@ -248,7 +248,7 @@ internal sealed class ClientEntityApi : IEntityApi
         return tags;
     }
 
-    /// The archetype this game registered for the shape. Only reached for one that replicates.
+    /// <summary>The archetype this game registered for the shape. Only reached for one that replicates.</summary>
     private ArchetypeId Bound(ComponentSet components)
     {
         var shape = ArchetypeRegistry.ShapeOf(components);
@@ -286,8 +286,10 @@ internal sealed class ClientEntityApi : IEntityApi
             .RawEntity;
     }
 
+    /// <summary>
     /// A component holding a native collection has no memory until this runs, and what a shape asked
     /// to run follows it, once the entity is whole.
+    /// </summary>
     private RawEntity Created(RawEntity rawEntity, ComponentSet components)
     {
         var handle = new EntityHandle(rawEntity, this);
@@ -301,7 +303,7 @@ internal sealed class ClientEntityApi : IEntityApi
         return rawEntity;
     }
 
-    /// Friflo does not update indices unless the component is replaced whole.
+    /// <summary>Friflo does not update indices unless the component is replaced whole.</summary>
     public void ReplaceIndexed<TComponent, TKey>(RawEntity rawEntity, TComponent component)
         where TComponent : struct, IIndexedComponent<TKey>
         => Resolve(rawEntity).AddComponent(component);
@@ -391,8 +393,10 @@ internal sealed class ClientEntityApi : IEntityApi
         _scope.Clear();
     }
 
+    /// <summary>
     /// A networked entity goes through the networked half: the other side is holding a copy and
     /// nothing else would tell it to let go.
+    /// </summary>
     private void DeleteNow(RawEntity rawEntity)
     {
         var entity = _store.GetEntityByRawEntity(rawEntity);

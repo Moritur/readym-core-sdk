@@ -3,18 +3,18 @@ using ReadyM.SDK.Entities;
 
 namespace ReadyM.SDK.Archetypes;
 
-/// Collection of callbacks applied to entities, either on creation or deletion.
+/// <summary>Collection of callbacks applied to entities, either on creation or deletion.</summary>
 internal sealed class HandlerTable
 {
     private readonly ConcurrentDictionary<ComponentSet, Declaration> _declarations = new();
 
     public bool Any => !_declarations.IsEmpty;
 
-    /// What the shape asked to run for itself. A shape has at most one.
+    /// <summary>What the shape asked to run for itself. A shape has at most one.</summary>
     public void Register(ComponentSet shape, EntityHandler handler)
         => Declared(shape).Own = handler;
 
-    /// What something else asked to run when it sees the shape.
+    /// <summary>What something else asked to run when it sees the shape.</summary>
     public void Observe(ComponentSet shape, EntityHandler handler) 
         => Declared(shape).Watch(handler);
 
@@ -63,7 +63,7 @@ internal sealed class HandlerTable
 
         public EntityHandler? Own { get; set; }
 
-        /// Module initializers of different assemblies can land here at once.
+        /// <summary>Module initializers of different assemblies can land here at once.</summary>
         public void Watch(EntityHandler handler)
         {
             lock (_gate)

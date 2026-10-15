@@ -17,7 +17,7 @@ namespace ReadyM.Api.Generators.Archetypes;
 [Generator]
 internal class ChunkCombinationGenerator : IIncrementalGenerator
 {
-    /// Bounded by the composed views that exist in the server SDK.
+    /// <summary>Bounded by the composed views that exist in the server SDK.</summary>
     private const int MaxArity = 6;
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
@@ -66,7 +66,7 @@ internal class ChunkCombinationGenerator : IIncrementalGenerator
         return new Combination(shapes.ToImmutable(), chunks);
     }
 
-    /// Whether the generator emitted a view for this shape in whichever assembly declared it.
+    /// <summary>Whether the generator emitted a view for this shape in whichever assembly declared it.</summary>
     private static bool HasChunkView(INamedTypeSymbol shape)
     {
         var declared = shape.GetAttributes().Any(attribute

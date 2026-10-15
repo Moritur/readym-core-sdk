@@ -5,8 +5,10 @@ using ReadyM.Api.Multiplayer.RPC;
 
 namespace ReadyM.SDK.Tests.Rpc;
 
+/// <summary>
 /// What the generated half of an RPC class declares, and what a host does with it: one instance in
 /// DI that anything can ask for, built from its constructor the way a [Service] is.
+/// </summary>
 public class RpcHandlerRegistryTests
 {
     [Fact]
@@ -17,7 +19,7 @@ public class RpcHandlerRegistryTests
         Assert.Same(container.Resolve<Handlers>(), container.Resolve<Handlers>());
     }
 
-    /// Which is what lets an RPC class ask for what it needs rather than reaching for a static.
+    /// <summary>Which is what lets an RPC class ask for what it needs rather than reaching for a static.</summary>
     [Fact]
     public void A_declared_class_is_handed_what_it_asked_for()
     {
@@ -40,7 +42,7 @@ public class RpcHandlerRegistryTests
         Assert.Same(container.Resolve<Handlers>(), container.Resolve<Handlers>());
     }
 
-    /// A mod that registered its RPC class by hand before the SDK did it keeps working.
+    /// <summary>A mod that registered its RPC class by hand before the SDK did it keeps working.</summary>
     [Fact]
     public void A_class_registered_by_hand_as_well_still_resolves()
     {
@@ -81,13 +83,15 @@ public class RpcHandlerRegistryTests
 
     private sealed class Container : DependencyContainerBase;
 
+    /// <summary>
     /// Stands in for the half of an RPC class a mod writes. The generated half is what declares it,
     /// which a generator test covers; this is about what the declaration then does.
+    /// </summary>
     private sealed class Handlers(ILogger logger)
     {
         public ILogger Logger { get; } = logger;
     }
 
-    /// Declared for the side the test does not register, so it must not turn up.
+    /// <summary>Declared for the side the test does not register, so it must not turn up.</summary>
     private sealed class OtherSide;
 }

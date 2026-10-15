@@ -10,7 +10,7 @@ using ReadyM.Api.Generators.Archetypes;
 
 namespace ReadyM.Api.Generators.Analyzers;
 
-/// Reports a client writing a replicated value straight through its setter.
+/// <summary>Reports a client writing a replicated value straight through its setter.</summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class ReplicatedWriteAnalyzer : DiagnosticAnalyzer
 {
@@ -115,7 +115,7 @@ public sealed class ReplicatedWriteAnalyzer : DiagnosticAnalyzer
     private static bool Replicates(INamedTypeSymbol shape)
         => shape.IsValueType && DeclarationModel.For(shape).IsReplicated;
 
-    /// Whether the write sits in a create handler, where the shape is authoring its own entity.
+    /// <summary>Whether the write sits in a create handler, where the shape is authoring its own entity.</summary>
     private static bool Authoring(ISymbol? containing)
     {
         for (var symbol = containing; symbol is IMethodSymbol method; symbol = symbol.ContainingSymbol)
@@ -126,7 +126,7 @@ public sealed class ReplicatedWriteAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    /// Whether the write sits in a handler handed to a mapping.
+    /// <summary>Whether the write sits in a handler handed to a mapping.</summary>
     private static bool InsideMapping(SyntaxNode node, SemanticModel? model, CancellationToken ct)
     {
         if (model is null)

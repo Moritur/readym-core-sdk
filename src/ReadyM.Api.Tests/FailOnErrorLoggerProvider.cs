@@ -3,7 +3,7 @@ using Xunit.Sdk;
 
 namespace ReadyM.Api.Tests;
 
-/// Throws on any log at Error or above, so an unexpected error fails the test.
+/// <summary>Throws on any log at Error or above, so an unexpected error fails the test.</summary>
 public sealed class FailOnErrorLoggerProvider : ILoggerProvider
 {
     private sealed class Logger(string categoryName) : ILogger

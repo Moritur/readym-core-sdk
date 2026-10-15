@@ -5,8 +5,10 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
+/// <summary>
 /// What a mod's replicated shapes tell the host, which is the one thing the host needs before any
 /// entity exists: which components go over the wire, and how.
+/// </summary>
 public class ReplicationRegistryTests
 {
     private static ReplicatedComponent? Find(Type component)
@@ -45,7 +47,7 @@ public class ReplicationRegistryTests
         Assert.Null(Find(typeof(ClimateComponent)));
     }
 
-    /// The entry point a loader calls, which is what a target without module initializers relies on.
+    /// <summary>The entry point a loader calls, which is what a target without module initializers relies on.</summary>
     [Fact]
     public void Registering_the_assembly_registers_every_replicated_shape()
     {
@@ -59,7 +61,7 @@ public class ReplicationRegistryTests
         Assert.Equal(Delivery.Unreliable, Find(typeof(MotionComponent))?.Delivery);
     }
 
-    /// A reload registers the same component again rather than failing.
+    /// <summary>A reload registers the same component again rather than failing.</summary>
     [Fact]
     public void Registering_twice_keeps_one_entry()
     {
@@ -77,9 +79,11 @@ public class ReplicationRegistryTests
         Assert.Equal(1, matching);
     }
 
+    /// <summary>
     /// A shape over storage that already exists replicates through it, but does not register it:
     /// that component belongs to whoever declared it, and may be one the host registered itself.
     /// Registering it again as a mod component is wrong, and for a large one the host refuses it.
+    /// </summary>
     [Fact]
     public void A_shape_over_a_component_it_does_not_own_registers_nothing()
     {
@@ -93,13 +97,15 @@ public class ReplicationRegistryTests
         Assert.NotNull(RegistrationFor<Telemetry>());
     }
 
-    /// The generated class that tells the host about a shape's component, when the shape owns one.
+    /// <summary>The generated class that tells the host about a shape's component, when the shape owns one.</summary>
     private static Type? RegistrationFor<T>() where T : struct
         => typeof(T).Assembly.GetType($"{typeof(T).Namespace}.{typeof(T).Name}Replication");
 
+    /// <summary>
     /// What the SDK tells the host about for an archetype the host owns: the components it
     /// generated, never the ones it only borrowed. World has a marker of its own; Area, Player and
     /// Cell sit on components the host declared and registers itself.
+    /// </summary>
     [Fact]
     public void Only_a_shapes_generated_components_are_the_sdks_to_register()
     {
@@ -112,8 +118,10 @@ public class ReplicationRegistryTests
         Assert.Empty(Generated<global::ReadyM.SDK.Archetypes.Core.Cell>());
     }
 
+    /// <summary>
     /// Mirrors the rule ServerArchetypes applies, which cannot be reached from here: a generated
     /// component lands in the shape's own assembly, a borrowed one does not.
+    /// </summary>
     private static Type[] Generated<T>() where T : struct, IArchetypeQueryable
         => [.. ((IArchetypeQueryable)default(T)).Components.Types.Where(c => c.Assembly == typeof(T).Assembly)];
 }

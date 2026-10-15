@@ -95,7 +95,7 @@ public class ReplicatedWriteAnalyzerTests(ITestOutputHelper output)
     public void Nor_step_one()
         => Assert.Single(Report("        vitals.Hp++;"));
 
-    /// A collection has no setter, so what is refused is every member that changes it.
+    /// <summary>A collection has no setter, so what is refused is every member that changes it.</summary>
     [Fact]
     public void Nor_change_a_replicated_collection()
         => Assert.Single(Report("        vitals.AddMarks(1);"));
@@ -104,28 +104,30 @@ public class ReplicatedWriteAnalyzerTests(ITestOutputHelper output)
     public void Nor_clear_one()
         => Assert.Single(Report("        vitals.ClearMarks();"));
 
-    /// Reading one says nothing about who owns it, the same as reading a value.
+    /// <summary>Reading one says nothing about who owns it, the same as reading a value.</summary>
     [Fact]
     public void Reading_a_collection_is_left_alone()
         => Assert.Empty(Report("        var read = vitals.MarksCount;"));
 
-    /// Nothing sends it, so nobody is kept from writing it.
+    /// <summary>Nothing sends it, so nobody is kept from writing it.</summary>
     [Fact]
     public void A_local_value_is_left_alone()
         => Assert.Empty(Report("        mood.Cheer = 5;"));
 
-    /// Reading says nothing about who owns the value.
+    /// <summary>Reading says nothing about who owns the value.</summary>
     [Fact]
     public void Reading_is_left_alone()
         => Assert.Empty(Report("        var read = vitals.Hp;"));
 
-    /// The server is the one deciding, and the API saying otherwise is not compiled for it.
+    /// <summary>The server is the one deciding, and the API saying otherwise is not compiled for it.</summary>
     [Fact]
     public void A_server_writes_what_it_likes()
         => Assert.Empty(Report("        vitals.Hp = 5;", runtime: "Server"));
 
+    /// <summary>
     /// Inside a mapping the write is the pull, which is how the game's answer reaches the ECS. The
     /// same write a step outside it is not, which is what tells the two apart.
+    /// </summary>
     [Fact]
     public void A_mapping_handler_writes_the_whole_shape()
     {

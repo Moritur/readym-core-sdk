@@ -5,7 +5,9 @@ using Microsoft.CodeAnalysis;
 
 namespace ReadyM.Api.Generators.Archetypes;
 
+/// <summary>
 /// [Interned] on a shape's property only means something when the shape's own component is replicated.
+/// </summary>
 internal static class InternedShapeRules
 {
     public static readonly DiagnosticDescriptor OnExplicitComponent = new(

@@ -8,11 +8,13 @@ using ReadyM.SDK.Chunks;
 
 namespace ReadyM.SDK.Client.Entities;
 
+/// <summary>
 /// Every entity of a shape. How it is walked is decided for you: a shape whose components are all
 /// known at compile time is walked by chunk, and anything else by identity. The choice is made by
 /// overload resolution, so this type has no GetEnumerator of its own and a foreach binds one of the
 /// extensions instead. A netstandard2.0 client has no chunk path at all, so every query there walks
 /// identities.
+/// </summary>
 public readonly struct EntityQuery<T>
     where T : struct, IArchetypeQueryable
 {
@@ -25,7 +27,7 @@ public readonly struct EntityQuery<T>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public IdentityEnumerator Identities() => new(_context, Components);
 
-    /// Narrows the query to the entities one scope holds.
+    /// <summary>Narrows the query to the entities one scope holds.</summary>
     public ScopedQuery<T> InScope(Scope scope) => new(_context, scope);
 
 #if NET

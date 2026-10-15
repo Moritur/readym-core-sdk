@@ -5,13 +5,13 @@ using ReadyM.SDK.Entities;
 
 namespace ReadyM.SDK.Archetypes;
 
-/// Which component holds the index behind each shape, so a lookup can reach it by the shape alone.
+/// <summary>Which component holds the index behind each shape, so a lookup can reach it by the shape alone.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public static class IndexRegistry
 {
     private static readonly ConcurrentDictionary<Type, object> Finders = new();
 
-    /// Called by generated code for an indexed shape.
+    /// <summary>Called by generated code for an indexed shape.</summary>
     public static void Register<TShape, TKey, TComponent>()
         where TShape : struct, IArchetypeQueryable, IIndexed<TKey>
         where TComponent : struct, IIndexedComponent<TKey>

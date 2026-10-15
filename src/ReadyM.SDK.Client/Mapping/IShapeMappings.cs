@@ -1,8 +1,8 @@
 ﻿namespace ReadyM.SDK.Client.Mapping;
 
-/// A client mod's game-state mappings, declared once when the mod loads.
+/// <summary>A client mod's game-state mappings, declared once when the mod loads.</summary>
 public interface IShapeMappings
 {
-    /// Declares the mappings on <paramref name="registry"/>.
+    /// <summary>Declares the mappings on <paramref name="registry"/>.</summary>
     void Register(IShapeMappingRegistry registry);
 }

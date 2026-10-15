@@ -25,8 +25,10 @@ internal sealed class ShapeMappingRegistry : IShapeMappingRegistry
 #endif
         => Collected<TAccess, TContext>(access, Way.Push);
 
+    /// <summary>
     /// A handler over a collection cannot be held beside the others: on a runtime carrying ref
     /// structs it is a delegate whose parameter is one, so the pair is kept apart instead.
+    /// </summary>
     private Collected<TAccess, TContext>? Collected<TAccess, TContext>(ValueAccess access, Way way)
 #if NET
         where TAccess : allows ref struct
@@ -63,7 +65,7 @@ internal sealed class ShapeMappingRegistry : IShapeMappingRegistry
     private void Add<TValue, TContext>(ValueAccess<TValue> access, Mapping<TValue, TContext> mapping)
         => _mappings[(access.Component, typeof(TContext), access.Field)] = mapping;
 
-    /// A shape-wide mapping sits under the same key with no field, which nothing else can take.
+    /// <summary>A shape-wide mapping sits under the same key with no field, which nothing else can take.</summary>
     private const int WholeShape = -1;
 
     internal Mapping<TShape, TContext>? FindShape<TShape, TContext>(ShapeAccess access)
@@ -76,7 +78,7 @@ internal sealed class ShapeMappingRegistry : IShapeMappingRegistry
 
     internal sealed class Mapping<TValue, TContext>(Action<TValue, TContext>? push, Pull<TValue, TContext> pull)
     {
-        /// Null for a value the game owns and will not be told.
+        /// <summary>Null for a value the game owns and will not be told.</summary>
         public Action<TValue, TContext>? Push { get; } = push;
 
         public Pull<TValue, TContext> Pull { get; } = pull;

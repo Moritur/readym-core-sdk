@@ -3,14 +3,14 @@ using System.Runtime.InteropServices;
 
 namespace ReadyM.Api.Interop;
 
-/// A handle for a C++ closure that does not take any parameters.
+/// <summary>A handle for a C++ closure that does not take any parameters.</summary>
 [StructLayout(LayoutKind.Sequential)]
 internal unsafe struct ClosureTrampoline0
 {
     private delegate* unmanaged[Cdecl]<void*, void> Functor;
     private void* Context;
 
-    /// Invokes the closure.
+    /// <summary>Invokes the closure.</summary>
     /// <exception cref="NullReferenceException">When the closure function or context pointers are invalid.</exception>
     public void Invoke()
     {
@@ -21,14 +21,14 @@ internal unsafe struct ClosureTrampoline0
     }
 }
 
-/// A handle for a C++ closure that takes a single parameter.
+/// <summary>A handle for a C++ closure that takes a single parameter.</summary>
 [StructLayout(LayoutKind.Sequential)]
 internal unsafe struct ClosureTrampoline1
 {
     private delegate* unmanaged[Cdecl]<void*, IntPtr, void> Functor;
     private void* Context;
 
-    /// Invokes the closure.
+    /// <summary>Invokes the closure.</summary>
     /// <exception cref="NullReferenceException">When the closure function or context pointers are invalid.</exception>
     public void Invoke(IntPtr eventData)
     {

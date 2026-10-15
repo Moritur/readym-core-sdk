@@ -126,7 +126,7 @@ internal static class ServerRpcModel
         return FindTypeNamed(target.ContainingAssembly.GlobalNamespace, ManifestClassName) is not null;
     }
 
-    /// Only half of it is the mod's, so a class that is not partial is not one of these.
+    /// <summary>Only half of it is the mod's, so a class that is not partial is not one of these.</summary>
     private static bool IsPartial(INamedTypeSymbol type) =>
         type.DeclaringSyntaxReferences
             .Select(reference => reference.GetSyntax())

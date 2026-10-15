@@ -4,7 +4,7 @@ using Yooni.Native.Container;
 
 namespace Yooni.Native.Serialization;
 
-/// How a native string's bytes are written after its length.
+/// <summary>How a native string's bytes are written after its length.</summary>
 internal enum NativeStringWireForm : byte
 {
     Narrow = 0, // 1 byte per character

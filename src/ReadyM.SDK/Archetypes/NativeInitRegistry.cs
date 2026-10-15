@@ -7,7 +7,7 @@ using Yooni.Native.LowLevel;
 
 namespace ReadyM.SDK.Archetypes;
 
-/// Which components have to be given their memory before anything reads them.
+/// <summary>Which components have to be given their memory before anything reads them.</summary>
 /// <remarks>
 /// A native collection is a handle to memory nobody has taken yet, so a component holding one is
 /// unusable until it has been created. Creating an entity runs this for every component it carries,
@@ -18,19 +18,23 @@ public static class NativeInitRegistry
 {
     private static readonly ConcurrentDictionary<Type, Initializer> Initializers = new();
 
-    /// Called by generated code for a component holding a native collection.
+    /// <summary>Called by generated code for a component holding a native collection.</summary>
     public static void Register<TComponent>()
         where TComponent : struct, Friflo.Engine.ECS.IComponent, INativeInit
         => Initializers[typeof(TComponent)] = new Initializer<TComponent>();
 
+    /// <summary>
     /// Nothing to do for the common shape, which holds no collection at all, so the lookup is
     /// skipped outright rather than once per component.
+    /// </summary>
     internal static bool Any => !Initializers.IsEmpty;
 
     internal static bool Needs(Type component) => Initializers.ContainsKey(component);
 
+    /// <summary>
     /// Runs the init for one component if the entity carries it. For an entity the host built from
     /// an archetype rather than a shape, where what it carries is not known here.
+    /// </summary>
     internal static void InitIfPresent(int entityId, IComponentsById components, Type component)
     {
         if (Initializers.TryGetValue(component, out var initializer))

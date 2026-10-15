@@ -3,7 +3,7 @@ using ReadyM.SDK.Tests.Client.Fixtures;
 
 namespace ReadyM.SDK.Tests.Client;
 
-/// A query nobody gave a world to, which matches nothing rather than faulting.
+/// <summary>A query nobody gave a world to, which matches nothing rather than faulting.</summary>
 public class EmptyQueryTests : ClientSdkTest
 {
     private static EntityQuery<Monster> Nothing => default;
@@ -82,7 +82,7 @@ public class EmptyQueryTests : ClientSdkTest
         Assert.Equal(0, count);
     }
 
-    /// Walking an empty one must not leave a query scope open behind it.
+    /// <summary>Walking an empty one must not leave a query scope open behind it.</summary>
     [Fact]
     public void An_empty_query_leaves_no_scope_open()
     {
@@ -120,8 +120,10 @@ public class EmptyQueryTests : ClientSdkTest
         Assert.False(monster.IsValid);
     }
 
+    /// <summary>
     /// The other way a scoped query ends up with nothing to look in: a real scope, but a query that
     /// was never given a world.
+    /// </summary>
     [Fact]
     public void A_default_query_narrowed_to_a_real_scope_visits_nothing()
     {

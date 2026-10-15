@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace ReadyM.SDK.Services;
 
-/// Encapsulates the on/off state of a service so only the SDK can change it internally.
+/// <summary>Encapsulates the on/off state of a service so only the SDK can change it internally.</summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
 public sealed class ServiceSwitch
 {
