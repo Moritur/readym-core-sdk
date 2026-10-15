@@ -190,7 +190,7 @@ internal class ArchetypeGenerator : IIncrementalGenerator
             writer.Line();
             HandleEmitter.Accessor(
                 writer, accessor, include.Accessors, partial: false, include.IsReplicated, client,
-                include.Named(accessor.Name), include.IsHidden);
+                include.Named(accessor.Name), include.IsHidden, ArchetypeNames.DocSource(include.Type, accessor.Name));
         }
     }
 

@@ -266,4 +266,31 @@ public class IncludeNameTests(ITestOutputHelper output)
             output,
             Sdk,
             SourceGeneratorTestHelper.SdkInternalsAssembly);
+
+    /// <summary>A value an include brings shows the docs it has where it is declared, whatever it is called here.</summary>
+    [Fact]
+    public void An_included_value_inherits_the_docs_of_where_it_is_declared()
+    {
+        const string shapes =
+            """
+            [Archetype(replicated: false)]
+            public readonly partial struct Walker
+            {
+                public partial int Steps { get; set; }
+            }
+
+            [Archetype(replicated: false)]
+            [IncludeArchetype(typeof(Walker))]
+            [Include(typeof(Health))]
+            [Include(typeof(Mana), "Mana")]
+            public readonly partial struct Hero;
+            """;
+
+        var generated = Generated(shapes);
+
+        Assert.Contains("/// <inheritdoc cref=\"global::Mod.Health.Value\"/>", generated);
+        Assert.Contains("/// <inheritdoc cref=\"global::Mod.Mana.Value\"/>", generated);
+        Assert.Contains("/// <inheritdoc cref=\"global::Mod.Walker.Steps\"/>", generated);
+        Assert.DoesNotContain(Run(shapes).OutputDiagnostics, d => d.Id == "CS1574");
+    }
 }

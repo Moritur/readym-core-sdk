@@ -89,6 +89,7 @@ internal static class HandleEmitter
     /// What the value is called here, which an include puts its prefix in front of. The accessor
     /// class it is read through keeps the name the declaring shape gave it.
     /// </param>
+    /// <param name="inheritsFrom">For a value an include brings, the member it comes from, as a cref.</param>
     public static void Accessor(
         SourceWriter writer,
         AccessorModel accessor,
@@ -97,14 +98,15 @@ internal static class HandleEmitter
         bool replicated = false,
         bool client = false,
         string? name = null,
-        bool hidden = false)
+        bool hidden = false,
+        string? inheritsFrom = null)
     {
         if (!partial && !accessor.IsExposed)
             return;
 
         var called = name ?? accessor.Name;
 
-        if (partial && accessor.InheritsDocFrom is { } source)
+        if ((partial ? accessor.InheritsDocFrom : inheritsFrom) is { } source)
             writer.Line($"/// <inheritdoc cref=\"{source}\"/>");
 
         if (hidden)

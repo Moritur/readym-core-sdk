@@ -505,6 +505,6 @@ public class ExplicitComponentTests(ITestOutputHelper output)
             }
             """);
 
-        Assert.DoesNotContain("<inheritdoc", generated);
+        Assert.DoesNotContain("<inheritdoc cref=\"global::Core.DocumentedComponent.Amount\"/>", generated);
     }
 }

@@ -32,6 +32,13 @@ internal static class ArchetypeNames
     public const string ComponentSet = "global::ReadyM.SDK.Archetypes.ComponentSet";
 
     /// <summary>Keeps a generated type or member out of IntelliSense and the docs.</summary>
+    /// <summary>
+    /// A cref to a member of a shape, for a generated member to inherit its docs from. Null for a generic shape, whose
+    /// type arguments a cref would have to spell out.
+    /// </summary>
+    public static string? DocSource(INamedTypeSymbol type, string member)
+        => type.IsGenericType ? null : $"{type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)}.{member}";
+
     public const string Hidden = "[global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]";
 
     public const string Queryable = "global::ReadyM.SDK.Archetypes.IArchetypeQueryable";

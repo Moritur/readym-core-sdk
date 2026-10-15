@@ -138,7 +138,8 @@ internal static class ChunkViewEmitter
 
         if (own is not null)
             foreach (var accessor in model.Accessors)
-                Property(writer, accessor, model.QualifiedAccessors, own.Field, model.IndexedBy is not null, writes);
+                Property(writer, accessor, model.QualifiedAccessors, own.Field, model.IndexedBy is not null, writes,
+                    inheritsFrom: ArchetypeNames.DocSource(model.Symbol, accessor.Name));
 
         foreach (var (include, accessor) in model.FlattenedAccessors())
         {
@@ -147,7 +148,8 @@ internal static class ChunkViewEmitter
 
             if (slot is not null)
                 Property(writer, accessor, include.Accessors, slot.Field,
-                    DeclarationModel.For(include.Type).IndexedBy is not null, writes, include.Named(accessor.Name), include.IsHidden);
+                    DeclarationModel.For(include.Type).IndexedBy is not null, writes, include.Named(accessor.Name), include.IsHidden,
+                    ArchetypeNames.DocSource(include.Type, accessor.Name));
         }
 
         if (own is not null)
@@ -173,7 +175,8 @@ internal static class ChunkViewEmitter
         bool indexed,
         bool writes,
         string? name = null,
-        bool hidden = false)
+        bool hidden = false,
+        string? inheritsFrom = null)
     {
         // A value the shape keeps to itself is not put on its chunk view either.
         if (!accessor.IsExposed)
@@ -182,6 +185,9 @@ internal static class ChunkViewEmitter
         var called = name ?? accessor.Name;
 
         writer.Line();
+
+        if (inheritsFrom is not null)
+            writer.Line($"/// <inheritdoc cref=\"{inheritsFrom}\"/>");
 
         if (hidden)
             writer.Line(ArchetypeNames.Hidden);
