@@ -2,9 +2,8 @@
 
 namespace ReadyM.Api.Multiplayer.ECS.Tags;
 
-/// <exclude/>
 /// <summary>
-/// Entities with this component get their ownership transferred to the first player that joins their scope,
-/// if there are no other players in that scope when that player joins it.
+/// Hands the entity to the player whose game runs its area or cell: the first player into an empty one takes it, and
+/// it follows when that player changes or the entity moves to another cell.
 /// </summary>
 public readonly struct AllowOwnershipTransferOnScopeEnterTag : ITag;
